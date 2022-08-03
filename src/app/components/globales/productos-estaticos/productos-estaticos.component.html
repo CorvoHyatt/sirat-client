@@ -1,0 +1,635 @@
+<div class="row valign-wrapper" style="height: 90%;" *ngIf="destinos.length === 0">
+    <div class="col s12 center">
+        <p>
+            <strong>
+                <h1>No hay productos en tu cotización</h1>
+            </strong>
+        </p>
+        <a class="btn" (click)="addProducts()">Agregar productos</a>
+    </div>
+</div>
+
+<div *ngFor="let destino of destinos; let i = index" class="row">
+    <div class="col s1 alineacion-texto light-blue darken-2 center">
+        {{ destino.ciudad }}
+    </div>
+    <div *ngIf="destino.productos.length > 0; else empty">
+        <div *ngFor="let product of destino.productos; let ii = index" class="col s11">
+            <div [ngSwitch]="product.tipo">
+                <div *ngSwitchCase="1" class="row row-style z-depth-1">
+                    <!-- TRASLADO -->
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h1>
+                                    <strong>Traslado</strong>
+                                    <h3>{{ product.titulo }}</h3>
+                                </h1>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Hora:</strong>
+                                <h3>{{ product.horario }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <p>{{ product.precio | currency: cotizacion.divisa }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'traslado', i, ii)">Eliminar</a>
+                    </div>
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(1, product)">Editar</a>
+                    </div>
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- DISPOSICIÓN -->
+                <div *ngSwitchCase="2" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>
+                                    <strong>Disposición</strong>
+                                    <h3>{{ product.titulo }}</h3>
+                                </h1>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Hora:</strong>
+                                <h3>{{ product.horario }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'disposicion', i, ii)">Eliminar</a>
+                    </div>
+
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(2, product)">Editar</a>
+                    </div>
+
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <div *ngSwitchCase="3" class="row row-style z-depth-1">
+                    <!-- TRASLADO OTRO-->
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h1>
+                                    <strong>Traslado Otro</strong>
+                                </h1>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Hora:</strong>
+                                <h3>{{ product.horario }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <p>{{ product.precio | currency: cotizacion.divisa }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Desde:</strong>
+                                <h3>{{ product.desde }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Hacia:</strong>
+                                <h3>{{ product.hacia }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Vehículo:</strong>
+                                <h3>{{ product.vehiculo }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'trasladoOtro', i, ii)">Eliminar</a>
+                    </div>
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(1, product)">Editar</a>
+                    </div>
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- TOUR A PIE -->
+                <div *ngSwitchCase="71" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>
+                                    <strong>Tour a pie</strong>
+                                </h1>
+                                <h3>{{ product.titulo }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'tourPie', i, ii)">Eliminar</a>
+                    </div>
+
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(3, product)">Editar</a>
+                    </div>
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- TOUR EN TRANSPORTE -->
+                <div *ngSwitchCase="72" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>
+                                    <strong>Tour en transporte</strong>
+                                </h1>
+                                <h3>{{ product.titulo }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'tourTransporte', i, ii)">Eliminar</a>
+                    </div>
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(4, product)">Editar</a>
+                    </div>
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- TOUR EN GRUPO -->
+                <div *ngSwitchCase="73" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>
+                                    <strong>Tour en grupo</strong>
+                                </h1>
+                                <h3>{{ product.titulo }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'tourGrupo', i, ii)">Eliminar</a>
+                    </div>
+
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(5, product)">Editar</a>
+                    </div>
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- ACTIVIDAD -->
+                <div *ngSwitchCase="74" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>
+                                    <strong>Actividad</strong>
+                                </h1>
+                                <h3>{{ product.titulo }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'actividad', i, ii)">Eliminar</a>
+                    </div>
+
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(6, product)">Editar</a>
+                    </div>
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- HOTEL -->
+                <div *ngSwitchCase="4" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h1>
+                                    <strong>Hotel</strong>
+                                </h1>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Nombre:</strong>
+                                <h3>{{ product.nombre }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Dirección:</strong>
+                                <h3>{{ product.direccion }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Teléfono:</strong>
+                                <h3>{{ product.telefono }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2 center">
+                                <strong>Check In:</strong>
+                                <h3>{{ product.checkIn | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Check Out:</strong>
+                                <h3>{{ product.checkOut | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Categoría:</strong>
+                                <h3>{{ product.categoria }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Personas:</strong>
+                                <h3>{{ product.noPersonas }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Tarifa:</strong>
+                                <h3 style="margin-bottom: 0px;">{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="col s7 center">
+                            <strong>Descripción:</strong>
+                            <h3>{{ product.descripcion }}</h3>
+                        </div>
+                        <div class="col s5 center">
+                            <strong>Notas:</strong>
+                            <h3>{{ product.notas }}</h3>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'hotel', i, ii)">Eliminar</a>
+                    </div>
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(7, product)">Editar</a>
+                    </div>
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- VUELOS -->
+                <div *ngSwitchCase="5" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h1>
+                                    <strong>Vuelo</strong>
+                                </h1>
+                            </div>
+                            <div class="col s1 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Origen:</strong>
+                                <h3>{{ product.origenN }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Destino:</strong>
+                                <h3>{{ product.destinoN }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Hora Salida:</strong>
+                                <h3>{{ product.horaSalida }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Hora Llegada:</strong>
+                                <h3>{{ product.horaLlegada }}</h3>
+                            </div>
+                            <div class="col s1 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3 center">
+                                <strong>Viajeros:</strong>
+                                <h3>{{ product.noViajeros }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Maleta (Kg):</strong>
+                                <h3>{{ product.maletaPeso === 0 ? 'N/A' : product.maletaPeso }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Clase:</strong>
+                                <h3>{{ product.clase }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Notas:</strong>
+                                <h3>{{ product.notas }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="product.escala" class="col s12">
+                        <div class="row">
+                            <h1 class="center">Escala</h1>
+                            <div class="col s4 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fechaEscala | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Lugar:</strong>
+                                <h3>{{ product.lugarEscala }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Duración:</strong>
+                                <h3>{{ product.tiempoEscala }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s12 center">
+                                <strong>Descripción:</strong>
+                                <h3>{{ product.descripcion }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'vuelo', i, ii)">Eliminar</a>
+                    </div>
+
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(8, product)">Editar</a>
+                    </div>
+
+
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- TRENES -->
+                <div *ngSwitchCase="6" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s2">
+                                <h1>
+                                    <strong>Tren</strong>
+                                </h1>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Horario:</strong>
+                                <h3>{{ product.horario }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Origen:</strong>
+                                <h3>{{ product.origenN }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Destino:</strong>
+                                <h3>{{ product.destinoN }}</h3>
+                            </div>
+                            <div class="col s2 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="canDelete" class="col s2">
+                        <a class="pointer" (click)="deleteProduct(product, cotizacion.idCotizacion, 'tren', i, ii)">Eliminar</a>
+                    </div>
+                    <div *ngIf="canEdit" class="col s2">
+                        <a class="pointer" (click)="editProduct(9, product)">Editar</a>
+                    </div>
+                    <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                        <h3 style="margin: 0px;">
+                            <strong>Producto opcional</strong>
+                        </h3>
+                    </div>
+                </div>
+
+                <!-- EXTRAS -->
+                <div *ngSwitchCase="8" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>{{ product.extras }}<br><span style="font-size: 1.3vh">(Producto Extra)</span></h1>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Fecha:</strong>
+                                <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Ciudad:</strong>
+                                <h3>{{ product.ciudad }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                        <div style="margin: 0px;" class="row">
+                            <div *ngIf="canDelete" class="col s2">
+                                <a class="pointer left" (click)="deleteProduct(product, cotizacion.idCotizacion, 'extra', i, ii)">Eliminar</a>
+                            </div>
+                            <div *ngIf="canEdit" class="col s2">
+                                <a class="pointer" (click)="editProduct(10, product)">Editar</a>
+                            </div>
+                            <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                                <h3 style="margin: 0px;">
+                                    <strong>Producto opcional</strong>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RENTA VEHICULOS -->
+                <div *ngSwitchCase="12" class="row row-style z-depth-1">
+                    <div class="col s12">
+                        <div class="row">
+                            <div class="col s3">
+                                <h1>Renta de vehículo</h1>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Nombre:</strong>
+                                <h3>{{ product.nombre }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tipo Transmisión:</strong>
+                                <h3>{{ product.tipoTransmision }}</h3>
+                            </div>
+                            <div class="col s3 center">
+                                <strong>Tarifa:</strong>
+                                <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Lugar Pick Up:</strong>
+                                <h3>{{ product.lugarPickUp }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Fecha Pick Up:</strong>
+                                <h3>{{ product.fechaPickUp }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Hora Pick Up:</strong>
+                                <h3>{{ product.horaPickUp }}</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Lugar Drop Off:</strong>
+                                <h3>{{ product.lugarDropOff }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Fecha Drop Off:</strong>
+                                <h3>{{ product.fechaDropOff }}</h3>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Hora Drop Off:</strong>
+                                <h3>{{ product.horaDropOff }}</h3>
+                            </div>
+                        </div>
+                        <div style="margin: 0px;" class="row">
+                            <div *ngIf="canDelete" class="col s2">
+                                <a class="pointer left" (click)="deleteProduct(product, cotizacion.idCotizacion, 'rentaVehiculo', i, ii)">Eliminar</a>
+                            </div>
+                            <div *ngIf="canEdit" class="col s2">
+                                <a class="pointer" (click)="editProduct(12, product)">Editar</a>
+                            </div>
+                            <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                                <h3 style="margin: 0px;">
+                                    <strong>Producto opcional</strong>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #empty>
+    <div class="col s11 center">
+        <h2>Destino vacío</h2>
+    </div>
+</ng-template>

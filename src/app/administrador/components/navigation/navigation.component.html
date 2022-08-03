@@ -1,0 +1,664 @@
+<ul id="slide-out" class="sidenav sidenav-fixed light-blue lighten-5">
+    <li>
+        <div class="user-view">
+            <!-- <div class="background">
+                <img src="https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image.png">
+            </div> -->
+            <a><img style="margin: auto" class="circle" src="https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image.png"></a>
+            <a><span class="black-text name center">Administrador</span></a>
+        </div>
+    </li>
+    <li style="margin-top: 35px !important; cursor: pointer;">
+        <a (click)="mostrarModalNotificaciones()">
+            <i *ngIf="noFinalizadas>0" style="color: red;" class="material-icons" >notifications_active</i>
+            <i *ngIf="noFinalizadas == 0" class="material-icons">notifications_none</i>
+            <span *ngIf="noFinalizadas>0" class="new badge left" data-badge-caption="No finalizadas" [ngClass]="{'pulse': noFinalizadas>0}" > {{noFinalizadas}} </span>
+            <span *ngIf="noFinalizadas ==0" class="new badge left" data-badge-caption="Sin pendientes"  > </span>
+
+        </a>
+    </li>
+    <li>
+        <a [routerLink]="['/administrador/traslados']"><i class="material-icons">transfer_within_a_station</i>Traslados</a>
+        <a [routerLink]="['/administrador/disposiciones']"><i class="material-icons">layers</i>Disposiciones</a>
+        <a [routerLink]="['/administrador/tours-privados-a-pie']"><i class="material-icons">hiking</i>Tours privados a pie</a>
+        <a [routerLink]="['/administrador/tours-privados-en-transporte']"><i class="material-icons">emoji_transportation</i>Tours privados en transporte</a>
+        <a [routerLink]="['/administrador/tours-en-grupo']"><i class="material-icons">groups</i>Tours en grupo</a>
+        <a [routerLink]="['/administrador/actividades']"><i class="material-icons">checklist_rtl</i>Actividades</a>
+        <a [routerLink]="['/administrador/hotel']"><i class="material-icons">business</i>Tarifas de Hotel</a>
+        <a [routerLink]="['/administrador/paises']"><i class="material-icons">public</i>Países</a>
+        <a [routerLink]="['/administrador/ciudades']"><i class="material-icons">emoji_flags</i>Ciudades</a>
+        <a [routerLink]="['/administrador/vehiculos']"><i class="material-icons">directions_car</i>Vehiculos</a>
+        <a [routerLink]="['/administrador/areas']"><i class="material-icons">engineering</i>Áreas</a>
+        <a [routerLink]="['/administrador/agencias']"><i class="material-icons">real_estate_agent</i>Agencias</a>
+        <a [routerLink]="['/administrador/agentes']"><i class="material-icons">support_agent</i>Agentes</a>
+        <a [routerLink]="['/administrador/usuarios']"><i class="material-icons">group_add</i>Usuarios</a>
+        <a [routerLink]="['/administrador/jerarquias']"><i class="material-icons">account_tree</i>Jerarquías</a>
+        <a [routerLink]="['/administrador/procesarExcel']"><i class="material-icons">autorenew</i>Procesar excel</a>
+    </li>
+    <li style="cursor: pointer;">
+        <a (click)="logout()"><i class="material-icons">logout</i>Cerrar sesión</a>
+    </li>
+</ul>
+
+
+
+<div id="modalNotificaciones" class="modal modalNotificacion">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row center">
+            <table>
+                <tr>
+                    <td colspan="3" style="text-align: center;">
+                        NOTIFICACIONES
+
+                    </td>
+                </tr>
+                <tr>
+                    <td (click)="mostrarVerTareasPendientes()">
+                        Tareas pendientes
+                    </td>
+                    <td (click)="mostrarVerTareasPendientes()">
+                        {{noFinalizadasTPLPNotas.tareasPendientes}}
+                    </td>
+                    <td>
+                        <a class="btn-floating btn-small waves-effect waves-light red" title="Agregar tarea pendiente" (click)="mostrarAgregarNuevaTareaPendiente()"><i class="material-icons">add</i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td (click)="mostrarVerLlamadasPendientes()">
+                        Llamadas pendientes
+                    </td>
+                    <td (click)="mostrarVerLlamadasPendientes()">
+                        {{noFinalizadasTPLPNotas.llamadasPendientes}}
+                    </td>
+                    <td>
+                        <a class="btn-floating btn-small waves-effect waves-light red" title="Agregar llamada pendiente" (click)="mostrarmodalNuevaLlamadaPendiente()"><i class="material-icons">add</i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td (click)="mostrarVerNotas()">
+                        Notas
+                    </td>
+                    <td (click)="mostrarVerNotas()">
+                        {{noFinalizadasTPLPNotas.notas}}
+                    </td>
+                    <td>
+                        <a class="btn-floating btn-small waves-effect waves-light red" title="Agregar nota" (click)="mostrarModalNuevaNota()"><i class="material-icons">add</i></a>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+<ng-template #isEmptyNotifications>
+    <div style="text-align: center;">
+        <h1>No hay notificaciones</h1>
+    </div>
+</ng-template>
+
+<div id="modalNuevaTareaPendiente" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12">
+                <span><label > 
+                    ¿Para quien en la nueva tarea?
+                </label></span>
+                <select id="receptorNuevaTarea" class="browser-default" name="receptorNuevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="usuario.idUsuario" >Para ti mismo</option>
+                    <option [value]="-1" >Otro</option>
+                </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <span><label > 
+                    Área
+                </label></span>
+                <select id="areaNuevaTarea" class="browser-default" name="areaNuevaTarea" [(ngModel)]="idArea" (change)="getUsuarios()" required>
+                    <option *ngFor="let area of areas" [value]="area.idArea" >{{area.nombre}}</option>
+               </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <select id="receptoArea" class="browser-default" name="areaNureceptoAreaevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="-1">Todos</option>
+                    <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario" >{{usuario.nombre}}</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="asuntoTarea" [(ngModel)]="notificacion.asunto">
+                <label for="asuntoTarea">Asunto</label>
+            </div>
+
+
+            <div class="input-field col s12">
+                <textarea id="tarea" class="materialize-textarea" [(ngModel)]="notificacion.data.tarea"></textarea>
+                <label for="tarea">¿Cuál es la tarea?</label>
+            </div>
+
+            <div class="input-field col s12">
+                <span><label > 
+                    Prioridad
+                </label></span>
+                <select id="prioridadTareaNueva" class="browser-default" name="prioridadTareaNueva" [(ngModel)]="notificacion.prioridad" required>
+                    <option [value]="1">Baja</option>
+                    <option [value]="2">Media</option>
+                    <option [value]="3">Alta</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="number" id="caducidad" [(ngModel)]="notificacion.caducidad">
+                <label for="caducidad">¿Cuántos días tiene para completarlo?</label>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="enviarNotificacion(1)">Enviar</a>
+    </div>
+</div>
+
+
+<div id="modalVerTareasPendientes" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row" *ngIf="this.areasSinFinalizar.length>0; else isEmptyNotifications">
+
+            <div class="col s12" class="center">
+                Tareas pendientes
+            </div>
+            <div class="col s4">
+                <ul class="collection">
+                    <li *ngFor="let area of areasSinFinalizar" (click)="setArea(area.idArea,1)" class="collection-item" [ngClass]="{'blue-grey lighten-5': area.idArea==idArea }">{{area.nombre}}</li>
+
+                </ul>
+            </div>
+
+            <div class="col s8">
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s10 m10">
+                        <div class="card" [ngClass]="{'light-green': notificacion.prioridad==1,'amber': notificacion.prioridad==2,'red': notificacion.prioridad==3}">
+                            <div class="card-content black-text row">
+                                <div class="col s6">
+                                    Fecha de llegada: {{notificacion.createAt | date: 'short'}}
+                                </div>
+
+                                <div class="col s6">
+                                    Fecha de limite: <span style="color: rgb(163, 46, 46);"><b>{{notificacion.caducidad | date: 'short'}}</b></span>
+                                </div>
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Asunto: {{notificacion.asunto}}
+                                </div>
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Descripción: <br> {{notificacion.data.tarea}}
+                                </div>
+                                <div class="col s12">
+                                    De: {{notificacion.nombre}}
+                                </div>
+                                <div class="col s12" [ngSwitch]="notificacion.prioridad">
+                                    <span *ngSwitchCase="1"> Prioridad: <b>Baja</b></span>
+                                    <span *ngSwitchCase="2"> Prioridad: <b>Media</b></span>
+                                    <span *ngSwitchCase="3"> Prioridad: <b>Alta</b></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="switch">
+                            <label>
+                              Pendiente
+                              <input type="checkbox" [(ngModel)]="notificacion.estatus" (change)="verificarFinalizado(notificacion)">
+                              <span class="lever"></span>
+                              Finalizado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s12">
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+<div id="modalNuevaLlamadaPendiente" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12">
+                <span><label > 
+                    ¿Quien necesita hacer la llamada?
+                </label></span>
+                <select id="receptorNuevaTarea" class="browser-default" name="receptorNuevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="usuario.idUsuario" >Para ti mismo</option>
+                    <option [value]="-1" >Otro</option>
+                </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <span><label > 
+                    Área
+                </label></span>
+                <select id="areaNuevaTarea" class="browser-default" name="areaNuevaTarea" [(ngModel)]="idArea" (change)="getUsuarios()" required>
+                    <option *ngFor="let area of areas" [value]="area.idArea" >{{area.nombre}}</option>
+               </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <select id="receptoArea" class="browser-default" name="areaNureceptoAreaevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="-1">Todos</option>
+                    <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario" >{{usuario.nombre}}</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="nombreLlamada" [(ngModel)]="notificacion.data.nombre">
+                <label for="nombreLlamada">¿A quien se le debe llamar(nombre)?</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="numeroLLamada" [(ngModel)]="notificacion.data.numero">
+                <label for="numeroLLamada">¿A quien se le debe llamar(número)?</label>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="asuntoTarea" [(ngModel)]="notificacion.asunto">
+                <label for="asuntoTarea">Asunto</label>
+            </div>
+
+            <div class="input-field col s12">
+                <textarea id="motivoLlamada" class="materialize-textarea" [(ngModel)]="notificacion.data.motivo"></textarea>
+                <label for="motivoLlamada">¿Cuál es el motivo?</label>
+            </div>
+
+            <div class="input-field col s12">
+                <span><label > 
+                    Prioridad
+                </label></span>
+                <select id="prioridadTareaNueva" class="browser-default" name="prioridadTareaNueva" [(ngModel)]="notificacion.prioridad" required>
+                    <option [value]="1">Baja</option>
+                    <option [value]="2">Media</option>
+                    <option [value]="3">Alta</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="number" id="caducidad" [(ngModel)]="notificacion.caducidad">
+                <label for="caducidad">¿Cuántos días tiene para realizarla?</label>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="enviarNotificacion(2)">Enviar</a>
+    </div>
+</div>
+
+
+<div id="modalVerLlamadasPendientes" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row" *ngIf="this.areasSinFinalizar.length>0; else isEmptyNotifications">
+
+            <div class="col s12" class="center">
+                Llamadas pendientes
+            </div>
+            <div class="col s4">
+                <ul class="collection">
+                    <li *ngFor="let area of areasSinFinalizar" (click)="setArea(area.idArea,1)" class="collection-item" [ngClass]="{'blue-grey lighten-5': area.idArea==idArea }">{{area.nombre}}</li>
+
+                </ul>
+            </div>
+
+            <div class="col s8">
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s10 m10">
+                        <div class="card" [ngClass]="{'light-green': notificacion.prioridad==1,'amber': notificacion.prioridad==2,'red': notificacion.prioridad==3}">
+                            <div class="card-content black-text row">
+                                <div class="col s6">
+                                    Fecha de llegada: {{notificacion.createAt | date: 'short'}}
+                                </div>
+
+                                <div class="col s6">
+                                    Fecha de limite: <span style="color: rgb(163, 46, 46);"><b>{{notificacion.caducidad | date: 'short'}}</b></span>
+                                </div>
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Nombre: {{notificacion.data.nombre}}
+                                </div>
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Número: {{notificacion.data.numero}}
+                                </div>
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Asunto: {{notificacion.asunto}}
+                                </div>
+
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Motivo: {{notificacion.data.motivo}}
+                                </div>
+                                <div class="col s12">
+                                    De: {{notificacion.nombre}}
+                                </div>
+                                <div class="col s12" [ngSwitch]="notificacion.prioridad">
+                                    <span *ngSwitchCase="1"> Prioridad: <b>Baja</b></span>
+                                    <span *ngSwitchCase="2"> Prioridad: <b>Media</b></span>
+                                    <span *ngSwitchCase="3"> Prioridad: <b>Alta</b></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="switch">
+                            <label>
+                              Pendiente
+                              <input type="checkbox" [(ngModel)]="notificacion.estatus" (change)="verificarFinalizado(notificacion)">
+                              <span class="lever"></span>
+                              Finalizado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s12">
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<div id="modalNuevaNota" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12">
+                <span><label > 
+                    ¿Para quien es la nota?
+                </label></span>
+                <select id="receptorNuevaTarea" class="browser-default" name="receptorNuevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="usuario.idUsuario" >Para ti mismo</option>
+                    <option [value]="-1" >Otro</option>
+                </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <span><label > 
+                    Área
+                </label></span>
+                <select id="areaNuevaTarea" class="browser-default" name="areaNuevaTarea" [(ngModel)]="idArea" (change)="getUsuarios()" required>
+                    <option *ngFor="let area of areas" [value]="area.idArea" >{{area.nombre}}</option>
+               </select>
+            </div>
+
+            <div class="col s12" *ngIf="notificacion.receptor!=usuario.idUsuario">
+                <select id="receptoArea" class="browser-default" name="areaNureceptoAreaevaTarea" [(ngModel)]="notificacion.receptor" required>
+                    <option [value]="-1">Todos</option>
+                    <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario" >{{usuario.nombre}}</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="text" id="asuntoTarea" [(ngModel)]="notificacion.asunto">
+                <label for="asuntoTarea">Asunto</label>
+            </div>
+
+            <div class="input-field col s12">
+                <textarea id="motivoLlamada" class="materialize-textarea" [(ngModel)]="notificacion.data.nota"></textarea>
+                <label for="motivoLlamada">¿Cuál es la nota?</label>
+            </div>
+
+            <div class="input-field col s12">
+                <span><label > 
+                    Prioridad
+                </label></span>
+                <select id="prioridadTareaNueva" class="browser-default" name="prioridadTareaNueva" [(ngModel)]="notificacion.prioridad" required>
+                    <option [value]="1">Baja</option>
+                    <option [value]="2">Media</option>
+                    <option [value]="3">Alta</option>
+                </select>
+            </div>
+
+            <div class="input-field col s12">
+                <input type="number" id="caducidad" [(ngModel)]="notificacion.caducidad">
+                <label for="caducidad">¿Cuántos días tiene para realizarla?</label>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="enviarNotificacion(3)">Enviar</a>
+    </div>
+</div>
+
+
+<div id="modalVerNotas" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row" *ngIf="this.areasSinFinalizar.length>0; else isEmptyNotifications">
+
+            <div class="col s12" class="center">
+                Notas
+            </div>
+            <div class="col s4">
+                <ul class="collection">
+                    <li *ngFor="let area of areasSinFinalizar" (click)="setArea(area.idArea,1)" class="collection-item" [ngClass]="{'blue-grey lighten-5': area.idArea==idArea }">{{area.nombre}}</li>
+
+                </ul>
+            </div>
+
+            <div class="col s8">
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s10 m10">
+                        <div class="card" [ngClass]="{'light-green': notificacion.prioridad==1,'amber': notificacion.prioridad==2,'red': notificacion.prioridad==3}">
+                            <div class="card-content black-text row">
+                                <div class="col s6">
+                                    Fecha de llegada: {{notificacion.createAt | date: 'short'}}
+                                </div>
+
+                                <div class="col s6">
+                                    Fecha de limite: <span style="color: rgb(163, 46, 46);"><b>{{notificacion.caducidad | date: 'short'}}</b></span>
+                                </div>
+
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    Asunto: {{notificacion.asunto}}
+                                </div>
+
+                                <div class="col s12" style=" margin-top: 5px; margin-bottom: 5px; color: white;">
+                                    {{notificacion.data.nota}}
+                                </div>
+                                <div class="col s12">
+                                    De: {{notificacion.nombre}}
+                                </div>
+                                <div class="col s12" [ngSwitch]="notificacion.prioridad">
+                                    <span *ngSwitchCase="1"> Prioridad: <b>Baja</b></span>
+                                    <span *ngSwitchCase="2"> Prioridad: <b>Media</b></span>
+                                    <span *ngSwitchCase="3"> Prioridad: <b>Alta</b></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col s2">
+                        <div class="switch">
+                            <label>
+                              Pendiente
+                              <input type="checkbox" [(ngModel)]="notificacion.estatus" (change)="verificarFinalizado(notificacion)">
+                              <span class="lever"></span>
+                              Finalizado
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngFor="let notificacion of notificaciones" class="row">
+                    <div class="col s12">
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<div id="modalRecordatorios" class="modal modalRecordatorios">
+    <div class="modal-content">
+        <h1 class="center">Recordatorios</h1>
+        <div *ngFor="let recordatorio of recordatoriosArray">
+            <div [ngSwitch]="recordatorio.type">
+                <div *ngSwitchCase="1" class="row z-depth-1">
+                    <div class="col s12" style="margin: 10px;">
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Asunto:</strong>
+                                <h4 class="">{{ recordatorio.asunto }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Prioridad:</strong>
+                                <h4 class="">{{ recordatorio.prioridad === 1 ? 'Baja' : recordatorio.prioridad === 2 ? 'Media' : 'Alta' }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Caducidad:</strong>
+                                <h4 class="">{{ recordatorio.limite | date: 'M/d/yy, h:mm a' }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6 center">
+                                <strong>Notas:</strong>
+                                <h4 class="">{{ recordatorio.text }}</h4>
+                            </div>
+                            <div class="col s6">
+                                <h4 class=""><strong>Emisor: {{ recordatorio.emisor }} ({{ recordatorio.area }})</strong></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="2" class="row z-depth-1">
+                    <div class="col s12" style="margin: 10px;">
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Asunto:</strong>
+                                <h4 class="">{{ recordatorio.asunto }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Motivo:</strong>
+                                <h4 class="">{{ recordatorio.motivo }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Prioridad:</strong>
+                                <h4 class="">{{ recordatorio.prioridad === 1 ? 'Baja' : recordatorio.prioridad === 2 ? 'Media' : 'Alta' }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Nombre:</strong>
+                                <h4 class="">{{ recordatorio.nombre }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Teléfono:</strong>
+                                <h4 class="">{{ recordatorio.tel }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Caducidad:</strong>
+                                <h4 class="">{{ recordatorio.limite | date: 'M/d/yy, h:mm a' }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6">
+                                <h4 class=""><strong>Emisor: {{ recordatorio.emisor }} ({{ recordatorio.area }})</strong></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="3" class="row z-depth-1">
+                    <div class="col s12" style="margin: 10px;">
+                        <div class="row">
+                            <div class="col s4 center">
+                                <strong>Asunto:</strong>
+                                <h4 class="">{{ recordatorio.asunto }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Prioridad:</strong>
+                                <h4 class="">{{ recordatorio.prioridad === 1 ? 'Baja' : recordatorio.prioridad === 2 ? 'Media' : 'Alta' }}</h4>
+                            </div>
+                            <div class="col s4 center">
+                                <strong>Caducidad:</strong>
+                                <h4 class="">{{ recordatorio.limite | date: 'M/d/yy, h:mm a' }}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s6 center">
+                                <strong>Notas:</strong>
+                                <h4 class="">{{ recordatorio.text }}</h4>
+                            </div>
+                            <div class="col s6 center">
+                                <h4 class=""><strong>Emisor: {{ recordatorio.emisor }} ({{ recordatorio.area }})</strong></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close btn-flat">Entendido</a>
+    </div>
+</div>

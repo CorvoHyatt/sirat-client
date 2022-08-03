@@ -1,0 +1,131 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abrirNuevaJerarquia()">Nueva jerarquía</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE JERARQUÍAS</h2>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Área principal
+                </td>
+                <td>
+                    Áreas subordinadas
+                </td>
+
+                <td>
+                    Acciones
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let jerarquia of jerarquiasVista">
+                <td>
+                    {{jerarquia.nombre}}
+                </td>
+                <td>
+                    <table>
+                        <tr *ngFor="let js of jerarquia.subordinados">
+                            <td>
+                                {{js.nombre}}
+                            </td>
+
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <i class="small material-icons" title="Editar" (click)="editar(jerarquia)" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                    <i class="small material-icons" title="Eliminar" (click)="eliminar(jerarquia.idAreaPrincipal)" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+
+
+<!-- Modal para agregar una jerarquia -->
+<div id="agregarJerarquia" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Jerarquía</h2>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <span><label >Área principal</label></span>
+                <select id="idAreaPrincipal" class="browser-default" name="idAreaPrincipal" [(ngModel)]="idAreaPrincipal" required>
+                    <option *ngFor="let area of areasDisponibles" [value]="area.idArea">{{area.nombre}}</option>  
+                </select>
+            </div>
+
+            <div style="margin-bottom: 5px;">
+                Áreas subordinadas
+            </div>
+            <div *ngIf="areasDisponibles.length>0">
+                <div class="col s12" *ngFor="let area of areas">
+                    <p *ngIf="area.idArea!= this.idAreaPrincipal">
+                        <label>
+                          <input type="checkbox"  (change)="setIdAreaSubordinada(area.idArea)"/>
+                          <span>{{area.nombre}}</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="agregar()" [ngClass]="{'disabled': areasDisponibles.length==0}">Aceptar</a>
+    </div>
+</div>
+
+
+<!-- Modal para editar una jerarquia -->
+<div id="editarJerarquia" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Jerarquía</h2>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                Área principal: {{jerarquiaActual?.nombre}}
+            </div>
+
+            <div class="col s12" style="margin-bottom: 5px; margin-top: 5px;">
+                Áreas subordinadas
+            </div>
+            <div class="col s12" *ngFor="let area of areas">
+                <p *ngIf="area.idArea!= jerarquiaActual.idAreaPrincipal">
+                    <label>
+                          <input type="checkbox"  [checked]=(existe(area.idArea)) (change)="setIdAreaSubordinadaEditar(area)"/>
+                          <span>{{area.nombre}}</span>
+                        </label>
+                </p>
+            </div>
+
+
+        </div>
+
+
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="actualizar()">Aceptar</a>
+    </div>
+</div>

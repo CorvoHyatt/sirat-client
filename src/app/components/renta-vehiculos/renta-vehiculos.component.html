@@ -1,0 +1,345 @@
+<div class="row">
+    <form class="col s12 z-depth-2" #vehiculoForm="ngForm" (ngSubmit)="onSubmit(vehiculoForm)">
+        <div class="row">
+            <div class="input-field col s6">
+                <input [ngClass]="{'invalid': validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)}" required id="comision" type="number" name="comision" #comision="ngModel" [(ngModel)]="rentaVehiculo.comision" (ngModelChange)="calcularTotal()">
+                <label for="comision">*Comisión</label>
+                <span *ngIf="validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s6">
+                <input [ngClass]="{'invalid': validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)}" id="comisionAgente" type="number" name="comisionAgente" #comisionAgente="ngModel" [(ngModel)]="rentaVehiculo.comisionAgente"
+                    (ngModelChange)="calcularTotal()" required>
+                <label for="comisionAgente">*Comisión Agente</label>
+                <span *ngIf="validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s8">
+                <input [ngClass]="{'invalid': validando && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)}" id="nombre" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="rentaVehiculo.nombre" required>
+                <label for="nombre">*Nombre</label>
+                <span *ngIf="validando && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <span><label >*Tipo vehículo</label></span>
+                <select class="browser-default" name="tipoTransmision" #tipoTransmision="ngModel" [(ngModel)]="rentaVehiculo.tipoTransmision" required>
+                    <option value="" disabled selected>Selecione</option>
+                    <option value="Automático">Automático</option>
+                    <option value="Estándar">Estándar</option>
+                </select>
+                <span *ngIf="validando && tipoTransmision.invalid || tipoTransmision.invalid && (tipoTransmision.dirty || tipoTransmision.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s4">
+                <input [ngClass]="{'invalid': validando && lugarPickUp.invalid || lugarPickUp.invalid && (lugarPickUp.dirty || lugarPickUp.touched)}" id="lugarPickUp" type="text" name="lugarPickUp" #lugarPickUp="ngModel" [(ngModel)]="rentaVehiculo.lugarPickUp" required>
+                <label for="lugarPickUp">*Lugar Pick Up</label>
+                <span *ngIf="validando && lugarPickUp.invalid || lugarPickUp.invalid && (lugarPickUp.dirty || lugarPickUp.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input class="datepicker datepicker-pickUp" id="fechaPickUp" type="text" name="fechaPickUp" (change)="cambiarFechas($event, 'fechaPickUp')" required>
+                <label for="fechaPickUp">*Fecha Pick Up</label>
+            </div>
+            <div class="input-field col s4">
+                <input [ngClass]="{'invalid': validando && horaPickUp.invalid || horaPickUp.invalid && (horaPickUp.dirty || horaPickUp.touched)}" class="timepicker timepicker-pickUp" id="horaPickUp" type="text" name="horaPickUp" #horaPickUp="ngModel" [(ngModel)]="rentaVehiculo.horaPickUp"
+                    (change)="cambiarHoras($event, 'horaPickUp')" required>
+                <label for="horaPickUp">*Hora Pick Up</label>
+                <span *ngIf="validando && horaPickUp.invalid || horaPickUp.invalid && (horaPickUp.dirty || horaPickUp.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s4">
+                <input [ngClass]="{'invalid': validando && lugarDropOff.invalid || lugarDropOff.invalid && (lugarDropOff.dirty || lugarDropOff.touched)}" id="lugarDropOff" type="text" name="lugarDropOff" #lugarDropOff="ngModel" [(ngModel)]="rentaVehiculo.lugarDropOff"
+                    required>
+                <label for="lugarDropOff">*Lugar Drop Off</label>
+                <span *ngIf="validando && lugarDropOff.invalid || lugarDropOff.invalid && (lugarDropOff.dirty || lugarDropOff.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input class="datepicker datepicker-dropOff" id="fechaDropOff" type="text" name="fechaDropOff" (change)="cambiarFechas($event, 'fechaDropOff')" required>
+                <label for="fechaDropOff">*Fecha Drop Off</label>
+            </div>
+            <div class="input-field col s4">
+                <input [ngClass]="{'invalid': validando && horaDropOff.invalid || horaDropOff.invalid && (horaDropOff.dirty || horaDropOff.touched)}" class="timepicker timepicker-dropOff" id="horaDropOff" type="text" name="horaDropOff" #horaDropOff="ngModel" [(ngModel)]="rentaVehiculo.horaDropOff"
+                    (change)="cambiarHoras($event, 'horaDropOff')" required>
+                <label for="horaPickUp">*Hora Drop Off</label>
+                <span *ngIf="validando && horaDropOff.invalid || horaDropOff.invalid && (horaDropOff.dirty || horaDropOff.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s6">
+                <input disabled id="dias" type="number" name="diasRentado" #diasRentado="ngModel" [(ngModel)]="rentaVehiculo.diasRentado" required>
+                <label for="dias">Días en renta</label>
+            </div>
+            <div class="input-field col s6">
+                <input [ngClass]="{'invalid': validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)}" id="tarifa" type="number" name="tarifa" #tarifa="ngModel" [(ngModel)]="rentaVehiculo.tarifa" (ngModelChange)="calcularTotal()" required>
+                <label for="tarifa">*Tarifa por día</label>
+                <span *ngIf="validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <label for="notas">Notas del operador</label>
+                <textarea id="notas" name="notas" #notas="ngModel" [(ngModel)]="rentaVehiculo.notas" rows="40" cols="50" style="height: 100px;">
+                </textarea>
+            </div>
+        </div>
+        <div class="row valign-wrapper container-img">
+            <div class="col s6 center-align">
+                <div class="file-field input-field">
+                    <div class="btn green darken-3">
+                        <span>
+                            <i class="material-icons">attach_file</i>
+                        </span>
+                        <input type="file" (change)="cargarImagen($event.target.files, 'rentaVehiculo')">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input
+                        [ngClass]="{'invalid': validando && !imagenVehiculo.blob}"
+                        class="file-path"
+                        id="image"
+                        type="text"
+                        name="image"
+                        placeholder="Seleccionar imagen de vehículo">
+                        <span *ngIf="validando && !imagenVehiculo.blob" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col s6 center-align">
+                <img *ngIf="agregarImagen" class="responsive-img" [src]="imagenVehiculo.blob" alt="Sin imagen">
+                <img *ngIf="!agregarImagen" class="responsive-img" [src]="filePath + '/imagenesRentaVehiculos/' + rentaVehiculo.imagen" alt="Vehículo">
+            </div>
+        </div>
+        <div *ngIf="!rentaVehiculoMejora.cargada && mostrarMejora" class="row">
+            <div class="col s12">
+                <h2 class="center">
+                    Agregar mejora
+                    <a (click)="cargarMejora('abrir')" href="#modalMejoraRV" class="modal-trigger btn-floating btn-small blue">
+                        <i class="material-icons">add</i>
+                    </a>
+                </h2>
+            </div>
+        </div>
+        <div *ngIf="rentaVehiculoMejora.cargada && mostrarMejora" class="row" style="margin: 20px">
+            <div class="col s12 z-depth-1" style="padding: 10px">
+                <div class="row center">
+                    <div class="col s12">
+                        <h1>Mejora de vehículo</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s3 center">
+                        <img *ngIf="agregarImagenMejora" class="responsive-img" [src]="imagenVehiculoMejora.blob" alt="Sin imagen" width="100" height="200">
+                        <img *ngIf="!agregarImagenMejora" class="responsive-img" [src]="filePath + '/imagenesRentaVehiculos/' + rentaVehiculoMejora.imagen" alt="Vehículo">
+                    </div>
+                    <div class="col s6 center">
+                        <strong><i class="material-icons icon-size">time_to_leave</i>&nbsp;Nombre:</strong>
+                        <h3>{{ rentaVehiculoMejora.nombre }}</h3>
+                    </div>
+                    <div class="col s3 center">
+                        <strong><i class="material-icons icon-size">account_tree</i>&nbsp;Tipo Transmisión:</strong>
+                        <h3>{{ rentaVehiculoMejora.tipoTransmision }}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 center">
+                        <strong><i class="material-icons icon-size">location_on</i>&nbsp;Lugar Pick Up:</strong>
+                        <h3>{{ rentaVehiculoMejora.lugarPickUp }}</h3>
+                    </div>
+                    <div class="col s3 center">
+                        <strong><i class="material-icons icon-size">date_range</i>&nbsp;Fecha Pick Up:</strong>
+                        <h3>{{ rentaVehiculoMejora.fechaPickUp }}</h3>
+                    </div>
+                    <div class="col s3 center">
+                        <strong><i class="material-icons icon-size">schedule</i>&nbsp;Hora Pick Up:</strong>
+                        <h3>{{ rentaVehiculoMejora.horaPickUp }}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 center">
+                        <strong><i class="material-icons icon-size">location_on</i>&nbsp;Lugar Drop Off:</strong>
+                        <h3>{{ rentaVehiculoMejora.lugarDropOff }}</h3>
+                    </div>
+                    <div class="col s3 center">
+                        <strong><i class="material-icons icon-size">date_range</i>&nbsp;Fecha Drop Off:</strong>
+                        <h3>{{ rentaVehiculoMejora.fechaDropOff }}</h3>
+                    </div>
+                    <div class="col s3 center">
+                        <strong><i class="material-icons icon-size">schedule</i>&nbsp;Hora Drop Off:</strong>
+                        <h3>{{ rentaVehiculoMejora.horaDropOff }}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 center">
+                        <strong><i class="material-icons icon-size">location_on</i>&nbsp;Tarifa:</strong>
+                        <h3>{{ rentaVehiculoMejora.precio | currency: cotizacion.divisa }}</h3>
+                    </div>
+                    <div class="col s6 center">
+                        <strong><i class="material-icons icon-size">attach_money</i>&nbsp;Diferencia:</strong>
+                        <h3>{{ rentaVehiculoMejora.diferencia | currency: cotizacion.divisa }}</h3>
+                    </div>
+                </div>
+                <div style="margin: 0px;" class="row">
+                    <div class="col s2">
+                        <a class="remove left pointer" (click)="eliminarMejora()">Eliminar</a>
+                    </div>
+                    <div class="col s2">
+                        <a class="remove pointer" (click)="editarMejora(rentaVehiculoMejora)">Editar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <button *ngIf="!editingCarrito && !editing" type="submit" style="width: 100%;" class="btn amber darken-2">{{ total | currency: cotizacion.divisa }} Agregar</button>
+                <button *ngIf="editingCarrito && editing" type="button" style="width: 100%;" class="btn amber darken-2" (click)="updateCarrito(vehiculoForm)">{{ total | currency: cotizacion.divisa }} Actualizar</button>
+                <button *ngIf="!editingCarrito && editing" type="button" style="width: 100%;" class="btn amber darken-2" (click)="abrirModalDetalle(vehiculoForm)">{{ total | currency: cotizacion.divisa }} Actualizar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal detalle -->
+<div id="modalDetalleRV" class="modal">
+    <div class="modal-content">
+        <div class="row center">
+            <h1>¿Por qué realizaste ésta actualización?</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea id="detalle" #detalle rows="40" cols="50" style="height: 100px;"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a class="btn right" (click)="updateVersion()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal mejora -->
+<div id="modalMejoraRV" class="modal modal-editar-mejora">
+    <i class="material-icons right pointer" (click)="cargarMejora('cerrar')" style="margin: 8px;">close</i>
+    <div class="modal-content">
+        <div class="row center">
+            <h1>Mejora renta de vehículo</h1>
+        </div>
+        <div class="row">
+            <form class="col s12 z-depth-2" #vehiculoFormMejora="ngForm" (ngSubmit)="agregarMejora(vehiculoFormMejora)">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input [ngClass]="{'invalid': agregandoMejora && validandoMejora && comisionMejora.invalid || comisionMejora.invalid && (comisionMejora.dirty || comisionMejora.touched)}" required id="comisionMejora" type="number" name="comisionMejora" #comisionMejora="ngModel"
+                            [(ngModel)]="rentaVehiculoMejora.comision" (ngModelChange)="calcularDiferenciaMejora()">
+                        <label for="comisionMejora">*Comisión</label>
+                        <span *ngIf="agregandoMejora && validandoMejora && comisionMejora.invalid || comisionMejora.invalid && (comisionMejora.dirty || comisionMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                    <div class="input-field col s6">
+                        <input [ngClass]="{'invalid': validandoMejora && comisionAgenteMejora.invalid || comisionAgenteMejora.invalid && (comisionAgenteMejora.dirty || comisionAgenteMejora.touched)}" id="comisionAgenteMejora" type="number" name="comisionAgenteMejora" #comisionAgenteMejora="ngModel"
+                            [(ngModel)]="rentaVehiculoMejora.comisionAgente" (ngModelChange)="calcularDiferenciaMejora()" required>
+                        <label for="comisionAgenteMejora">*Comisión Agente</label>
+                        <span *ngIf="validandoMejora && comisionAgenteMejora.invalid || comisionAgenteMejora.invalid && (comisionAgenteMejora.dirty || comisionAgenteMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s8">
+                        <input [ngClass]="{'invalid': agregandoMejora && validandoMejora && nombreMejora.invalid || nombreMejora.invalid && (nombreMejora.dirty || nombreMejora.touched)}" id="nombreMejora" type="text" name="nombreMejora" #nombreMejora="ngModel" [(ngModel)]="rentaVehiculoMejora.nombre"
+                            required>
+                        <label for="nombreMejora">*Nombre</label>
+                        <span *ngIf="agregandoMejora && validandoMejora && nombreMejora.invalid || nombreMejora.invalid && (nombreMejora.dirty || nombreMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                    <div class="input-field col s4">
+                        <span><label >*Tipo vehículo</label></span>
+                        <select class="browser-default" name="tipoTransmisionMejora" #tipoTransmisionMejora="ngModel" [(ngModel)]="rentaVehiculoMejora.tipoTransmision" required>
+                            <option value="" disabled selected>Selecione</option>
+                            <option value="Automático">Automático</option>
+                            <option value="Estándar">Estándar</option>
+                        </select>
+                        <span *ngIf="validandoMejora && tipoTransmisionMejora.invalid || tipoTransmisionMejora.invalid && (tipoTransmisionMejora.dirty || tipoTransmisionMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input [ngClass]="{'invalid': validandoMejora && lugarPickUpMejora.invalid || lugarPickUpMejora.invalid && (lugarPickUpMejora.dirty || lugarPickUpMejora.touched)}" id="lugarPickUpMejora" type="text" name="lugarPickUpMejora" #lugarPickUpMejora="ngModel"
+                            [(ngModel)]="rentaVehiculoMejora.lugarPickUp" required>
+                        <label for="lugarPickUpMejora">*Lugar Pick Up</label>
+                        <span *ngIf="validandoMejora && lugarPickUpMejora.invalid || lugarPickUpMejora.invalid && (lugarPickUpMejora.dirty || lugarPickUpMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                    <div class="input-field col s4">
+                        <input class="datepicker datepicker-pickUpMejora" id="fechaPickUpMejora" type="text" name="fechaPickUpMejora" (change)="cambiarFechas($event, 'fechaPickUpMejora')" required>
+                        <label for="fechaPickUpMejora">*Fecha Pick Up</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input [ngClass]="{'invalid': validandoMejora && horaPickUpMejora.invalid || horaPickUpMejora.invalid && (horaPickUpMejora.dirty || horaPickUpMejora.touched)}" class="timepicker timepicker-pickUpMejora" id="horaPickUpMejora" type="text" name="horaPickUpMejora"
+                            #horaPickUpMejora="ngModel" [(ngModel)]="rentaVehiculoMejora.horaPickUp" (change)="cambiarHoras($event, 'horaPickUpMejora')" required>
+                        <label for="horaPickUpMejora">*Hora Pick Up</label>
+                        <span *ngIf="validandoMejora && horaPickUpMejora.invalid || horaPickUpMejora.invalid && (horaPickUpMejora.dirty || horaPickUpMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input [ngClass]="{'invalid': validandoMejora && lugarDropOffMejora.invalid || lugarDropOffMejora.invalid && (lugarDropOffMejora.dirty || lugarDropOffMejora.touched)}" id="lugarDropOffMejora" type="text" name="lugarDropOffMejora" #lugarDropOffMejora="ngModel"
+                            [(ngModel)]="rentaVehiculoMejora.lugarDropOff" required>
+                        <label for="lugarDropOffMejora">*Lugar Drop Off</label>
+                        <span *ngIf="validandoMejora && lugarDropOffMejora.invalid || lugarDropOffMejora.invalid && (lugarDropOffMejora.dirty || lugarDropOffMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                    <div class="input-field col s4">
+                        <input class="datepicker datepicker-dropOffMejora" id="fechaDropOffMejora" type="text" name="fechaDropOffMejora" (change)="cambiarFechas($event, 'fechaDropOffMejora')" required>
+                        <label for="fechaDropOffMejora">*Fecha Drop Off</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input [ngClass]="{'invalid': validandoMejora && horaDropOffMejora.invalid || horaDropOffMejora.invalid && (horaDropOffMejora.dirty || horaDropOffMejora.touched)}" class="timepicker timepicker-dropOffMejora" id="horaDropOffMejora" type="text" name="horaDropOffMejora"
+                            #horaDropOffMejora="ngModel" [(ngModel)]="rentaVehiculoMejora.horaDropOff" (change)="cambiarHoras($event, 'horaDropOffMejora')" required>
+                        <label for="horaPickUp">*Hora Drop Off</label>
+                        <span *ngIf="validandoMejora && horaDropOffMejora.invalid || horaDropOffMejora.invalid && (horaDropOffMejora.dirty || horaDropOffMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input disabled id="dias" type="number" name="diasRentado" #diasRentado="ngModel" [(ngModel)]="rentaVehiculoMejora.diasRentado" required>
+                        <label for="dias">Días en renta</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input [ngClass]="{'invalid': validandoMejora && tarifaMejora.invalid || tarifaMejora.invalid && (tarifaMejora.dirty || tarifaMejora.touched)}" id="tarifaMejora" type="number" name="tarifaMejora" #tarifaMejora="ngModel" [(ngModel)]="rentaVehiculoMejora.tarifa"
+                            (ngModelChange)="calcularDiferenciaMejora()" required>
+                        <label for="tarifaMejora">*Tarifa por día</label>
+                        <span *ngIf="validandoMejora && tarifaMejora.invalid || tarifaMejora.invalid && (tarifaMejora.dirty || tarifaMejora.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <label for="notas">Notas del operador</label>
+                        <textarea id="notas" name="notas" #notas="ngModel" [(ngModel)]="rentaVehiculoMejora.notas" rows="40" cols="50" style="height: 100px;">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row valign-wrapper container-img">
+                    <div class="col s6 center-align">
+                        <div class="file-field input-field">
+                            <div class="btn green darken-3">
+                                <span>
+                                    <i class="material-icons">attach_file</i>
+                                </span>
+                                <input type="file" (change)="cargarImagen($event.target.files, 'rentaVehiculoMejora')">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input [ngClass]="{'invalid': validandoMejora && !imagenVehiculoMejora.blob}" class="file-path" id="imageMejora" type="text" name="imageMejora" placeholder="Seleccionar imagen de vehículo">
+                                <span *ngIf="validandoMejora && !imagenVehiculoMejora.blob" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s6 center-align">
+                        <img *ngIf="agregarImagenMejora" class="responsive-img" [src]="imagenVehiculoMejora.blob" alt="Sin imagen">
+                        <img *ngIf="!agregarImagenMejora && rentaVehiculoMejora.imagen" class="responsive-img" [src]="filePath + '/imagenesRentaVehiculos/' + rentaVehiculoMejora.imagen" alt="adfadfasdf">
+                    </div>
+                </div>
+                <!-- {{editingCarrito}}{{editing}}{{rentaVehiculoMejora.add}} -->
+                <div class="row">
+                    <div class="col s12">
+                        <button *ngIf="!editingCarrito && !editing || rentaVehiculoMejora.add" id="btn1" type="submit" style="width: 100%;" class="btn amber darken-2">{{ diferencia | currency: cotizacion.divisa }} {{ !this.rentaVehiculoMejora.edit || rentaVehiculoMejora.add ? 'Agregar' : 'Actualizar' }}</button>
+                        <button *ngIf="editingCarrito && editing && !rentaVehiculoMejora.add" id="btn2" type="button" style="width: 100%;" class="btn amber darken-2" (click)="updateCarritoMejora(vehiculoFormMejora)">{{ diferencia | currency: cotizacion.divisa }} Actualizar Mejora</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

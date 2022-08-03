@@ -1,0 +1,63 @@
+<h2 style="text-align: center;">Pendientes</h2>
+<table class="striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Fecha</th> 
+            <th>Hora</th> 
+            <th>Desde</th> 
+            <th>Información suplementaria</th> 
+            <th>Hasta</th> 
+            <th>Información suplementaria</th> 
+            <th>Notas</th> 
+            <th>Aceptar</th> 
+            <th>Rechazar</th> 
+        </tr> 
+    </thead>
+    <tr *ngFor="let lista of listaTraslados; let kk = index">
+        <td>{{kk+1}}</td>
+        <td>{{lista.fechaDesde}}</td> 
+        <td>{{lista.horarioDesde}}</td> 
+        <td>{{infoDesde(lista)}}</td> 
+        <td>{{DarInfoSuplementariaDesde(lista)}}</td> 
+        <td>{{infoHacia(lista.tipoHacia)}}</td> 
+        <td>{{DarInfoSuplementariaHacia(lista)}}</td> 
+        <td>{{lista.notas}}</td> 
+        <td><a  (click)="   addChoferTraslado(lista.idTrasladoAdquiridoInfo)" class="waves-effect waves-light btn-small"><i class="large material-icons">check_circle</i></a></td> 
+        <td><a  (click)="deleteChoferTraslado(lista.idTrasladoAdquiridoInfo)" class="waves-effect #f44336 red btn-small"><i class="large material-icons">cancel</i></a></td> 
+    </tr>
+    <tr>
+        <td colspan="10">
+            <h2 style="text-align: center;">Aceptados</h2>
+        </td>
+    </tr>
+    <tr *ngFor="let lista of listaTrasladosAceptados; let kk = index">
+        <td>{{kk+1}}</td>
+        <td>{{lista.fechaDesde}}</td> 
+        <td>{{lista.horarioDesde}}</td> 
+        <td>{{infoDesde(lista)}}</td> 
+        <td>{{DarInfoSuplementariaDesde(lista)}}</td> 
+        <td>{{infoHacia(lista.tipoHacia)}}</td> 
+        <td>{{DarInfoSuplementariaHacia(lista)}}</td> 
+        <td>{{lista.notas}}</td> 
+        <td></td> 
+        <td></td> 
+    </tr>
+    <tr>
+        <td colspan="10">
+            <h2 style="text-align: center;">Rechazados</h2>
+        </td>
+    </tr>
+    <tr *ngFor="let lista of listaTrasladosRechazados; let kk = index">
+        <td>{{kk+1}}</td>
+        <td>{{lista.fechaDesde}}</td> 
+        <td>{{lista.horarioDesde}}</td> 
+        <td>{{infoDesde(lista)}}</td> 
+        <td>{{DarInfoSuplementariaDesde(lista)}}</td> 
+        <td>{{infoHacia(lista.tipoHacia)}}</td> 
+        <td>{{DarInfoSuplementariaHacia(lista)}}</td> 
+        <td>{{lista.notas}}</td> 
+        <td></td> 
+        <td></td> 
+    </tr>
+</table>

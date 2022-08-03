@@ -1,0 +1,29 @@
+td i {
+    cursor: pointer;
+}
+
+.linea{
+    text-decoration: line-through !important;
+}
+
+.bg-no-aplica{
+    background-color: rgba(183, 28, 28, .06);
+}
+
+.bg-aplica{
+    background-color: #b2dfdb;
+}
+
+.modalSendProducts{
+    width: 80% !important;
+}
+
+.header-country{
+    height: 5vh;
+    font-size: 3vh;
+    color: #fff;
+}
+
+.selectAddProduct{
+    font-size: 1.5vh;
+}

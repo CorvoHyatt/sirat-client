@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col s12">
+        <div class="row">
+            <div class="input-field col s6 ">
+                <i class="fas fa-search left"></i>
+                <input id="autocomplete_pais" class="autocomplete autocomplete-destino" type="text" autocomplete="off">
+                <label for="autocomplete_pais">País</label>
+            </div>
+            <div disable *ngIf="actualPais != null" class="input-field col s6 ">
+                <i class="fas fa-search left"></i>
+                <input id="completarCiudad" class="autocomplete autocomplete-destino" type="text" autocomplete="off">
+                <label for="completarCiudad">Ciudad</label>
+            </div>
+            <div class="col s12 right-align" style="margin-right: 20px;">
+                <a class="btn right-align disable" *ngIf="actualCiudad != null" (click)="insertarDestino()">Insertar destino</a>
+            </div>
+        </div>
+    </div>
+</div>

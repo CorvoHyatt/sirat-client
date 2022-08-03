@@ -1,0 +1,296 @@
+<div *ngIf="editing" class="col s12" style="text-align: center; margin-top: 10px; background-color: #051c49; color: white;">
+    ACTIVIDADES
+</div>
+
+<div class="col s12 m12" style="padding: 20px; min-height: 100%">
+    <div id="trasl_1" class="col s2 form_ciudad ciudad_traslado" *ngIf="!editing && !seleccion">
+        <div class="col s12 m12">
+
+            <p *ngFor="let subcategoria of subcategorias; let ii = index">
+                <label>
+                  <input name="actividades" type="radio"  [value]="subcategoria.idSubcategoria" (click)="getActividades(ii)"     [checked]="(ii === 0)" />
+                  <span>{{subcategoria?.nombre}}</span>
+                </label>
+            </p>
+        </div>
+
+    </div>
+
+    <div class="col s10" *ngIf="!seleccion">
+        <div class="row ">
+
+            <table mat-table [dataSource]="dataSource" class="example-container mat-elevation-z8">
+
+                <ng-container matColumnDef="tour">
+                    <th mat-header-cell *matHeaderCellDef class="center">
+                        {{this.subcategoriaActual?.nombre}}
+                    </th>
+                    <td mat-cell *matCellDef="let producto" style="cursor: pointer;">
+                        <div [routerLink]="['/home/cotizacionProductos/actividades',producto.idProducto]" class="row" *ngIf="!producto.disabled" (click)="setProducto(producto)">
+                            <div class="col s2" style="display: flex; align-items: center; justify-content: center; justify-items: center;">
+                                <img src="{{API_URI}}/productos/{{producto.idProducto}}_1.jpg" alt="" style="width: 150px;">
+                            </div>
+                            <div class="col s10">
+                                <h1>{{producto?.titulo}}</h1>
+                                {{producto?.resumen}}
+                                <br>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="producto.disabled">
+                            <div class="col s2" style="display: flex; align-items: center; justify-content: center; justify-items: center;">
+                                <img src="{{API_URI}}/productos/{{producto.idProducto}}_1.jpg" alt="" style="width: 150px;">
+                            </div>
+                            <div class="col s10">
+                                <s><h1>{{producto?.titulo}}</h1></s> {{producto?.resumen}}
+                                <br>
+                                <span style="color: red;">No se puede tomar esta actividad, ESTÁ FUERA DEL RANGO DE FECHAS ESPECIFICADAS</span>
+                                <br>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No hay tours disponibles</td>
+                </tr>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10]"></mat-paginator>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="col s4" [hidden]="!seleccion">
+
+        <div class="carousel carousel-slider" id="imagenesTPAP" data-indicators="true">
+
+            <a class="carousel-item"><img width="640" height="300" src="{{API_URI}}/productos/{{this.productoActual.idProducto}}_1.jpg"></a>
+
+        </div>
+        <div style="text-align: center; display: flex; justify-content: center; align-items: center;">
+            <i *ngIf="productoInfoActual.reserva2Meses" style="width: 20px; margin: 10px;cursor: pointer;" class="material-icons" style="width: 20px;" title="Reserva con dos meses">event_empty_outline</i>
+            <i *ngIf="productoInfoActual.freeTour" class="material-icons" style="width: 20px; margin: 10px;cursor: pointer;" title="Free tour">card_giftcard_outline</i>
+            <i *ngIf="productoInfoActual.audioguia" class="material-icons" style="width: 20px; margin: 10px;cursor: pointer;" title="Audioguía">record_voice_overc_outline</i>
+            <i *ngIf="productoInfoActual.audifonos >0" class="material-icons" style="width: 20px; margin: 10px;cursor: pointer;" title="Audífonos">headphones_music_outline</i>
+            <i *ngIf="productoInfoActual.choferGuia >0" class="material-icons" style="width: 20px; margin: 10px;cursor: pointer;" title="Chofer-guía">library_music_outline</i>
+
+        </div>
+
+        <ul class="collapsible">
+
+            <li>
+                <div class="collapsible-header"><i class="material-icons">info_outline</i>Incluye</div>
+                <div class="collapsible-body"><span>{{productoInfoActual.incluye}}</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header"> <i class="material-icons">error_outline</i> No incluye</div>
+                <div class="collapsible-body"><span>{{productoInfoActual.noIncluye}}</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">event_busy</i>Cancelaciones</div>
+                <div class="collapsible-body"><span>{{productoInfoActual.cancelacion}}</span></div>
+            </li>
+            <li>
+                <div class="collapsible-header"><i class="material-icons">event_note</i>Notas</div>
+                <div class="collapsible-body"><span>{{productoInfoActual.notas}}</span></div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col s8" [hidden]="!seleccion">
+
+        <div class="row ">
+            <div class="col s12 center-align">
+                <h1>{{this.productoActual?.titulo}}</h1>
+                <span *ngIf="cotizacion?.numM>0">
+                    Adultos: {{cotizacion?.numM}}
+                  </span> &nbsp;&nbsp;
+                <span *ngIf="cotizacion?.num18>0">
+                    Menores de 18: {{cotizacion?.num18}}
+                  </span> &nbsp;&nbsp;
+                <span *ngIf="cotizacion?.num12>0">
+                        Menores de 12: {{cotizacion?.num12}}
+                    </span> </div>
+
+            <div class="col s6 ">
+                <label for="fecha">Fecha</label>
+                <input type="text" class="datepicker" id="fechaA" name="fechaA" [(ngModel)]="productoAdquirido.fecha" (change)="setFecha()">
+            </div>
+
+
+            <div class="col s6">
+                <span><label for="horario" >Horario</label></span>
+                <select id="horario" class="browser-default" name="horario" (change)="setHorario($event.target.value)" required>
+                            <option [selected]="this.productoAdquirido.horario == horario.hora"  *ngFor="let horario of horarios; let ii = index" [value]="horario.hora">{{horario?.hora}}</option> 
+                </select>
+            </div>
+
+            <div class="col s12" *ngIf="this.productoInfoActual.guiaEspecializado>0">
+                <p>
+                    <label>
+                      <input type="checkbox" class="filled-in" [(ngModel)]="productoAdquirido.guiaEspecializado" (change)="getTarifaTotal()"/>
+                      <span>Guía especializado</span>
+                    </label>
+                </p>
+            </div>
+
+            <div class="col s12" *ngIf="this.productoInfoActual.audioguia>0">
+                <p>
+                    <label>
+                      <input type="checkbox" class="filled-in" [(ngModel)]="productoAdquirido.audioguia" (change)="getTarifaTotal()"/>
+                      <span>Audioguía</span>
+                    </label>
+                </p>
+            </div>
+
+            <div class="col s12" *ngIf="productoOpciones.length>0">
+                <span><label >Opcionales</label></span>
+                <p *ngFor="let productoOpcion of productoOpciones; let ii = index">
+                    <label>
+                      <input *ngIf="!editing" type="checkbox" class="filled-in" (change)="setOpcionSeleccionada(ii, productoOpcion)"/>
+                      <input *ngIf="editing" type="checkbox" class="filled-in" (change)="setOpcionSeleccionada(ii, productoOpcion)" [checked]="esOpcionSeleccionada(productoOpcion)"/>
+
+                      <span>{{productoOpcion?.nombre}} <label>(Requiere {{productoOpcion?.horasExtras}}</label> <label *ngIf="productoOpcion.horasExtras==1"> hora extra)</label> <label *ngIf="productoOpcion.horasExtras!=1"> horas extras)</label>                    </span>
+                    </label>
+                </p>
+            </div>
+
+            <div class="col s12" *ngIf="this.trasportes.length>0">
+                <p>
+                    <label>
+                      <input type="checkbox"  [(ngModel)]="t"  (change)="verificarTransporte()" />
+                      <span>¿Quieres elegir un transporte de  ida?</span>
+                    </label>
+                </p>
+            </div>
+            <div class="col s6" *ngIf="t">
+                <span><label for="transporte" >Transporte</label></span>
+                <select id="transporte" class="browser-default" name="transporte" [(ngModel)]="indexTS" (change)="this.mejorasTransporte = []; this.deseleccionarMejorasTransportes();getTarifaTotal()" required>
+                            <option *ngFor="let transporte of trasportes; let ii = index" [value]="ii">{{transporte?.nombre}}</option>  
+                </select>
+            </div>
+
+
+
+            <div class="col s12">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="productoAdquirido.descripcion">
+                    </textarea>
+            </div>
+
+            <div class="col s12">
+                <label for="notas">Notas del operador</label>
+                <textarea id="notas" name="notas" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="productoAdquirido.notas">
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="hayMejoras() && !editing || hayMejoras() && editingCarrito">
+                <br> Mejoras (las mejoras no se incluyen en la tarifa total):
+                <br>
+                <div *ngFor="let opcion of productoOpciones">
+                    <p *ngIf="!esOpcionSeleccionada(opcion)">
+                        <label>
+                        <input [checked]="esMejoraOpcion(opcion.idProductoOpcion)" id="{{opcion.idProductoOpcion}}_ma" type="checkbox" class="filled-in" (change)="setMejorasOpciones(opcion.idProductoOpcion)" />
+                        <span style="color: black">{{opcion.nombre}}</span> &nbsp;<span style="color:rgb(146, 28, 28);" >(<span *ngIf="getDiferenciaOpcion(opcion.idProductoOpcion)>0" >+</span>  {{getDiferenciaOpcion(opcion.idProductoOpcion) | currency: divisaBase.divisa }})</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col s12" *ngIf="t && !editing || t && editingCarrito">
+                <br> Mejoras de transporte:
+                <br>
+
+                <div *ngFor="let transporte of trasportes">
+                    <p *ngIf="transporte.idVehiculo!= this.transporteSeleccionado.idVehiculo">
+                        <label>
+                        <input [checked]="esMejoraTransporte(transporte.idVehiculo)" id="{{transporte.idVehiculo}}_ta" type="checkbox" (change)="setMejorasTransporte(transporte.idVehiculo)" class="filled-in"/>
+                        <span style="color: black">{{transporte.nombre}}</span> &nbsp;<span style="color:rgb(146, 28, 28);" >(<span *ngIf="getDiferenciaTransporte(transporte.idVehiculo)>0" >+</span>  {{getDiferenciaTransporte(transporte.idVehiculo) | currency: divisaBase.divisa }})</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+
+
+            <div class="col s12" style="margin-top: 10px; margin-bottom: 10px;">
+                Comisión de 5rives:
+                <b *ngIf="!mostrarComision5rives"> {{this.productoInfoActual.com}}% </b> &nbsp;
+                <input *ngIf="mostrarComision5rives" [(ngModel)]="comision5rivesNueva" type="number" id="5rivesTPAP" name="5rivesTPAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comision5rivesNueva=this.productoInfoActual.com; mostrarComision5rives=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComision5rives()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComision5rives=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+
+            </div>
+
+            <div class="col s12" *ngIf="cotizacion.comisionAgente==2" style="margin-top: 10px; margin-bottom: 10px;">
+                Comisión del agente:
+                <b *ngIf="!mostrarComisionAgente"> {{comisionAgente}}% </b> &nbsp;
+                <input *ngIf="mostrarComisionAgente" [(ngModel)]="comisionAgenteNueva" type="number" id="agentePAP" name="agentePAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comisionAgenteNueva=comisionAgente; mostrarComisionAgente=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComisionAgente()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComisionAgente=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+
+            </div>
+
+
+
+
+        </div>
+
+        <div class="col s12">
+            <a *ngIf="!editing && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="agregar()"><span class="precio" style="width: 100%;">{{total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; AGREGAR</a>
+            <a *ngIf="editing && editado && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="abrirModalDetalle()"><span class="precio" style="width: 100%;">{{total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; ACTUALIZAR</a>
+            <a *ngIf="editing && !editado && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="cerrarModalDetalle()"><span class="precio" style="width: 100%;">{{total| currency: divisaBase.divisa}}</span></a>
+            <a *ngIf="editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="actualizarCarrito()"><span class="precio" style="width: 100%;">{{total| currency: divisaBase.divisa}}  &nbsp;&nbsp; ACTUALIZAR</span></a>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- Modal detalle -->
+    <div id="modalDetalleActividad" class="modal">
+        <div class="modal-content">
+            <div class="row center">
+                <h1>¿Por qué realizaste ésta actualización?</h1>
+            </div>
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <textarea id="detalle" #detalle class="validate" rows="40" cols="50" style="height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <a class="btn right" (click)="actualizar()">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>

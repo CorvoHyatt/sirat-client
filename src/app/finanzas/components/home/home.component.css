@@ -1,0 +1,70 @@
+.container-pendientes .actividades {
+    background-color: #0d47a1 ;
+    color: #fff;
+}
+
+.card-list {
+    min-height: 65vh;
+    max-height: 65vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.altas h2 {
+    color: red;
+}
+
+.medias h2 {
+    color: #f9a825;
+}
+
+.valign {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notificaciones-container {
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+
+.no-notificaciones-container {
+    min-height: 18vh;
+    max-height: 18vh;
+}
+
+.container-altas {
+    min-height: 18.5vh;
+    max-height: 18.5vh;
+    border: 1px solid #eb3d05;
+    overflow-y: auto;
+}
+
+.container-altas .row,
+.container-medias .row,
+.container-bajas .row {
+    font-size: .8rem;
+    margin: 0px;
+}
+
+.container-altas .date {
+    font-size: .6rem;
+}
+
+.container-medias {
+    min-height: 18.5vh;
+    max-height: 18.5vh;
+    border: 1px solid #ff8d00;
+    overflow-y: auto;
+}
+
+.container-bajas {
+    min-height: 18.5vh;
+    max-height: 18.5vh;
+    border: 1px solid green;
+    overflow-y: auto;
+}

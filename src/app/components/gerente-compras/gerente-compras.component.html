@@ -1,0 +1,402 @@
+<link rel="stylesheet" [href]="sanitizer.bypassSecurityTrustResourceUrl(cssUrl)">
+
+
+<div class="container seccion_formulario">
+  <br><br><br>
+
+
+  <div class="row">
+    <div class="switch">
+      <label>
+        Reducida
+        <input  (change)="cambioAmplia()" type="checkbox" checked>
+        <span class="lever"></span>
+        Amplia
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <form>
+      <label for="asunto">Cotizaciones Aprobadas</label>
+      <select  (change)="cambioCotizacion($event.target.value)" class="browser-default">
+        <option [value]="-1">Todas</option>
+        <option *ngFor="let cotizacion of lista_cotizaciones; let ii = index" [value]="cotizacion.idCotizacion">
+          {{cotizacion.idCotizacion}}</option>
+      </select>
+    </form>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col s6 m6 l6">
+       Inicio
+      <input  (change)="cambioFechaIni()" id="fechaIni" type="date"   value={{fechaIni}}> 
+  </div>
+  <div class="col s6 m6 l6">
+    Fin
+   <input  (change)="cambioFechaFin()" id="fechaFin" type="date"   value={{fechaFin}}> 
+</div>
+</div>
+
+<table class="myTable" id="myTable">
+    <tr>
+      <th colspan="6">
+        Agregar factura
+      </th>
+      <th>
+        <a (click)="modalSubirFactura()"><i class="material-icons">add</i></a>
+      </th>
+    </tr>
+    <tr>
+      <th onclick="sortTable(0, 'str')" class="intro">Status</th>
+      <th onclick="sortTable(1, 'str')" class="intro">Urgente</th>
+      <th onclick="sortTable(2, 'str')" class="intro">Fecha</th>
+      <th onclick="sortTable(3, 'str')" class="intro">Cotización</th>
+      <th data-type="number">Ref</th>
+      <th *ngIf="versionAmplia==true">Agencia</th>
+      <th *ngIf="versionAmplia==true">Ciudad</th>
+      <th width="500" *ngIf="versionAmplia==true">Empresa</th>
+      <th>Servicio</th>
+      <th *ngIf="versionAmplia==true">Viajero</th>
+      <th *ngIf="versionAmplia==true">Pasajeros</th>
+      <th *ngIf="versionAmplia==true">Teléfono</th>
+      <th>Divisa</th>
+      <th>Precio cotizado</th>
+      <th>Precio comprado</th>
+      <th>Fecha último pago parcial</th>
+      <th>Descripción</th>
+      <th>Nota</th>
+      <th *ngIf="versionAmplia==true" class="intro" onclick="sortTable(18, 'int')">Días</th>
+      <th>Compra</th>
+      <th>Facturada</th>
+    </tr>
+
+  <tr>
+    <TD></TD>
+    <TD></TD>
+    <TD></TD>
+    <TD>
+      <form>
+        <div  class="multiselect">
+          <div class="selectBox" (click)="showCheckboxes()">
+            <select style="width:50px;font-size:10px" name="filtroCotizacion" id="filtroCotizacion" class="browser-default">
+              <option> &#xf0b0;</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxes">
+              <label *ngFor="let lista of lista_cotizaciones;let kk = index" >
+                <input (change)="cambioFiltroCotizaciones(kk)" type="checkbox" [checked]="lista_cotizacionesFiltro[kk]" id="lista.idCotizacion" /><span>{{lista.idCotizacion}}</span>
+              </label>
+          </div>
+        </div>
+      </form>  
+    </TD>
+    <TD></TD>
+    <TD>
+      <form>
+        <div  class="multiselect">
+          <div class="selectBox" (click)="showCheckboxesAgencias()">
+            <select style="width:50px;font-size:10px" name="filtroAgencias" id="filtroAgencias" class="browser-default">
+              <option> &#xf0b0;</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxesAgencias">
+              <label *ngFor="let lista of lista_agencias;let kk = index" >
+                <input (change)="cambioFiltroAgencias(kk)" type="checkbox" [checked]="lista_agenciasFiltro[kk]" id="lista.idAgencia" /><span>{{lista.nombreAgencia}}</span>
+              </label>
+          </div>
+        </div>
+      </form>  
+    </TD>
+    <TD></TD>
+    <TD></TD>
+    <TD>
+      <form>
+        <div  class="multiselect">
+          <div class="selectBox" (click)="showCheckboxesTipo()">
+            <select style="width:50px;font-size:10px" name="filtroTipo" id="filtroTipo" class="browser-default">
+              <option> &#xf0b0;</option>
+            </select>
+            <div class="overSelect"></div>
+          </div>
+          <div id="checkboxesTipo">
+              <label *ngFor="let lista of lista_tipo;let kk = index" >
+                <input (change)="cambioFiltroTipo(kk)" type="checkbox" [checked]="lista_tipoFiltro[kk]" id="lista.tipoProducto" /><span>{{darTipo(lista.tipoProducto)}}</span>
+              </label>
+          </div>
+        </div>
+      </form>  
+    </TD>
+    <TD></TD>
+    <TD></TD>
+  </tr>
+
+
+
+
+
+
+
+
+
+
+    <tr *ngFor="let producto of lista_productosMostrar; let kk = index">
+      <TD><i class='small material-icons {{getColorEstado(producto.estado)}}'>{{estado(producto.estado)}}</i> </TD>
+      <TD *ngIf="producto.urgente==0"><i class="material-icons  black-text text-darken-4">alarm_off</i></TD>
+      <TD *ngIf="producto.urgente==1"><i class="material-icons red-text text-darken-4">alarm_on</i></TD>      
+       <TD> {{producto.fechaDesde}}</TD>
+      <TD> {{producto.idCotizacion}}</TD>
+      <TD> {{producto.id}}</TD>
+      <TD *ngIf="versionAmplia==true">{{producto.nombreAgencia}} </TD>
+      <TD *ngIf="versionAmplia==true">{{producto.nombreCiudad}} </TD>
+
+      <TD *ngIf="versionAmplia==true && (producto.tipoProducto==1 || producto.tipoProducto==3) && producto.estado==0">TBD</TD>
+      <TD *ngIf="versionAmplia==true && (producto.tipoProducto==1 || producto.tipoProducto==3) && producto.estado==1">TBD</TD>
+      <TD *ngIf="versionAmplia==true && (producto.tipoProducto==1 || producto.tipoProducto==3) && producto.estado==2">{{producto.empresa}}</TD>
+      <TD *ngIf="versionAmplia==true && (producto.tipoProducto==1 || producto.tipoProducto==3) && producto.estado==3">TBD</TD>
+      <TD *ngIf="versionAmplia==true && producto.tipoProducto==4">
+        <input (keyup.enter)="onEnterHotel(producto.idHotelesAdquiridosInfo,$event.target.value)" name="empresa" type="text" value="{{producto.empresa}}" class="validate">
+      </TD>
+      <TD *ngIf="versionAmplia==true && producto.tipoProducto==5">
+        <input (keyup.enter)="onEnterVuelo(producto.idVueloInfo,$event.target.value)" name="empresa" type="text" value="{{producto.empresa}}" class="validate">
+      </TD>
+      <TD *ngIf="versionAmplia==true && producto.tipoProducto==6">
+        <input (keyup.enter)="onEnterTren(producto.idTrenInfo,$event.target.value)" name="empresa" type="text" value="{{producto.empresa}}" class="validate">
+      </TD>
+      <TD *ngIf="versionAmplia==true && producto.tipoProducto==7">
+        <input (keyup.enter)="onEnterProductos(producto.idProductosAdquiridosInfo,$event.target.value)" name="empresa" type="text" value="{{producto.empresa}}" class="validate">
+      </TD>
+      <TD *ngIf="versionAmplia==true && producto.tipoProducto==8">
+        <input (keyup.enter)="onEnterExtras(producto.idExtrasInfo,$event.target.value)" name="empresa" type="text" value="{{producto.empresa}}" class="validate">
+      </TD>
+
+
+      <TD>{{darTipo(producto.tipoProducto)}}</TD>
+      <td *ngIf="versionAmplia==true">{{producto.nombrePasajero}}</td>
+      <td *ngIf="versionAmplia==true">{{producto.pasajeros}}</td>
+      <td *ngIf="versionAmplia==true">{{producto.viajeroTel}}</td>
+      <td>{{producto.divisa}}</td>
+      <td>{{producto.costoCotizado| number: '0.2' }}</td>
+
+      <td *ngIf="producto.pagado==0">TBD</td>
+      <td *ngIf="producto.pagado==1">{{producto.precioComprado| number: '0.2' }}</td>      
+
+      <td *ngIf="producto.fechaUltimo==null">NA</td>
+      <td *ngIf="producto.fechaUltimo!=null">{{producto.fechaUltimo}}</td>
+      <TD *ngIf="producto.tipoProducto<4" >Desde: {{infoDesde(producto)}} - Hacia {{infoHacia(producto)}}</TD>
+      <TD *ngIf="producto.tipoProducto>3">{{producto.descripcion}}</TD>
+      <TD>{{producto.notas}}</TD>
+      <TD *ngIf="versionAmplia==true">{{diasAntes(producto.fechaDesde)}}</TD>
+      <TD>
+        <a (click)="modalSumar(producto.idProductoCosto)"> <i class='material-icons'>add</i></a>
+        <a (click)="modalMostrar(producto.idProductoCosto)"> <i class='material-icons'>assignment</i></a>
+      </TD>
+      <TD *ngIf="producto.factura==0"><i class='tiny material-icons {{getColorFactura(producto.factura)}}'>check_box_outline_blank</i> </TD>
+      <TD *ngIf="producto.factura==1"> <a href="{{liga}}/facturas/{{producto.nombreFactura}}" target="_blank"><i class='tiny material-icons'>file_download</i></a> </TD>
+   </tr>
+</table>
+
+
+
+<div id="modalSumar" class="modal">
+  <div class="modal-content">
+    <h4>Pago Parcial o total</h4>
+    <div class="row">
+        <div class="input-field col s6">
+          <label for="cantidad">Cantidad</label>
+          <input id="cantidad" type="number" [(ngModel)]="pagoParcial.pagoParcial" class="validate" autofocus>
+        </div>
+        <div class="col s6">
+          <span><label>Divisa</label></span>
+          <select class="browser-default" [(ngModel)]="pagoParcial.idDivisa">
+            <option *ngFor="let divisa of divisas; " [value]="divisa.idDivisa">{{divisa.divisa}}</option>
+          </select>
+        </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s6">
+        <input id="nota" type="text" [(ngModel)]="pagoParcial.nota" class="materialize-textarea validate">
+        <label for="nota">Nota</label>
+      </div>
+      <div class="input-field col s6">
+        <input id="tarjeta" type="text" [(ngModel)]="pagoParcial.tarjeta">
+        <label>Tarjeta</label>
+      </div>
+    </div>
+
+
+    <div class="row">
+
+      <div class="input-field col s3">
+        <label>
+          <input (click)="cambioRadio(1)" type="radio" [(ngModel)]="pagoParcial.terminado" value="true" name="tipoPago" />
+          <span>Fin</span>
+        </label>
+      </div>
+      <div class="input-field col s3">
+        <label>
+          <input (click)="cambioRadio(0)" type="radio" [(ngModel)]="pagoParcial.terminado" value="false" name="tipoPago" checked />
+          <span>Parcial</span>
+        </label>
+      </div>
+
+
+
+
+
+      <div class="input-field col s6">
+        <input id="proximoPago" name="proximoPago" type="date" [(ngModel)]="pagoParcial.proximoPago">
+        <label for="proximoPago">Pŕoximo pago</label>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <div class="modal-footer">
+    <a (click)="agregarPagoParcial()" class=" modal-action modal-close waves-effect waves-green btn-flat">Enviar</a>
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+  </div>
+</div>
+
+<div id="modalMostrar" class="modal">
+  <div class="modal-content">
+    <h4>Listado de pago Parciales</h4>
+
+
+    <table *ngIf="historialPagos!=undefined">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Fecha del pago</th>
+          <th>Monto</th>
+          <th>Nota</th>
+          <th>Próximo pago</th>
+          <th>Tarjeta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of historialPagos.historialPagos; let kk = index">
+
+          <td>{{kk+1}}</td>
+          <td>{{producto.fecha}}</td>
+          <td style="text-align:'right'">{{producto.pagoParcial}}</td>
+          <td>{{producto.nota}}</td>
+          <td>{{producto.proximoPago}}</td>
+          <td>{{producto.tarjeta}}</td>
+        </tr>
+        <tr>
+
+          <td></td>
+          <td style="text-align:'right'">
+            <h3>Total</h3>
+          </td>
+          <td style="text-align:'right'">
+            <h3>{{hitorialPagosTotal[0]}}</h3>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cerrar</a>
+  </div>
+</div>
+
+<div id="modalSubirFactura" class="modal">
+  <div class="modal-content">
+    <h4 style="text-align: center;">Todos los elementos a facturar en el mismo documento
+    </h4>
+
+    <table *ngIf="lista_productosSinFactura!=undefined">
+      <thead>
+        <tr>
+          <th style="text-align: center;" colspan="5">A facturar</th>
+        </tr>
+        <tr>
+          <th>#</th>
+          <th>Cot</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of listaPorFacturar; let kk = index">
+          <td>{{kk+1}}</td>
+          <td>{{getInfoProductos(producto).idCotizacion}}</td>
+          <td>{{getInfoProductos(producto).id}}</td>
+          <td>{{getInfoProductos(producto).fecha}}</td>
+          <td>{{darTipo(producto.tipo)}}</td>
+          <td *ngIf="producto.tipo!=8 && producto.tipo!=4 && producto.tipo!=5 && producto.tipo!=6">***Desde: {{infoDesde(getInfoProductos(producto))}} - Hacia {{infoHacia(getInfoProductos(producto))}}</td>
+          <td *ngIf="producto.tipo==8||producto.tipo==4||producto.tipo==5||producto.tipo==6">{{getInfoProductos(producto).descripcion}}</td>          
+          
+        </tr>
+      </tbody>
+    </table>
+
+
+    <div class="row">
+      <form>
+        <label for="asunto">Cotizaciones</label>
+        <select (change)="cambioCotizacionFactura($event.target.value)" class="browser-default">
+          <option *ngFor="let cotizacion of lista_cotizaciones; let ii = index" [value]="cotizacion.idCotizacion">
+            {{cotizacion.idCotizacion}}</option>
+        </select>
+      </form>
+    </div>
+
+
+
+
+
+    <table *ngIf="lista_productosSinFactura!=undefined">
+      <thead>
+        <tr>
+          <th style="text-align: center;" colspan="5">Selecciona para facturar</th>
+        </tr>
+        <tr>
+          <th>#</th>
+          <th>Servicio</th>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Descripción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of lista_productosSinFactura; let kk = index">
+          <td>
+            <label>
+              <input (change)="cambioFactura(kk,$event.target)" type="checkbox"
+                [checked]="estaSeleccionado(producto.idTrasladoAdquiridoInfo)" />
+              <span></span>
+            </label>
+          </td>
+          <td>{{producto.id}} </td>
+          <td>{{producto.fecha}}</td>
+          <td>{{darTipo(producto.tipo)}}</td>
+          <td *ngIf="producto.tipo!=8 && producto.tipo!=4 && producto.tipo!=7">Desde: {{infoDesde(producto)}} - Hacia {{infoHacia(producto)}}</td>
+          <td *ngIf="producto.tipo==8 || producto.tipo==4 || producto.tipo==7"> {{producto.descripcion}} </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <form>
+        <input type="file" id="filePDF" (change)="cargandoPDF($event.target.files,$event)">
+        <div class="modal-footer">
+          <a class=" modal-action modal-close waves-effect waves-green btn-flat">Cancelar</a>
+          <a *ngIf="banderaPDF==1"  class=" modal-action modal-close waves-effect waves-green btn-flat" (click)="cargarFactura()">Agregar</a>
+        </div>
+      
+      </form>
+    </div>
+

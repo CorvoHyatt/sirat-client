@@ -1,0 +1,1095 @@
+<div class="container seccion_formulario">    
+  <br><br><br>
+  <div class="row">
+    <form>
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Portada</div>
+          <div class="collapsible-body">
+            <label for="nombre">NOMBRE</label>
+            <input  name="nombre" type="text" [(ngModel)]="vista.nombreCliente"  class="validate">
+            <label for="titulo">TITULO</label>
+            <input  name="titulo" type="text" [(ngModel)]="vista.titulo"  class="validate">
+            <label for="subtitulo">SUBTITULO</label>
+            <input  name="subtitulo" type="text" [(ngModel)]="vista.lista_destinos"  class="validate">
+            <label for="asunto">Imagen principal</label>
+            <select (change)="cambioImagenPrincipal($event.target.value)" class="browser-default">
+              <option *ngFor="let item of vista.listaImagenesCiudadesPortada; let ii = index" [value]="item.id"
+              [selected]="(item.id === vista.imagenPrincipalSeleccionada)">{{item.nombre}}_{{item.num}}</option>
+            </select>
+            <label for="Mapa">Imagen Principal Manual</label>
+            <input type="file" id="fileImagenPrincipal" (change)="cargandoImagenPrincipalManual($event.target.files)" multiple>
+            <label for="agencia">AGENCIA</label>
+            <input  name="agencia" type="text" [(ngModel)]="vista.agencia"  class="validate">
+            <label for="fecha">FECHA</label>
+            <input  name="fecha" type="text" [(ngModel)]="vista.fecha"  class="validate">
+            <label for="agente">AGENTE</label>
+            <input  name="agente" type="text" [(ngModel)]="vista.agente"  class="validate">
+          </div>
+        </li>
+      </ul>
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Resumen</div>
+          <div class="collapsible-body">
+            <label for="periodo">PERIODO</label>
+            <input  name="periodo" type="text" [(ngModel)]="vista.periodo"  class="validate">
+            <label for="noches">NOCHES</label>
+            <input  name="noches" type="text" [(ngModel)]="vista.noches"  class="validate">
+            <label for="evento">EVENTO</label>
+            <input  name="evento" type="text" [(ngModel)]="vista.evento"  class="validate">
+            <label for="asunto">Imagen evento</label>
+            <select (change)="cambioImagenEvento($event.target.value)" class="browser-default">
+              <option *ngFor="let item of vista.listaImagenesCiudadesEvento; let ii = index" [value]="item.id"
+              [selected]="(item.id === vista.imagenEventoSeleccionada)">{{item.nombre}}_{{item.num}}</option>
+            </select>
+            <label for="Mapa">Imagen evento Manual</label>
+            <input type="file" id="file" (change)="cargandoImagenEventoManual($event.target.files)" multiple>
+          </div>
+        </li>
+      </ul>
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Itinerario</div>
+          <div class="collapsible-body">
+
+
+            <span *ngFor="let mapita of vista.mapProductos; let jj = index" >
+              <p><b>{{obtenerMesFechaCompleta(mapita[0])}} {{obtenerDiaFechaCompleta(mapita[0])}}</b></p>
+              <label for="Mapa">Lugar</label>
+              <textarea (input)="cambioItinerarioLugar(jj,$event.target.value)" >{{vista.mapProductos[jj][1][0].lugar}}</textarea>
+  
+              <div *ngFor="let itinerario of mapita[1];let ii = index">
+                <label>
+                  <input type="checkbox"  [checked]="itinerario.hojaNuevaItinerario" (change)="cambioHojaNuevaItinerario(jj,ii,1)" />
+                  <span><textarea (input)="cambioItinerario(jj,ii,$event.target.value)" >{{mapTexto.get(itinerario.tipo+","+itinerario.id)}}</textarea></span>
+                </label>
+
+
+                  <label>
+
+                    <input type="checkbox"  [checked]="itinerario.visible" (change)="cambioInvisible(jj,ii,1)"  />
+                  <span>               
+                    <select  (change)="cambiaOrden(jj,ii,1,$event.target.value)" class="browser-default">
+                    <option *ngFor="let number of [1,2,3,4,5,6,7,8,9]" [value]="number"
+                    [selected]="(number === itinerario.orden)">{{number}}</option>
+                    </select>
+                  </span>
+                  <br>
+                  <br>
+                </label>
+
+  
+              </div>
+            </span>
+
+
+
+            <label for="asunto">Imagen</label>
+            <select (change)="cambioImagenItinerarioFinal($event.target.value)" class="browser-default">
+              <option *ngFor="let item of imagenesPrincipales; let ii = index" [value]="item.id"
+              [selected]="(item.id === vista.imagenItinerarioFinalSeleccionada)">{{item.nombre}}</option>
+            </select>
+            <label for="Mapa">Imagen Itinerario Final Manual</label>
+            <input type="file" id="fileImagenItinerarioManual" (change)="cargandoImagenItinerarioFinalManual($event.target.files)" multiple>
+
+
+
+          </div>
+        </li>
+      </ul>      
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Day by day</div>
+          <div class="collapsible-body">
+            <label for="asunto">Imagen Day by day</label>
+            <select (change)="cambioImagenDayByDay($event.target.value)" class="browser-default">
+              <option *ngFor="let item of vista.listaImagenesCiudadesDaybyday; let ii = index" [value]="item.id"
+              [selected]="(item.id === vista.imagenDaybydaySeleccionada)">{{item.nombre}}_{{item.num}} </option>
+            </select>
+            <label for="Mapa">Imagen daybyday Manual</label>
+            <input type="file" id="file" (change)="cargandoImagenDaybydayManual($event.target.files)" multiple>
+          </div>
+        </li>
+      </ul>      
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Días</div>
+          <div class="collapsible-body">
+            <span *ngFor="let mapita of vista.mapProductos; let jj = index" >
+              <p><b>{{obtenerMesFechaCompleta(mapita[0])}} {{obtenerDiaFechaCompleta(mapita[0])}}</b></p>
+              <div *ngFor="let itinerario of mapita[1];let ii = index">
+  
+                <label>
+                  <input type="checkbox" [checked]="itinerario.hojaNuevaDayByDay" (change)="cambioHojaNuevaDayByDay(jj,ii,1)" />
+                  <span *ngIf="itinerario.tipo==1">Traslado</span>
+                  <span *ngIf="itinerario.tipo==2">Disposición</span>
+                  <span *ngIf="itinerario.tipo==3">Otro traslado</span>
+                  <span *ngIf="itinerario.tipo==4">Hotel</span>
+                  <span *ngIf="itinerario.tipo==5">Vuelo</span>
+                  <span *ngIf="itinerario.tipo==6">Tren</span>
+                  <span *ngIf="itinerario.tipo==7">
+                    <span *ngIf="itinerario.categoria==1">Tour a pie</span>
+                    <span *ngIf="itinerario.categoria==2">Tour con transporte</span>
+                    <span *ngIf="itinerario.categoria==3">Tour en grupo</span>
+                    <span *ngIf="itinerario.categoria==4">Actividad</span>
+                  </span>
+                  <label>
+                    <input type="checkbox" [checked]="itinerario.imagenNuevaDayByDay"  (change)="cambioImagenNuevaDayByDay(jj,ii)" />
+                    <span>Imagen</span>
+                </label>
+                  <span><textarea (input)="cambioTextoDayByDay(jj,ii,$event.target.value)" >{{itinerario.descripcion}}</textarea></span>
+                </label>
+              </div>
+            </span>
+          </div>
+        </li>
+      </ul>      
+
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Fin</div>
+          <div class="collapsible-body">
+            <label for="asunto">Imagen Fin</label>
+            <select (change)="cambioImagenFin($event.target.value)" class="browser-default">
+              <option *ngFor="let item of vista.listaImagenesCiudadesDaybyday; let ii = index" [value]="item.id"
+              [selected]="(item.id === vista.imagenFinSeleccionada)">{{item.nombre}}_{{item.num}}</option>
+            </select>
+            <label for="Mapa">Imagen fin Manual</label>
+            <input type="file" id="file" (change)="cargandoImagenFinManual($event.target.files)" multiple>
+          </div>
+        </li>
+      </ul>      
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Imágenes de Hoteles</div>
+          <div class="collapsible-body">
+            <span *ngFor="let mapita of vista.mapProductos; let jj = index" >
+              <p><b>{{obtenerMesFechaCompleta(mapita[0])}} {{obtenerDiaFechaCompleta(mapita[0])}}</b></p>
+              <div *ngFor="let itinerario of mapita[1];let ii = index">
+                <label *ngIf="itinerario.tipo==4" for="Mapa">{{itinerario.texto}}</label>
+
+                <input *ngIf="itinerario.tipo==4" type="file" id="file" (change)="cargandoImagenHotel1Manual(jj,ii,$event.target.files,itinerario.id)" >
+                <input *ngIf="itinerario.tipo==4" type="file" id="file" (change)="cargandoImagenHotel2Manual(jj,ii,$event.target.files,itinerario.id)" >
+              </div>
+            </span>
+          </div>
+        </li>
+      </ul>     
+
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Actualizacion de Hoteles </div>
+          <div class="collapsible-body">
+            <span *ngFor="let itinerario of vista.mapHotelesActualizacion; let jj = index" >
+              <p><b>{{obtenerMesFechaCompleta(itinerario.fecha)}} {{obtenerDiaFechaCompleta(itinerario.fecha)}}</b></p>
+              <label for="Mapa">{{itinerario.texto}}</label>
+              <input type="file" id="file" (change)="cargandoImagenActualizacionHotel1Manual(jj,$event.target.files,itinerario.id)" >
+              <input type="file" id="file" (change)="cargandoImagenActualizacionHotel2Manual(jj,$event.target.files,itinerario.id)" >
+            </span>
+          </div>
+        </li>
+      </ul>     
+
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Extras</div>
+          <div class="collapsible-body">
+            <span *ngFor="let extra of vista.mapProductosExtras; let jj = index" >
+              <div >
+  
+                <label >
+                  <input type="checkbox" [checked]="false" (change)="cambioInvisibleExtra(jj,1)" />
+                  <span *ngIf="extra.tipo==1">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+                  <span *ngIf="extra.tipo==2">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+                  <span *ngIf="extra.tipo==3">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+                  <span *ngIf="extra.tipo==4">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+                  <span *ngIf="extra.tipo==5">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+                  <span *ngIf="extra.tipo==6">{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</span>
+
+                  <span *ngIf="extra.tipo==7">
+                    <span *ngIf="extra.categoria==1">Tour a pie</span>
+                    <span *ngIf="extra.categoria==2">Tour con transporte</span>
+                    <span *ngIf="extra.categoria==3">Tour en grupo</span>
+                    <span *ngIf="extra.categoria==4">Actividad</span>
+                  </span>
+                </label>
+              </div>
+            </span>
+          </div>
+        </li>
+      </ul>    
+        
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Tours opcionales</div>
+          <div class="collapsible-body">
+            <span *ngFor="let mapita of vista.mapProductos; let jj = index" >
+              <p><b>{{obtenerMesFechaCompleta(mapita[0])}} {{obtenerDiaFechaCompleta(mapita[0])}}</b></p>
+              <div *ngFor="let itinerario of mapita[1];let ii = index">
+  
+                <label *ngIf="itinerario.tipo==7 && itinerario.opcional==1">
+                  <input type="checkbox" [checked]="itinerario.hojaNuevaTourExtra" (change)="cambioHojaNuevaTourExtra(jj,ii,1)" />
+                  <span *ngIf="itinerario.tipo==7">
+                    <span *ngIf="itinerario.categoria==1">Tour a pie</span>
+                    <span *ngIf="itinerario.categoria==2">Tour con transporte</span>
+                    <span *ngIf="itinerario.categoria==3">Tour en grupo</span>
+                    <span *ngIf="itinerario.categoria==4">Actividad</span>
+                  </span>
+                  <span><textarea readonly>{{itinerario.descripcion}}</textarea></span>
+                </label>
+              </div>
+            </span>
+          </div>
+        </li>
+      </ul>      
+
+      <br>    
+      <a (click)="guardarWord()" class="modal-close btn cta-blue">{{"WORD"}}</a>
+
+      <br><br>    
+
+
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Enviar correo</div>
+          <div class="collapsible-body">
+              <label for="nombre">Correo agente</label>
+              <input readonly name="correoAgente" type="text" [(ngModel)]="vista.correoAgente"  class="validate">
+              <label >Otros correos</label>
+              <span><textarea  (input)="cambioOtrosCorreos($event.target.value)" placeholder="correos separados por ,">{{vista.otrosCorreos}} </textarea></span>
+              <label >Nota</label>
+              <span><textarea (input)="cambioNotas($event.target.value)">{{vista.notas}}</textarea></span>
+              <input type="file" id="filePDF" (change)="cargandoPDF($event.target.files,$event)" >
+              <br>    
+              <br>
+              <a (click)="enviarCorreo()" class="modal-close btn cta-blue">{{"Enviar"}}</a>
+
+          </div>
+        </li>
+      </ul>  
+
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<div class="contenedor jovenes">
+  <div class="seccion portada" >
+    <div class="col s12">
+      <br><p class="center tfam" style="">{{vista.nombreCliente}}</p>
+      <br><h3 class="center tpais">{{vista.titulo}}</h3>
+      <p  class="center tlug">{{vista.lista_destinos}}</p>
+    </div>
+    <div class="col s12 center">
+      <table class="itinerario_table vip_itin">
+        <tbody>
+          <tr>
+            <td colspan="2">
+              <div class="banblanimg"><img src="{{liga}}/img/banwhite.jpg"><div class="txposi" style="padding: 512px 0px 0px 18px; width: 98%;">
+                <table class="itinerario_table">
+                   <thead style="background-color: #fff !important; -webkit-print-color-adjust: exact;">
+                     <tr >
+                     <td style="padding: 10px; width: 40%;"><p class="txage">{{vista.agencia.toUpperCase()}}</p></td>
+                     <td style="padding: 10px; width: 30%;"><p class="txage">{{vista.fecha.toUpperCase()}}</p></td>
+                     <td class="center" style="padding: 10px; width: 30%;"><p class="txage">{{vista.agente.toUpperCase()}}</p></td>
+                     </tr>
+                  </thead>
+                </table>
+              </div>              
+              </div>
+              <div class="logr5 center"><p>5RIVES</p></div>
+              <img *ngIf="estadoGuiaPortada==0" [src] ="guiaPortada" class="imgpor">
+              <img *ngIf="estadoGuiaPortada==1" src="{{liga}}/portada/{{idCotizacion}}.jpg" class="imgpor">
+              <img *ngIf="estadoGuiaPortada==2 && vista.imagenPrincipalSeleccionada!=undefined" src="{{liga}}/portada/{{vista.imagenPrincipalSeleccionada}}.jpg" class="imgpor"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    
+  <!--fin portada-->
+        <!--hoja1-->
+    <div *ngFor="let mapita of mapProductosPorHojaItinerarioArreglo; let ii = index" class="seccion hoja1" >
+      <div class="col s12">
+        <br><h3 class="tth2 center">AT A GLANCE</h3>
+        <table class="tamtab" *ngIf="ii==0">
+          <tr>
+            <td  style="width: 50%">
+              <div>
+                <img *ngIf="estadoGuiaEvento==0" [src] ="guiaEvento" class="imgpor">
+                <img *ngIf="estadoGuiaEvento==1" src="{{liga}}/evento/{{idCotizacion}}.jpg" class="imgpor">
+                <img *ngIf="estadoGuiaEvento==2 && vista.imagenEventoSeleccionada!=undefined" src="{{liga}}/evento/{{vista.imagenEventoSeleccionada}}.jpg" class="imgpor">
+               </div>
+            </td>
+            <td class="th1azul">
+              <p class="center pth2">{{vista.periodo.toUpperCase()}}</p>
+              <br>
+              <p class="center pth2">{{vista.noches}} NOCHES</p>
+              <br>
+              <p class="center pth2">{{vista.evento.toUpperCase()}}</p> 
+            </td>
+          </tr>
+        </table>
+        <br>
+        <table class="striped tamtab">
+          <thead class="tsh2">
+            <tr>
+              <th class="center bth1m25" style="padding: 10px;">DÍA</th>
+              <th class="center bth1m25" style="padding: 10px;">LUGAR</th>
+              <th class="center bth1m50" style="padding: 10px;">PROGRAMA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let submapita of mapita; let kk = index">
+              <td *ngIf="kk%2==0" style="padding: 15px;" class="center p_txt1h1 cazth1">
+                <ul>
+                  <li><p >{{obtenerMesFechaCompleta(submapita[0])}}</p></li>
+                  <li><p >{{obtenerDiaFechaCompleta(submapita[0])}}</p></li>
+                </ul>
+              </td>
+              <td *ngIf="kk%2!=0" style="padding: 15px;" class="center p_txt1h1 cazth2">                
+                <ul>
+                  <li><p >{{obtenerMesFechaCompleta(submapita[0])}}</p></li>
+                  <li><p >{{obtenerDiaFechaCompleta(submapita[0])}}</p></li>
+                </ul>
+              </td>
+  
+
+
+              <td *ngIf="kk%2==0" style="padding: 20px; white-space: pre-line" class="center p_txt1h1 cazth1">{{submapita[1][0]['lugar'].toUpperCase()}}</td>
+              <td *ngIf="kk%2!=0" style="padding: 20px; white-space: pre-line" class="center p_txt1h1 cazth2">{{submapita[1][0]['lugar'].toUpperCase()}}</td>
+
+              <td *ngIf="kk%2==0" class="cazth1">
+                <ul>
+                  <li *ngFor="let itinerario of submapita[1]">
+                    <p *ngIf="itinerario.visible==1" style="white-space: pre-line" class="p_t1h1">• {{mapTexto.get(itinerario.tipo+","+itinerario.id)}}</p>
+                  </li>
+                </ul>
+              </td>
+              <td *ngIf="kk%2!=0" class="cazth2">
+                <ul>
+                  <li *ngFor="let itinerario of submapita[1]">
+                    <p *ngIf="itinerario.visible==1" style="white-space: pre-line" class="p_t1h1">• {{mapTexto.get(itinerario.tipo+","+itinerario.id)}}</p>
+                  </li>
+                </ul>
+              </td>
+              </tr>
+          </tbody>
+        </table>  
+        <br>
+
+        <table *ngIf="ii!=0 && ii==mapProductosPorHojaItinerarioArreglo.length-1">
+          <tr>
+            <td>
+              <div class="wrapper2 tamtab">
+                <div
+                          class="rectangle2"
+                           [ngStyle]="styleItinerario"
+                           mwlResizable
+                           [validateResize]="validate"
+                           [enableGhostResize]="true"
+                           [resizeSnapGrid]="{ left: 1, right: 1,top: 1, bottom: 1}"
+                           (resizeEnd)="onResizeEndItinerario($event)"
+                >
+               <img *ngIf="vista.imagenItinerarioFinalAuxiliar==0"
+               class="rectangle2"
+               [ngStyle]="styleItinerario"
+               mwlResizable
+               [validateResize]="validate"
+               [enableGhostResize]="true"
+               [resizeSnapGrid]="{ left: 1, right: 1 }"
+               (resizeEnd)="onResizeEndItinerario($event)"
+                src="{{liga}}/img/m/{{vista.imagenItinerarioFinalSeleccionada}}.jpg">
+
+
+               <img *ngIf="vista.imagenItinerarioFinalAuxiliar!=0"
+               class="rectangle2"
+               [ngStyle]="styleItinerario"
+               mwlResizable
+               [validateResize]="validate"
+               [enableGhostResize]="true"
+               [resizeSnapGrid]="{ left: 1, right: 1 }"
+               (resizeEnd)="onResizeEndItinerario($event)"
+                src ="{{liga}}/itinerarioFinal/{{idCotizacion}}.jpg">
+
+               <div
+               class="resize-handle-top"
+               mwlResizeHandle
+               [resizeEdges]="{ top: true }"
+             ></div>
+             <div
+               class="resize-handle-left"
+               mwlResizeHandle
+               [resizeEdges]="{ left: true }"
+             ></div>
+             <div
+               class="resize-handle-right"
+               mwlResizeHandle
+               [resizeEdges]="{ right: true }"
+             ></div>
+             <div
+               class="resize-handle-bottom"
+               mwlResizeHandle
+               [resizeEdges]="{ bottom: true }"
+             ></div>
+
+
+
+             </div>
+            </div>
+
+            </td>
+          </tr>
+        </table>
+
+
+      </div>
+
+    </div>
+
+    
+        
+        <div class="seccion hoja2">          
+          <br><br>
+          <table class="tamtab">
+            <tbody>
+              <tr>
+                <td colspan="2">
+                <div class="lh2bdb center">DAY BY DAY</div>
+                <img *ngIf="guiaDaybyday!=null" [src] ="guiaDaybyday" class="imgpor">
+                <img *ngIf="guiaDaybyday==null && vista.imagenDaybydaySeleccionada!=undefined" src="{{liga}}/daybyday/{{vista.imagenDaybydaySeleccionada}}.jpg"  class="imgpor">
+
+
+
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+
+        <div *ngFor="let byDay of mapProductosPorHojaArreglo; let ii = index" class="seccion hoja2">
+           <div class="col s12 center">
+             <br><p class="tth3">{{byDay[1][0]['lugar'].toUpperCase()}}</p>
+             <span class="th3">{{obtenerDiaFechaCompletaLetra(byDay[1][0]['fecha'])}}</span>
+            </div>
+            <br>
+            <div class="linea tamtab"></div>
+            <div class="col s12 tamtab">
+              <p class="txh3">¡Bienvenido a {{byDay[1][0]['lugar']}}!</p>
+            </div>
+            
+            <div  *ngFor="let itinerario of byDay[1]" class="col s12 tamtab">
+              <div *ngIf="itinerario.tipo==4">
+                <b>Hospedaje:</b> {{itinerario.descripcion}} 
+              </div>
+              <div *ngIf="!(itinerario.tipo==4||itinerario.tipo==7)">
+                <p class="txh3">{{itinerario.descripcion}}</p>
+              </div>   
+              
+              <div *ngIf="itinerario.tipo==5">
+                <table class="striped bortbh7">
+                    <tbody>
+                      <tr>
+                        <th rowspan="2" class="center fondot2">
+                          <br><img src="{{liga}}/img/avion.jpg"><br>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">ORIGEN</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">DESTINO</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">SALIDA</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">LLEGADA</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">COMPAÑÍA</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="tt2h10">CANTIDAD</p>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.desde.toUpperCase()}}</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.hacia.toUpperCase()}}</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.hora.toUpperCase()}}</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.horaLlegada.toUpperCase()}}</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.nombre.toUpperCase()}}</p>
+                        </th>
+                        <th class="center fondot2">
+                          <p class="txt2h10">{{itinerario.cantidad}}</p>
+                        </th>
+                      </tr>                        
+                    </tbody>
+                  </table>
+              </div>              
+
+
+              <div *ngIf="itinerario.tipo==6" >
+                <table class="striped bortbh7">
+                  <tbody>
+                    <tr>
+                      <th class="center fondot1">
+                        <br><img src="{{liga}}/img/tren.jpg"><br>
+                      </th>
+                      <th class="center fondot1">
+                        <p class="tt1h10">ORIGEN</p>
+                        <p class="txt1h10">{{itinerario.desde.toUpperCase()}}</p>
+                      </th>
+                      <th class="center fondot1">
+                        <p class="tt1h10">DESTINO</p>
+                        <p class="txt1h10">{{itinerario.hacia.toUpperCase()}}</p>
+                      </th>
+                      <th class="center fondot1">
+                        <p class="tt1h10">SALIDA</p>
+                        <p class="txt1h10">{{itinerario.hora}}</p>
+                      </th>
+                      <th class="center fondot1">
+                        <p class="tt1h10">LLEGADA</p>
+                        <p class="txt1h10">{{itinerario.hora}}</p>
+                      </th>
+                      <th class="center fondot1">
+                        <p class="tt1h10">CANTIDAD</p>
+                        <p class="txt1h10">2</p>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              
+                      <span *ngIf="itinerario.tipo==7" class="col s12">
+                        <table class="itinerario_table vip_itin">
+                          <tbody>
+                            <tr>
+                              <td colspan="2">                        
+                                <div *ngIf="itinerario.opcional==1 " class="banrh6"><img src="../../../assets/img/banh14.png"><div class="txbanrh6"><p class="txnoh6">NO</p><p class="txbanr1h6">INCLUIDO</p></div></div>
+                                                                                
+
+
+                                <div class="content_card">
+                                  <p class="tx_card">{{itinerario.nombre.toUpperCase()}} </p>
+                                  <p class="tx_cardspan">FULL DAY PRIVATE TOUR</p>
+                                </div>
+                                <!-- 1 pie 2 transporte 3 grupo 4 actividad-->
+                                <img src="{{liga}}/productos/{{itinerario.tipoProducto}}_1.jpg">
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="tback1 center txth5">
+                                <p> Duración<br><br>{{itinerario.duracion}} horas</p><br></td>
+                              <td class="tback2">
+                                <br><p class="center txth5">Incluye:</p>
+                                <p style="white-space: pre-line" class="txth51">{{unirEntradas(itinerario)}}</p><br>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        <div   class="col s12">
+                          <div class="card">
+                            <div class="card-content"> 
+                              <p style="white-space: pre-line" class="txh3">{{itinerario.descripcionDetallada}}</p>
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </span>
+                    </div>
+
+                  
+
+
+                <div class="wrapper2 tamtab" *ngIf="byDay[1][0].imagenNuevaDayByDay==true" >
+                          <div
+                          class="rectangle2"
+                           [ngStyle]="style[ii]"
+                           mwlResizable
+                           [validateResize]="validate"
+                           [enableGhostResize]="true"
+                           [resizeSnapGrid]="{ left: 1, right: 1,top: 1, bottom: 1}"
+                           (resizeEnd)="onResizeEnd($event,ii)"
+                         >
+                         <img 
+                         class="rectangle2"
+                         [ngStyle]="style[ii]"
+                         mwlResizable
+                         [validateResize]="validate"
+                         [enableGhostResize]="true"
+                         [resizeSnapGrid]="{ left: 1, right: 1 }"
+                         (resizeEnd)="onResizeEnd($event,ii)"
+                         *ngIf="byDay[1][0].idCiudad!=undefined" src="{{liga}}/img/m/{{byDay[1][0].idCiudad}}.jpg">
+                           <div
+                             class="resize-handle-top"
+                             mwlResizeHandle
+                             [resizeEdges]="{ top: true }"
+                           ></div>
+                           <div
+                             class="resize-handle-left"
+                             mwlResizeHandle
+                             [resizeEdges]="{ left: true }"
+                           ></div>
+                           <div
+                             class="resize-handle-right"
+                             mwlResizeHandle
+                             [resizeEdges]="{ right: true }"
+                           ></div>
+                           <div
+                             class="resize-handle-bottom"
+                             mwlResizeHandle
+                             [resizeEdges]="{ bottom: true }"
+                           ></div>
+                         </div>
+            </div>
+        </div>
+
+
+        <div class="seccion hoja2">
+          <br><br>
+          <table class="tamtab">
+            <tbody>
+              <tr>
+                <td colspan="2">
+                <div class="lh2bdb center">FIN</div>
+                <img *ngIf="guiaFin!=null" [src] ="guiaFin" class="imgpor">
+                <img *ngIf="guiaFin==null && vista.imagenFinSeleccionada!=undefined" src="{{liga}}/daybyday/{{vista.imagenFinSeleccionada}}.jpg"  class="imgpor">
+
+
+              </td>
+            </tr>
+          </tbody></table>
+        </div>
+
+        <div *ngIf="numHotel>0">
+          <div *ngFor="let byDay of mapProductosPorHojaHoteles; let jj = index"   class="seccion hoja2">
+          <div class="col s12">
+            <p class="th10 center" style="">HOSPEDAJE SUGERIDO</p>
+          </div>
+          <span *ngFor="let itinerario of byDay; let ii = index">
+            
+          <div  class="col s12 tamtab">
+            <table>
+              <tbody>
+                  <tr>
+                    <td style="width: 80px;"><img src="{{liga}}/img/ubic3.jpg" style="width: 40px;"></td>
+                    <td><p class="tt3h10">{{itinerario.lugar.toUpperCase()}} </p><p class="txt3h10">{{obtenerDiaFechaMesDiaLetra(itinerario.fecha)}} - {{obtenerDiaFechaMesDiaLetra(itinerario.fechaSalida)}} ({{calcularNoches(itinerario.fechaSalida,itinerario.fecha)}} noches)</p></td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col s12 tamtab">
+            <table>
+              <thead>
+                  <tr>
+                      <th class="tx2t3h10">&nbsp;{{itinerario.nombre.toUpperCase()}}</th>
+                      <th class="tx2t3h10"><i class="material-icons right">{{mostrarEstrellas(itinerario.categoria)}} &nbsp;</i></th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                    <td class="grey lighten-4 black-text" style="padding: 8px;">Habitación {{itinerario.categoriaNombre}}<br>Desayuno  {{desayuno(itinerario.desayuno)}} Incluido</td>
+                    <td class="grey lighten-4 black-text" style="padding: 8px;"><span class="right">{{itinerario.direccion}}<br>{{itinerario.telefono}} </span></td>
+                  </tr>
+              </tbody>
+            </table><br>
+          </div>
+  
+          <br>
+ 
+ 
+          <div class="col s12 tamtab">
+            <table class="borimgh10">
+              <tbody>
+                  <tr>
+                    <td *ngIf="itinerario.imagenHotel1!=0"  ><img class="responsive-img" src="{{liga}}/hotel1/{{itinerario.id}}.jpg"></td>
+                    <td *ngIf="itinerario.imagenHotel1==0"  ><img class="responsive-img" src="{{liga}}/hotel1/0.jpg"></td>   
+                    
+                    <td *ngIf="itinerario.imagenHotel2!=0"  ><img class="responsive-img" src="{{liga}}/hotel2/{{itinerario.id}}.jpg"></td>
+                    <td *ngIf="itinerario.imagenHotel2==0"  ><img class="responsive-img" src="{{liga}}/hotel2/0.jpg"></td>   
+                  </tr>
+              </tbody>
+            </table>
+          </div><br><br>
+        </span>
+        </div>
+      </div>
+
+
+
+        <div class="seccion hoja2" style="background-color: #241937 !important; -webkit-print-color-adjust: exact;">
+        <div  style="background-image: url('../../../assets/img/fondoquote.jpg') !important; -webkit-print-color-adjust: exact; width: 90%; height: 100%; margin: 0px 0px 0px 27px; padding: 10px; vertical-align: top; display: inline-block;"><br>
+         <div class="col s12">
+              <br><p class="th11">Quote</p>
+         </div>
+
+         <table class="itinerario_table vip_itin bortb1h11" style="margin: 30px 0px -20px 35px;">
+            <tbody>
+                <tr>
+                    <th class="center white t-black ttb1h11" style=""><br>SERVICIOS<br><br></th>
+                    <th class="center white t-black ttb1h11"><br>SERVICIOS + HOTELES<br><br></th>
+                </tr>
+            </tbody>
+          </table>
+         <div class="col s12">
+              <div class="center steurh11">
+                <table class="itinerario_table vip_itin bortb1h11" style="margin: -10px 0px -10px 35px;">
+                  <tbody>
+                    <tr>
+                        <th class="center t-white eurtb1h11" style="width: 50%">{{vista.precioOtros| currency: 'MXN'}}</th>
+                        <th class="center t-white eurtb1h11">{{vista.precioOtros+vista.precioHoteles | currency: 'MXN'}}</th>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
+         </div>
+          <table class="itinerario_table vip_itin bortb3h11" style="margin: -42px 0px 0px 35px;">
+            <tbody>
+                <tr>
+                  <td class="white" style="padding: 8px;"><p class="center txtb1h11">PRECIO POR PERSONA EN BASE A OCUPACIÓN DOBLE</p><br>
+                    <p class="txtb1h11">INCLUYE<br><br>
+                      • Traslados especificados en taxi con acompañante<br>
+                      • Tours especificados en español con guía privado y en transporte público<br>
+                      • Jr pass de 14 días estándar<br>
+                      • Servicio de concierge y asistencia<br><br>
+                    </p> 
+                      <p class="txtb1h11">NO INCLUYE:<br><br>
+                        • Hoteles<br>
+                        • Desayuno en hoteles<br>
+                        • City tax e impuestos<br>
+                        • Alimentos y servicios no especificados<br>
+                        • Gastos de índole personal
+                      </p>
+                   </td>
+                  <td class="white" style="padding: 8px; color: #241937"><p class="center txtb1h11">PRECIO POR PERSONA EN BASE A OCUPACIÓN DOBLE</p><br>
+                    <p class="txtb1h11">INCLUYE<br><br>
+                      • Hospedaje en hoteles mencionados<br>
+                      • Desayuno en hoteles<br>
+                      • Traslados especificados en taxi con acompañante<br>
+                      • Tours especificados en español con guía privado y en transporte público<br>
+                      • Jr pass de 14 días estándar<br>
+                      • Servicio de concierge y asistencia<br><br>
+                    </p>
+                      <p class="txtb1h11">NO INCLUYE:<br><br>
+                        • Alimentos y servicios no especificados<br>
+                        • Gastos de índole personal<br><br>
+                      </p>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+          <table class="itinerario_table vip_itin bortb3h11nota" style="margin: 0px 0px 0px 35px; width: 90%;">
+
+            <tbody>
+                <tr>
+                  <td colspan="2" class="white black-text" style="padding: 8px;">
+                    <p class="center black-text ttb2h11" >N O T A S</p><br>
+                    <p class="txtb1h11">* Precios indicativos vigentes el día de cotización. Sujeto a variaciones. <br>El precio final se confirmará el día de la compra al tipo de cambio vigente. <br><br>Nota. Los precios mostrados, están sujetos a cambio sin previo aviso, se están tomando tarifas 2021.</p><br>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+          <div class="col s12">
+              <p class="pi1h11">FELGUERES TRAVEL GROUP</p>
+              <p class="pi2h11">5 RIVES</p>
+              <br><br>
+          </div>
+        </div>
+      </div>
+
+
+      <div *ngIf="mapProductosPorHojaExtraArreglo != undefined && mapProductosPorHojaExtraArreglo[0].length>0">
+      <div *ngFor="let mapota of mapProductosPorHojaExtraArreglo; let jj = index" class="seccion hoja2" style="background-color: #241937 !important; -webkit-print-color-adjust: exact;"><br>
+
+      <table  class="itinerario_table vip_itin" style="margin: 0px 0px 0px 35px; width: 90%; ">
+        <thead *ngIf="jj==0">
+            <tr>
+                <th colspan="4"><div class="lh2bdb center">EXTRAS  </div><img class="responsive-img" src="{{liga}}/img/img_extra.jpg" style="width: 100%;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td colspan="3" class="white-text center ttb1h12" style="padding: 8px;">SERVICIOS</td>
+              <td class="white-text ttb1h12" style="padding: 8px;">TOTAL</td>
+            </tr>
+            <tr *ngFor="let extra of mapota; let ii = index" style="border-bottom: 3px solid #000;">
+              <td class="center white" style="padding-top: 8px;width: 5%;">
+                <i *ngIf="extra.tipo==1" class="material-icons">directions_car</i>
+                <i *ngIf="extra.tipo==2" class="material-icons">person</i>
+                <i *ngIf="extra.tipo==3" class="material-icons">place</i>
+                <i *ngIf="extra.tipo==4" class="material-icons">hotel</i>
+                <i *ngIf="extra.tipo==10" class="material-icons">hotel</i>
+                <i *ngIf="extra.tipo==5" class="material-icons">flight</i>
+                <i *ngIf="extra.tipo==6" class="material-icons">train</i>
+                <i *ngIf="extra.tipo==7" class="material-icons">nature_people</i>
+                <i *ngIf="extra.tipo==9" class="material-icons">nature_people</i>
+              </td>
+              <td class="white txtb1h12" style="padding-top: 8px; width: 8%;">{{obtenerDiaFechaMesDiaLetra(extra.fecha)}}</td>
+              <td *ngIf="extra.tipo==1" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE {{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}} EN <b>{{extra.lugar.toUpperCase()}}</b> A: <b>{{extra.nombre.toUpperCase()}}</b></td>
+              <td *ngIf="extra.tipo==2" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE {{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}} EN <b>{{extra.lugar.toUpperCase()}}</b> A: <b>{{extra.nombreVehiculo.toUpperCase()}}</b></td>              
+              <td *ngIf="extra.tipo==3" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE <b>{{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</b> EN <b>{{extra.lugar.toUpperCase()}}</b> </td>              
+              <td *ngIf="extra.tipo==4" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE HOTEL <b>{{extra.nombre.toUpperCase()}}</b> EN <b>{{extra.lugar.toUpperCase()}}</b> A: {{extra.estrellas}} ESTRELLAS</td>              
+
+              <td *ngIf="extra.tipo==5" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE VUELO A <b>{{extra.clase.toUpperCase()}}</b> CLASE EN <b>{{extra.lugar.toUpperCase()}} </b> PARA IR A <b>{{extra.hacia.toUpperCase()}}</b></td>
+              <td *ngIf="extra.tipo==6" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA DE TREN A <b>{{extra.clase.toUpperCase()}}</b> CLASE EN <b>{{extra.lugar.toUpperCase()}}</b> PARA IR A <b>{{extra.hacia.toUpperCase()}}</b></td>
+              <td *ngIf="extra.tipo==7" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">AGREGAR <b>{{extra.nombreEntrada.toUpperCase()}}</b>: {{mapTexto.get(extra.tipo+","+extra.id).toUpperCase()}}</td>              
+              <td *ngIf="extra.tipo==9" class="white txtb1h12" style="padding: 8px; width: 70%; text-align: justify;">CAMBIAR CATEGORÍA  EN {{extra.titulo.toUpperCase()}} A: <b>{{extra.nombreVehiculo.toUpperCase()}}</b></td>                            
+              <td class="white txtb1h12" style="padding: 8px; width: 20%; text-align: right;">{{signo(extra.diferencia)}} {{sinSigno(extra.diferencia)| currency: 'MXN'}}</td>
+            </tr>
+
+    
+        </tbody>
+      </table>
+      <div *ngIf="jj==mapProductosPorHojaExtraArreglo.length-1" class="col s12">
+          <p class="pi1h12">{{vista.agencia.toUpperCase()}}</p>
+          <p class="pi2h12">5 RIVES</p>
+      </div>
+  </div>
+
+</div>
+
+
+
+<div *ngIf="mapProductosPorHojaHotelesActualizacion != undefined && mapProductosPorHojaHotelesActualizacion[0].length>0">
+
+  <div *ngFor="let daybyday of mapProductosPorHojaHotelesActualizacion; let jj = index" class="seccion hoja2">
+  <div class="col s12">
+    <p class="th13 center">UP GRADE DE HOTELES</p>
+  </div>
+  <span *ngFor="let itinerario of daybyday; let ii = index">
+  <div class="col s12 tamtab">
+    <table>
+      <tbody>
+          <tr>
+            <td style="width: 80px;"><img src="{{liga}}/img/ubic3.jpg" style="width: 40px;"></td>
+            <!--
+            <td><p class="tt3h10">{{itinerario.lugar.toUpperCase()}}</p><p class="txt3h10">{{obtenerDiaFechaMesDiaLetra(itinerario.fecha)}} - {{obtenerDiaFechaMesDiaLetra(itinerario.fechaSalida)}} ({{calcularNoches(itinerario.fechaSalida,itinerario.fecha)}} noches)</p></td>
+            <td style="width: 200px;"><img src="../../../assets/img/banh13.png"><div class="banrojh13">{{signo(itinerario.diferencia)}} {{itinerario.diferencia| currency: 'MXN'}} TOTAL</div></td>
+          -->            
+          <td><p class="tt3h10"></p></td>
+          <td><p style="width: 200px;"></p></td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+ <div class="col s12 tamtab">
+  <table>
+      <thead>
+          <tr>
+              <th class="tx2t3h13">&nbsp;{{itinerario.nombre.toUpperCase()}}</th>
+              <th class="tx2t3h13"><i class="material-icons right">{{mostrarEstrellas(itinerario.estrellas)}}&nbsp;</i></th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <td class="grey lighten-4 black-text" style="padding: 8px;">Habitación {{itinerario.categoriaNombre}}<br>Desayuno  {{desayuno(itinerario.desayuno)}} Incluido</td>
+            <td class="grey lighten-4 black-text" style="padding: 8px;"><span class="right">{{itinerario.direccion}}<br>{{itinerario.telefono}}</span></td>
+          </tr>
+      </tbody>
+    </table><br>
+  </div>
+  <div class="col s12 tamtab">
+    <table class="borimgh10">
+      <tbody>
+          <tr>
+
+
+            <td *ngIf="itinerario.hotel1!=0"  ><img class="responsive-img" src="{{liga}}/actualizacionHotel1/{{itinerario.id}}.jpg"></td>
+            <td *ngIf="itinerario.hotel1==0"  ><img class="responsive-img" src="{{liga}}/actualizacionHotel1/0.jpg"></td>   
+            
+            <td *ngIf="itinerario.hotel2!=0"  ><img class="responsive-img" src="{{liga}}/actualizacionHotel2/{{itinerario.id}}.jpg"></td>
+            <td *ngIf="itinerario.hotel2==0"  ><img class="responsive-img" src="{{liga}}/actualizacionHotel2/0.jpg"></td>   
+
+
+
+
+
+
+
+
+
+
+          </tr>
+      </tbody>
+    </table><br>
+  </div>
+  <br>
+</span>
+</div>
+
+</div>
+
+
+
+
+
+
+
+<div *ngIf="numTourOpcionales>0">
+
+
+        <div *ngFor="let byDay of mapProductosPorHojaTourExtraArreglo; let ii = index" class="seccion hoja2" style="background-color: #241937 !important; -webkit-print-color-adjust: exact;"><br><br>
+        <div class="col s12 center">
+             <p class="th10 center">TOURS OPCIONALES</p>
+        </div>              
+        <div  *ngFor="let itinerario of byDay[1]" >
+
+             <table *ngIf="itinerario.tipo==7 && itinerario.opcional==1" class="itinerario_table vip_itin" style="margin: 0px 0px 0px 35px; width: 90%; ">
+               <tbody>
+                 <tr>
+                   <td colspan="2">
+                     <div class="banh14"><img src="{{liga}}/img/banh14.png" style="width: 80px; height: 80px;"><div class="txbanh14">{{itinerario.precioPorPersona| currency: 'MXN'}}  <br>POR<br> PERSONA</div></div>
+                    <div class="content_card"><p class="tx_card">{{itinerario.nombre.toUpperCase()}}</p>
+                    <p class="tx_cardspan">FULL DAY PRIVATE TOUR</p></div><img src="{{liga}}/img/productos/{{itinerario.tipoProducto}}_1.jpg"></td>
+                 </tr>
+                 <tr>
+                   <td class="tback">
+                     <p class="center txth5"> Duración <br><br> {{itinerario.duracion}} horas </p></td>
+                   <td class="tback">
+                     <p class="txth5">&nbsp;&nbsp;Incluye:</p>
+                     <p style="white-space: pre-line" class="txth51">{{itinerario.incluye}} </p><br>
+                   </td>
+                 </tr>
+               </tbody>
+             </table>
+             <br>
+        </div>
+     </div>
+    </div>
+
+
+
+    <div *ngIf="numVuelos>0">
+
+     <div *ngFor="let byDay of mapProductosPorHojaTourExtraArreglo; let ii = index" class="seccion hoja2">
+        <div  style="background-image: url('../../../assets/img/vuelos-fondo.jpg') !important; -webkit-print-color-adjust: exact; width: 100%; height: 1000px; padding: 10px; vertical-align: top; display: inline-block;">
+                <table style="margin: 272px 0px 0px 35px; width: 90%; border-collapse: separate; border-spacing: 2px 2px;">
+                  <tbody>        
+
+                    <tr  *ngFor="let itinerario of byDay[1]" >
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">FECHA</p>
+                        <p class="txt2h10">{{obtenerDiaFechaMesDiaLetra(itinerario.fecha)}}</p><br>
+                      </td>
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">ORIGEN</p>
+                        <p class="txt2h10">{{itinerario.desde.toUpperCase()}}</p>
+                      </td>
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">DESTINO</p>
+                        <p class="txt2h10">{{itinerario.hacia.toUpperCase()}}</p>
+                      </td>
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">SALIDA</p>
+                        <p class="txt2h10">{{itinerario.hora.toUpperCase()}}</p><br>
+                      </td>
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">LLEGADA</p>
+                        <p class="txt2h10">{{itinerario.horaLlegada.toUpperCase()}}</p><br>
+                      </td>
+                      <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" class="center fondot2">
+                        <p class="tt2h10">COMPAÑÍA</p>
+                        <p class="txt2h10"></p>
+                      </td>
+                    <td *ngIf="itinerario.tipo==5 && itinerario.opcional==0" >
+                      <img src="{{liga}}/img/ban1h15.png"><div class="center txbanh15" style="margin: -7px 0px 0px -21px;"sssss>{{itinerario.precioPorPersona| currency: 'MXN'}}<br>POR<br>PERSONA</div>
+                    </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <br><br>
+                <table class="itinerario_table vip_itin" style="margin: 0px 0px 0px 35px; width: 90%; ">
+                  <tbody>
+                    <tr>
+                      <td colspan="2" class="white black-text" style="padding: 8px;">
+                        <ul class="txtb1h11">
+                          <li>• INCLUYEN 1 PIEZA DE EQUIPAJE DOCUMENTADA (23KG)</li>
+                          <li>• TARIFAS NO SON REEMBOLSABLES</li>
+                          <li>• LOS PRECIOS SON ESTIMADOS AL DÍA DE HOY. DEBIDO A LA FLUCTUACIÓN DE PRECIOS EN VUELOS, SE RE-COTIZARÁN AL MOMENTO DE COMPRAR.</li>
+                          <li>• LOS VUELOS SE TENDRÁN QUE PAGAR CON LA TARJETA DE CRÉDITO DEL VIAJERO EN CASO DE QUE SE REQUIERA LA TARJETA EL MOMENTO DE CHECK IN.</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+    </div>
+  </div>
+
+
+        
+
+        <div class="seccion hoja2" style="background-color: #dad9d6 !important; -webkit-print-color-adjust: exact;"><br>
+          <table class="itinerario_table vip_itin" style="margin: 30px 0px -14px 35px; width: 90%; ">
+            <tbody>
+                <tr>
+                  <td colspan="2" class="white black-text" style="padding: 8px;">
+                    <br><br>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+         <div class="col s12">
+              <p class="center th10">POLÍTICAS & CONDICIONES</p>
+         </div>
+              <br>
+          <table class="itinerario_table vip_itin" style="margin: -37px 0px 0px 35px; width: 90%; ">
+            <tbody>
+                <tr>
+                  <td colspan="2" class="white black-text" style="padding: 8px;">
+                    <br><br>
+                    <p class="th16">CONDICIONES GENERALES</p><br>
+                    <p class="txh16">Aceptando esta proposición, aceptó las condiciones generales de venta.<br><br>
+                      • Precio en base a ocupación doble. No se ha realizado ninguna reserva por lo que los precios son sujetos a disponibilidad y cambios sin previo aviso.<br>
+                      • Cualquier modificación a este presupuesto implica elaborar un nuevo presupuesto actualizado.<br>
+                      • En caso de llevar más de 1 maleta grande y 1 equipaje de mano por persona se podrá aplicar un suplemento.
+                  </p><br>
+                    <br>
+                    <p class="th16">POLÍTICAS DE CANCELACIÓN</p><br>
+                        <p class="txh16">• Los hoteles son reembolsados al 100 % hasta 5 días antes del servicio.<br>
+                           • Los vuelos nacionales no son reembolsables.<br>
+                           • Los traslados son reembolsables hasta 5 días antes del servicio.<br>
+                           • Reembolso integral hasta 7 días antes del servicio. Si el guía tuvo que reservar unos vuelos, entradas… no podrán ser reembolsados.
+                       </p>
+                    <br>
+                    <p class="th16">GARANTÍA DE VIAJE COVID</p><br>
+                    <p class="txh16">Conforme a la situación sanitaria y en apoyo a los viajeros, ofrecemos una garantía de reembolso COVID-19. Favor de consultar a su agente de viajes en caso de viaje cancelado por COVID-19.</p><br>
+                    <br><br><br>
+                    <img *ngIf="vista.idAgencia!=undefined" src="{{liga}}/img/logos/{{vista.idAgencia}}.png" style="width: 50%;">
+
+                    <br><br>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+              <br><br><br><br>
+      </div>
+
+      </div>

@@ -1,0 +1,731 @@
+<div class="center" style="margin: 20px !important;">
+    <div class="row valign-wrapper">
+        <div class="input-field col s5">
+            <select id="filterCotizaciones" #select (change)="filterCotizaciones(select.value)">
+              <option value="10" selected>TODAS</option>
+              <option value="0">PENDIENTES</option>
+              <option value="1">ENVIADAS</option>
+              <option value="100">RECIBIDAS POR COTIZADOR</option>
+              <option value="2">RECHAZADAS</option>
+              <option value="3">CONFIRMADAS</option>
+            </select>
+            <label>Filtrar cotizaciones</label>
+        </div>
+        <div class="input-field col s5">
+            <i class="material-icons prefix">search</i>
+            <input autocomplete="off" id="icon_prefix" type="text" class="validate" name="search" [(ngModel)]="search" (ngModelChange)="buscarCotizacion($event)">
+            <label for="icon_prefix">Realice su búsqueda</label>
+        </div>
+        <div class="col s2 center-align">
+            <a class="btn blue darken-4" (click)="abrirModalCotizacionNueva()">Nueva cotización</a>
+        </div>
+    </div>
+    <div *ngIf="cotizaciones.length !== 0; else empty" class="row">
+        <table class="highlight centered">
+            <thead>
+                <tr>
+                    <th width="500">ID</th>
+                    <th width="500">Título</th>
+                    <th width="500">Viajero</th>
+                    <th width="600">Fecha</th>
+                    <th width="300">Personas</th>
+                    <th width="500">Estado</th>
+                    <th width="500">Responsable</th>
+                    <th width="300">Agencia</th>
+                    <th width="250">Ver</th>
+                    <th width="100">Acciones</th>
+                    <!-- <th>Notas</th>
+                    <th>Archivos</th>
+                    <th>Estado</th>
+                    <th>Transferir</th>
+                    <th>Eliminar</th> -->
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let cotizacion of cotizaciones; let i = index">
+                    <td>{{ cotizacion.ref }}</td>
+                    <td>{{ cotizacion.titulo }}</td>
+                    <td>{{ cotizacion.viajeroNombre }}</td>
+                    <td>{{ cotizacion.fechaInicio | date: 'MMM d, yy' }} / {{ cotizacion.fechaFinal | date: 'MMM d, yy' }}</td>
+                    <td>{{ cotizacion.personas }}</td>
+                    <td>{{ cotizacion.estado === 0 ? 'Pendiente' : cotizacion.estado === 1 ? 'Enviada' : cotizacion.estado === 100 ? 'Recibida por cotizador' : cotizacion.estado === 2 ? 'Rechazada' : cotizacion.estado === 3 ? 'Confirmada' : cotizacion.estado
+                        === 4 ? 'Orden de compra' : cotizacion.estado === 5 ? 'Rechazada por finanzas' : cotizacion.estado === 6 ? 'Validada' : cotizacion.estado === 7 ? 'Cerrada' : 'Completada' }}
+                    </td>
+                    <td>{{ cotizacion.responsable }}</td>
+                    <td>
+                        <img [src]="filePath + '/img/logos/' + cotizacion.idAgencia + '.png'" width="60" alt="Agencia">
+                    </td>
+                    <td>
+                        <a [ngClass]="{'btn-floating': true, 'pulse red': cotizacion.caducada, 'btn-small': true}">
+                            <i class="material-icons modal-trigger" href="#modalVerCotizacion" (click)="changeCotizacion(cotizacion)">visibility</i>
+                        </a>
+                    </td>
+                    <td>
+                        <span style="width: 130px" class="material-icons dropdown-trigger accionesCotizaciones" [attr.data-target]="'accionesCotizaciones' + i">more_vert</span>
+                        <ul [id]="'accionesCotizaciones' + i" class='dropdown-content center'>
+                            <li>
+                                <a (click)="getNotas(cotizacion)" class="modal-trigger" href="#modalNotas"><span class="material-icons">comment</span>Notas</a>
+                            </li>
+                            <li>
+                                <a (click)="verArchivos(cotizacion)"><span class="material-icons">folder</span>Archivos</a>
+                            </li>
+                            <li>
+                                <a (click)="verEstadoCotizacion(cotizacion)"><span class="material-icons">query_stats</span>Timeline</a>
+                            </li>
+                            <li *ngIf="usuario.idUsuario === cotizacion.idUsuario">
+                                <a (click)="getUsuariosToTransfer(cotizacion)" class="modal-trigger" href="#modalTransferir"><span class="material-icons">connect_without_contact</span>Transferir</a>
+                            </li>
+                            <li *ngIf="usuario.idUsuario === cotizacion.idUsuario">
+                                <a (click)="delete(cotizacion.idCotizacion, i, '¿Ésta seguro que desea eliminar la cotización?')"><span class="material-icons">delete_forever</span>Eliminar</a>
+                            </li>
+                        </ul>
+                    </td>
+                    <!-- <td>
+                        <i class="material-icons modal-trigger" (click)="getNotas(cotizacion)" href="#modalNotas">comment</i>
+                    </td> -->
+                    <!-- <td>
+                        <i class="material-icons" (click)="verArchivos(cotizacion)">folder</i>
+                    </td>
+                    <td>
+                        <i class="material-icons" (click)="verEstadoCotizacion(cotizacion)">query_stats</i>
+                    </td>
+                    <td>
+                        <i *ngIf="usuario.idUsuario === cotizacion.idUsuario; else iconDisabledTransfer" class="material-icons  modal-trigger" href="#modalTransferir" (click)="getUsuariosToTransfer(cotizacion)">connect_without_contact</i>
+                    </td>
+                    <td>
+                        <i *ngIf="usuario.idUsuario === cotizacion.idUsuario; else iconDisabledDelete" class="material-icons" (click)="delete(cotizacion.idCotizacion, i, '¿Ésta seguro que desea eliminar la cotización?')">delete_forever</i>
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #iconDisabledTransfer>
+        <i class="material-icons icon-style-disabled">connect_without_contact</i>
+    </ng-template>
+
+    <ng-template #iconDisabledDelete>
+        <i class="material-icons icon-style-disabled">delete_forever</i>
+    </ng-template>
+
+    <ng-template #empty>
+        <div *ngIf="cotizaciones.length === 0">
+            <h1>No se encontraron cotizaciones.</h1>
+        </div>
+        <div *ngIf="cotizaciones.length !== 0">
+            <div class="preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <h2>Cargando cotizaciones</h2>
+        </div>
+    </ng-template>
+</div>
+
+<!-- Modal Generar una cotización nueva -->
+<div id="modalCotizacionNueva" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 15px;">close</i>
+    </div>
+    <div class="modal-content" style="padding-top: 0px">
+        <div class="row center" style="margin-bottom: 0px;">
+            <div class="col s12">
+                <h1>{{usuario.nombre}}</h1>
+            </div>
+        </div>
+        <form [formGroup]="cotizacionForm">
+            <div class="row valign-wrapper">
+                <div class="input-field col s6">
+                    <span><label >Agencia</label></span>
+                    <select class="browser-default" #agenica (change)="getAgentes(1, agenica.value)">
+                        <option *ngFor="let agencia of agencias" [value]="agencia.idAgencia">{{agencia.nombre}}</option> 
+                    </select>
+                </div>
+                <div class="input-field col s5">
+                    <span><label >*Agente</label></span>
+                    <select class="browser-default validate" formControlName="idAgente">
+                        <option  [value]="0" disabled selected>Seleccionar agente</option> 
+                        <option *ngFor="let agente of agentes" [value]="agente.idAgente">{{agente.nombre}} {{agente.apellidos}}</option> 
+                    </select>
+                    <span *ngIf="validando && cotizacionForm.get('idAgente').invalid || cotizacionForm.get('idAgente').touched && cotizacionForm.get('idAgente').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="col s1">
+                    <a class="btn-floating btn-small blue darken-4">
+                        <i class="material-icons" (click)="modalAgregarAgente()">add</i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <span><label >Responsable</label></span>
+                    <select class="browser-default" (change)="cambiarResponsable($event)">
+                        <option *ngFor="let user of usuarios" [selected]="usuario.idUsuario === user.idUsuario" [value]="user.idUsuario">{{user.nombre}} <span *ngIf="usuario.idUsuario === user.idUsuario">(Yo)</span></option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('titulo').invalid || cotizacionForm.get('titulo').touched && cotizacionForm.get('titulo').invalid}" id="titulo" type="text" formControlName="titulo">
+                    <label for="titulo">*Titulo</label>
+                    <span *ngIf="validando && cotizacionForm.get('titulo').invalid || cotizacionForm.get('titulo').touched && cotizacionForm.get('titulo').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('viajeroNombre').invalid || cotizacionForm.get('viajeroNombre').touched && cotizacionForm.get('viajeroNombre').invalid}" id="viajeroNombre" type="text" formControlName="viajeroNombre">
+                    <label for="viajeroNombre">*Nombre(s) del viajero</label>
+                    <span *ngIf="validando && cotizacionForm.get('viajeroNombre').invalid || cotizacionForm.get('viajeroNombre').touched && cotizacionForm.get('viajeroNombre').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s6">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('viajeroApellido').invalid || cotizacionForm.get('viajeroApellido').touched && cotizacionForm.get('viajeroApellido').invalid}" id="viajeroApellido" type="text" formControlName="viajeroApellido">
+                    <label for="viajeroApellido">*Apellido(s) del viajero</label>
+                    <span *ngIf="validando && cotizacionForm.get('viajeroApellido').invalid || cotizacionForm.get('viajeroApellido').touched && cotizacionForm.get('viajeroApellido').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <!-- <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && cotizacionForm.get('viajeroTel').invalid || cotizacionForm.get('viajeroTel').touched && cotizacionForm.get('viajeroTel').invalid}"
+                    id="viajeroTel" 
+                    type="text" 
+                    formControlName="viajeroTel">
+                    <label for="viajeroTel">*Teléfono del viajero</label>
+                    <span *ngIf="validando && cotizacionForm.get('viajeroTel').invalid || cotizacionForm.get('viajeroTel').touched && cotizacionForm.get('viajeroTel').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div> -->
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <label for="start">*Del:</label>
+                    <input type="date" #fechaDel id="del" formControlName="fechaInicio" (change)="setFechaAl(fechaDel.value)">
+                    <span *ngIf="validando && cotizacionForm.get('fechaInicio').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="col s6">
+                    <label for="start">*Al:</label>
+                    <input type="date" id="al" formControlName="fechaFinal">
+                    <span *ngIf="validando && cotizacionForm.get('fechaFinal').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('numM').invalid || cotizacionForm.get('numM').touched && cotizacionForm.get('numM').invalid}" id="numM" type="number" formControlName="numM">
+                    <label for="numM">*Adultos</label>
+                    <span *ngIf="validando && cotizacionForm.get('numM').invalid || cotizacionForm.get('numM').touched && cotizacionForm.get('numM').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('num18').invalid || cotizacionForm.get('num18').touched && cotizacionForm.get('num18').invalid}" id="num18" type="number" formControlName="num18">
+                    <label for="num18">*Menores de 18</label>
+                    <span *ngIf="validando && cotizacionForm.get('num18').invalid || cotizacionForm.get('num18').touched && cotizacionForm.get('num18').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input [ngClass]="{'invalid': validando && cotizacionForm.get('num12').invalid || cotizacionForm.get('num12').touched && cotizacionForm.get('num12').invalid}" id="num12" type="number" formControlName="num12">
+                    <label for="num12">*Menores de 12</label>
+                    <span *ngIf="validando && cotizacionForm.get('num12').invalid || cotizacionForm.get('num12').touched && cotizacionForm.get('num12').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <span><label >*Divisa de la cotización</label></span>
+                    <select class="browser-default" formControlName="divisa">
+                        <option [value]="1">MXN</option>
+                        <option [value]="2">USD</option> 
+                        <option [value]="3">EUR</option> 
+                    </select>
+                    <span *ngIf="validando && cotizacionForm.get('divisa').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s6">
+                    <span><label >*Comisión del agente de viaje</label></span>
+                    <select class="browser-default" formControlName="comisionAgente">
+                        <option  [value]="1">Tarifa neta</option>
+                        <option  [value]="2">Comisión del agente incluida</option> 
+                    </select>
+                    <span *ngIf="validando && cotizacionForm.get('comisionAgente').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    Estado: Pendiente
+                </div>
+                <div class="input-field col s6">
+                    Versión: 1
+                </div>
+            </div>
+            <div class="row center-align">
+                <div class="col s4 file-field">
+                    <a class="btn-small">
+                        <i class="material-icons right">attach_file</i>Adjuntar archivos
+                        <input type="file" (change)="cargarArchivo($event.target.files)">
+                    </a>
+                    <div class="file-path-wrapper hide">
+                        <input class="file-path validate" type="text" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4" *ngFor="let img of imagenesParaMostrar; let i = index">
+                    <i class="material-icons right" (click)="eliminarArchivo(img, i)">close</i>
+                    <span [innerHTML]="img.img"></span>
+                    <p class="center-align">{{ img.name }}</p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close btn-flat" (click)="validando = false">Cancelar</a>
+        <a class="btn" (click)="guardar()">Aceptar</a>
+    </div>
+</div>
+
+<!-- Modal ver cotización -->
+<div id="modalVerCotizacion" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content" style="padding-top: 0px !important;">
+        <div class="row center">
+            <div class="col s4">
+                <strong>
+                    <h2>Agente:</h2>
+                </strong> {{ cotizacion.agente }}
+            </div>
+            <div class="col s4">
+                <strong>
+                <h2>Agencia:</h2>
+            </strong> {{ cotizacion.nombre }}
+            </div>
+            <div class="col s4">
+                <strong>
+                <h2>Responsable:</h2>
+            </strong> {{ cotizacion.responsable }}
+            </div>
+        </div>
+        <hr>
+        <div *ngIf="showCaducada">
+            <div class="row">
+                <div class="col s12">
+                    <div class="card deep-orange darken-4">
+                        <div class="card-content white-text">
+                            <span class="card-title center">Cotización por caducar</span>
+                            <p class="center">
+                                La cotización <strong style="font-size: 18px;">{{ cotizacion.ref }}</strong> caducará el día
+                                <strong style="font-size: 18px;">{{ cotizacion.disponibleHasta | date: 'MMM d, y, h:mm a' }}</strong> (Será eliminada automáticamente en dicha fecha).
+                            </p>
+                        </div>
+                        <div class="card-action center">
+                            <a class="amber-text modal-close" style="cursor: pointer;">Entendido</a>
+                            <a class="amber-text" style="cursor: pointer;" (click)="actualizarTiempoCotizacion(cotizacion)">Guardar por 30 días más</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showDefault">
+            <div class="row red-text" style="margin-top: 20px;">
+                <div *ngIf="cotizacion.estado === 0" class="col s4">
+
+                </div>
+                <div *ngIf="cotizacion.estado !== 0" class="col s4">
+                    <strong>Version: </strong>V{{ cotizacion.version }} <br>
+                    <a style="cursor: pointer; font-size: 11px;" (click)="changeContent(4)">Ver historial de versiones</a>
+                </div>
+                <div class="col s4">
+                    <strong>
+                        <h2>{{ cotizacion.ref }}</h2>
+                    </strong>
+                </div>
+                <div class="col s4">
+                    <strong>Estado: </strong> {{ cotizacion.estado === 0 ? 'Pendiente' : cotizacion.estado === 1 ? 'Enviada' : cotizacion.estado === 100 ? 'Recibida por cotizador' : cotizacion.estado === 2 ? 'Rechazada' : cotizacion.estado === 3 ? 'Confirmada'
+                    : cotizacion.estado === 4 ? 'Orden de compra' : cotizacion.estado === 5 ? 'Rechazada por finanzas' : cotizacion.estado === 6 ? 'Validada' : cotizacion.estado === 7 ? 'Cerrada' : 'Completada' }}
+                </div>
+            </div>
+            <div *ngIf="cotizacion.estado !== 0" class="row">
+                <div class="col s4">
+                    <strong>Fecha de emisión: </strong>{{ cotizacion.createdAt | date: 'MMM d, y, h:mm a' }}
+                </div>
+                <div class="col s4">
+                    <strong>Disponible hasta: </strong>{{ cotizacion.disponibleHasta | date: 'MMM d, y, h:mm a' }}
+                </div>
+                <div class="col s4">
+                    <strong>Fecha de último envío: </strong>{{ cotizacion.fechaEnvio | date: 'MMM d, y, h:mm a' }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <strong>Fecha de viaje: </strong>{{ cotizacion.fechaInicio }} <strong>al</strong> {{ cotizacion.fechaFinal }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4">
+                    <strong>Adultos: </strong>{{ cotizacion.numM }}
+                </div>
+                <div class="col s4">
+                    <strong>Menores de 18: </strong>{{ cotizacion.num18 }}
+                </div>
+                <div class="col s4">
+                    <strong>Menores de 12: </strong>{{ cotizacion.num12 }}
+                </div>
+            </div>
+            <hr>
+            <div *ngIf="this.usuario.idUsuario === cotizacion.idUsuario" class="row">
+                <div *ngIf="cotizacion.estado === 0" class="col s4 center">
+                    <a class="btn flow-text" (click)="cancelarCotizacion(cotizacion.idCotizacion, cotizacion.estado)">
+                        <i class="material-icons right">cancel</i> Cancelar
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 100" class="col s4 center">
+                    <a class="btn flow-text" (click)="changeContent(2, cotizacion)">
+                        <i class="material-icons right">library_add</i> Nueva versión
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 100" class="col s4 center">
+                    <a class="btn modal-trigger flow-text" href="#modalRechazo">
+                        <i class="material-icons right">cancel</i> Rechazar
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 100" class="col s4 center">
+                    <a class="btn flow-text" (click)="confirmarCotizacion()">
+                        <i class="material-icons right">check_circle</i> Confirmar
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 0" class="col s4 center">
+                    <a class="btn flow-text" (click)="changeContent(3)">
+                        <i class="material-icons right">assignment_return</i> Retomar
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 2" class="col s4 center">
+                    <a class="btn flow-text" (click)="reactivarCotizacion()">
+                        <i class="material-icons right">refresh</i> Reactivar
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 3" class="col s4 center">
+                    <a class="btn flow-text" style="font-size: 1vh !important;" (click)="cambiarEstadoCotizacion(cotizacion, 4)">
+                        <i class="material-icons right">fact_check</i> Garantizar cotización
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 6" class="col s4 center">
+                    <a class="btn flow-text" (click)="completarInfo(cotizacion)" style="font-size: 1vh !important;">
+                        <i class="material-icons right">fact_check</i> Completar información
+                    </a>
+                </div>
+                <div *ngIf="cotizacion.estado === 8" class="col s4 center">
+                    <a class="btn flow-text" style="font-size: 1vh !important;" (click)="itinerario(cotizacion)">
+                        <i class="material-icons right">fact_check</i> Generar itinerario
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showNuevaVersion">
+            <div class="row">
+                <i class="material-icons left" (click)="changeContent(0)">undo</i>
+            </div>
+            <div class="row center">
+                <h2>Detalle de nueva versión</h2>
+            </div>
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <textarea class="validate" rows="40" cols="50" style="height: 150px;"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <div class="row">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>Adjuntar</span>
+                                <input type="file" multiple>
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Selecciona un archivo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <a class="btn right">Enviar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="showHistorial">
+            <div class="row">
+                <i class="material-icons left" (click)="changeContent(0)">undo</i>
+            </div>
+            <div class="row center">
+                <h2>Historial de versiones y cambios</h2>
+            </div>
+            <div class="row">
+                <table class="centered">
+                    <thead>
+                        <tr>
+                            <th>#Versión</th>
+                            <th>Fecha</th>
+                            <th>Responsable</th>
+                            <th>Acción</th>
+                            <th>Detalles de versión</th>
+                            <th>Ver productos</th>
+                            <th>Ver PDF</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let version of versiones">
+                            <td>V{{ version.versionCotizacion }}</td>
+                            <td>{{ version.createdAt | date: 'MMM d, y, h:mm a' }}</td>
+                            <td>{{ version.usuario }}</td>
+                            <td>{{ version.accion === 1 ? 'Actualización' : 'Eliminación' }}</td>
+                            <td>{{ version.detalle }}</td>
+                            <td>
+                                <i class="material-icons" (click)="redirect('productos', cotizacion.idCotizacion, version.versionCotizacion)">open_in_new</i>
+                            </td>
+                            <td>
+                                <i class="material-icons" (click)="redirect('procesado', cotizacion.idCotizacion, version.versionCotizacion)">picture_as_pdf</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal para agregar comentarios -->
+<div id="modalNotas" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row center">
+            <div class="col s8">
+                <h1>Nota</h1>
+            </div>
+            <div class="col s4">
+                <h1>Asunto</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                <div class="input-field col s12">
+                    <select name="asunto" [(ngModel)]="asunto">
+                        <option value="" disabled selected>----Seleccionar----</option>
+                        <option value="Solicitud de nueva versión">Solicitud de nueva versión</option>
+                        <!-- <option value="Cancelación">Cancelación</option> -->
+                        <option value="Solicitud de rechazo">Solicitud de rechazo</option>
+                        <option value="Solicitud de aprobación">Solicitud de aprobación</option>
+                        <option value="solicitud de reactivación">solicitud de reactivación</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <label>Asunto</label>
+                </div>
+            </div>
+
+            <div class="col s4">
+                <div class="input-field col s12">
+                    <select name="prioridad" [(ngModel)]="prioridad">
+                        <option value="1">Baja</option>
+                        <option value="1">Media</option>
+                        <option value="1">Alta</option>
+                    </select>
+                    <label>Prioridad</label>
+                </div>
+            </div>
+
+            <div class="col s4">
+                <div class="input-field col s12">
+                    <label for="caducidad">Tiempo de expiración</label>
+                    <input id="caducidad" type="number" class="validate" [(ngModel)]="caducidad">
+                </div>
+            </div>
+
+            <div class="col s12">
+                <textarea class="validate" rows="40" cols="50" style="height: 100px;" name="nota" [(ngModel)]="nota"></textarea>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <a class="btn right" (click)="insertNota('nota')">Guardar</a>
+            </div>
+        </div>
+        <!-- <div class="row" *ngIf="notas.length !== 0; else emptyNotas"> -->
+        <div class="row">
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Asunto</th>
+                        <th>Nota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let nota of notas">
+                        <td>{{ nota.idNota }}</td>
+                        <td>{{ nota.createdAt | date: 'EEEE d MMMM, y, h:mm:ss a' }}</td>
+                        <td>{{ nota.usuario }}</td>
+                        <td class="red-text"><strong>{{ nota.asunto }}</strong></td>
+                        <td>{{ nota.nota }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyNotas>
+    <h2 class="center">No hay notas</h2>
+</ng-template>
+
+
+
+
+<!-- Modal rechazo -->
+<div id="modalRechazo" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row center">
+            <h1>Motivo de rechazo</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea class="validate" rows="40" cols="50" style="height: 100px;" name="nota" [(ngModel)]="nota"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <a class="btn right" (click)="insertNota('motivo')">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal reasignar -->
+<div id="modalTransferir" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content" style="padding-top: 0px">
+        <div class="row center">
+            <div class="col s12">
+                <h1>Elegir nuevo responsable</h1>
+            </div>
+        </div>
+        <form #transferForm="ngForm">
+            <div class="row">
+                <div class="col s12">
+                    <p *ngFor="let usuario of usuariosToTransfer">
+                        <label>
+                            <input required (click)="changeUserToTransfer(usuario)" name="usuario" [checked]="usuario.idUsuario === userSelected.idUsuario" type="radio"/>
+                            <span>{{ usuario.nombre }}</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+            <div class="row center-align">
+                <button style="width: 100%" type="button" class="btn" (click)="transferirCotizacion(transferForm)">Transferir</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal archivos -->
+<div id="modalArchivos" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row center">
+            <h1>Archivos ({{ this.cotizacion.ref }})</h1>
+        </div>
+        <div *ngIf="archivos.length > 0; else archivosVacios">
+            <div class="row center">
+                <div *ngFor="let archivo of archivos">
+                    <div class="col s4">
+                        <img style="display: block; margin: auto; cursor: pointer;" class="center-align" src="{{ archivo.fullPath }} " height="120" width="120" (click)="verArchivo(archivo)">
+                        <p></p>
+                        <p><strong>NOTAS</strong></p>
+                        <p style="text-align: center">{{ archivo.notas }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #archivosVacios>
+    <h3 class="center">No hay archivos para mostrar.</h3>
+</ng-template>
+
+
+<!-- Modal para agregar un nuevo agente -->
+<div id="modalAgregarAgente" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content" style="padding-top: 0px">
+        <div style="text-align: center;">
+            <h2>Nuevo Agente</h2>
+        </div>
+        <form #agenteForm="ngForm">
+            <div class="row">
+                <div class="col s12">
+                    <label>Agencia</label>
+                    <select id="agenciasNuevo" class="browser-default" name="agenciasNuevo" [(ngModel)]="agente.idAgencia" required>
+                        <option *ngFor="let agencia of agencias" [selected]="+agente.idAgencia === +agencia.idAgencia" [value]="agencia.idAgencia">{{agencia.nombre}}</option>  
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input [ngClass]="{'invalid': validandoAgenteForm && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)}" required type="text" name="agente" #nombre="ngModel" [(ngModel)]="agente.nombre">
+                    <label for="nombreNuevo">Nombre</label>
+                    <span *ngIf="validandoAgenteForm && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s6">
+                    <input [ngClass]="{'invalid': validandoAgenteForm && apellidos.invalid || apellidos.invalid && (apellidos.dirty || apellidos.touched)}" required type="text" name="apellidos" #apellidos="ngModel" [(ngModel)]="agente.apellidos">
+                    <label for="apellidosNuevo">Apellidos</label>
+                    <span *ngIf="validandoAgenteForm && apellidos.invalid || apellidos.invalid && (apellidos.dirty || apellidos.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12 ">
+                    <input [ngClass]="{'invalid': validandoAgenteForm && correo.invalid || correo.invalid && (correo.dirty || correo.touched)}" type="email" name="correo" #correo="ngModel" [(ngModel)]="agente.correo" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                    <label for="apellidosNuevo">Correo</label>
+                    <span *ngIf="validandoAgenteForm && correo.value === '' || correo.value === '' && (correo.dirty || correo.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                    <span *ngIf="correo.value !== '' && correo.invalid" class="helper-text red-text text-darken-2">Debes ingresar un correo valido.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <div style="background-color: #0744a3; color: white; text-align: center; margin-bottom: 25px; padding: 10px">
+                        Comisiones(%)
+                    </div>
+                    <div class="row valign-wrapper" *ngFor="let comision of comisiones; let i = index">
+                        <div class="col s6">
+                            {{comision.nombre}}
+                        </div>
+                        <div class="col s6">
+                            <input [ngClass]="{'invalid': comisiones[i].invalid}" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="comision.comision" (ngModelChange)="validarComision($event, i)" required>
+                            <span style="font-size: 12px;" *ngIf="comisiones[i].invalid" class="red-text text-darken-2">El campo es obligatorio</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button style="width: 100%" type="button" class="btn" (click)="guardarAgenteNuevo(agenteForm)">Agregar</button>
+        </form>
+    </div>
+</div>

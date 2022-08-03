@@ -1,0 +1,368 @@
+<div *ngIf="editing" class="col s12" style="text-align: center; margin-top: 10px; background-color: #051c49; color: white;">
+    TRASLADO
+</div>
+
+
+
+<div class="col s6 m6" style="padding: 20px; min-height: 100%" *ngIf="desde.length>0">
+
+    <div class="col s12">
+        <br>
+        <select class="browser-default" name="tipoTraslado" (change)="seleccionarDesdeOtra(); " [(ngModel)]="tipo">
+            <option value="1" >Traslado clásico</option>
+            <option value="2" >Traslado a otra ciudad</option>
+ 
+        </select>
+        <br>
+
+    </div>
+
+
+    <div id="trasl_1" class="col s12 form_ciudad ciudad_traslado ">
+        <div class="col s12 m6" *ngIf="tipo ==1">
+            <h4>¿De donde sales?​</h4>
+            <p *ngFor="let item of desde; let ii = index">
+                <label>
+                    <input name="groupDesde" (change)="setDesde(ii)"  type="radio" id="radio_ciudad1" [checked]="(item.idDesde === desdeActual.idDesde)"/>
+                    <span>{{item?.nombre}}</span>
+                </label>
+            </p>
+        </div>
+
+        <div *ngIf="tipo ==2" class="col s12 m6">
+            <h4>¿De donde sales?​</h4>
+            <p *ngFor="let item of desde; let ii = index">
+                <label *ngIf="item.desdeOriginal.includes('Centro')">
+                    <input name="groupDesde" (change)="setDesde(ii)"  type="radio" id="radio_ciudad1" [checked]="(item.idDesde === desdeActual.idDesde)"/>
+                    <span>{{item?.nombre}}</span>
+                </label>
+            </p>
+        </div>
+
+        <div class="col s12 m6" *ngIf="tipo ==1">
+            <h4>¿Hacía donde vas?</h4>
+
+            <p *ngFor="let item of hacia; let ii = index">
+                <label *ngIf="!esOtraCiudad(desdeActual.desdeOriginal,item)">
+                    <input name="groupHacia" (change)="setHacia(ii)"  type="radio" id="radio_ciudad1" [checked]="(item.idHacia === haciaActual.idHacia)"/>
+                    <span>{{item?.nombre}}</span>
+                </label>
+            </p>
+        </div>
+        <div class="col s12 m6" *ngIf="tipo ==2">
+            <h4>¿Hacía donde vas?</h4>
+
+            <p *ngFor="let item of hacia; let ii = index">
+                <label *ngIf="esOtraCiudad(desdeActual.desdeOriginal,item)">
+                    <input name="groupHacia" (change)="setHacia(ii)"  type="radio" id="radio_ciudad1" [checked]="(item.idHacia === haciaActual.idHacia)"/>
+                    <span>{{nombreOtraCiudad(item?.nombre)}}</span>
+                </label>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="col s12" style="display: flex ; justify-content: center; align-items: center;" *ngIf="desde.length==0">
+    No hay traslados disponibles
+</div>
+
+
+
+
+<div class="col s6 m6" style="padding: 20px;" *ngIf="desde.length>0">
+    <div id="datos" class="col s12 form_ciudad ciudad_traslado card blue-grey darken-1">
+        <div class="row">
+
+            <div class="col s12">
+                <span><label >Vehiculo</label></span>
+                <select class="browser-default" name="vehiculos" required (change)="this.mejorasOtros=[]; setVehiculoActual($event.target.value)">
+                            <option [selected]="iii === this.ii" *ngFor="let vehiculo of vehiculos; let iii = index" [value]="iii">{{vehiculo.nombre}}</option> 
+                        </select>
+            </div>
+
+            <div class="col s4" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{vehiculoActual?.pasajerosMax}} pasajeros max
+            </div>
+
+            <div class="col s4" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{vehiculoActual?.maletasMax}} maleta(s) de 23 kg max
+            </div>
+
+
+            <div class="col s4" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{vehiculoActual?.maletasManoMax}} maleta(s) de mano max
+            </div>
+
+            <div class="col s6">
+
+                <label for="fechaTraslado">Fecha</label>
+
+                <input [ngModelOptions]="{standalone: true}" type="text" #fecha id="fechaTraslado" class="datepicker" name="fechaTraslado" [(ngModel)]="trasladoAdquirido.fecha" (change)="actualizarPrecioTraslados(fecha.value)">
+
+            </div>
+
+            <div class="col s6">
+
+                <label for="hora">Hora</label>
+
+                <input [ngModelOptions]="{standalone: true}" type="time" id="horaTraslado" name="horaTraslado" [(ngModel)]="trasladoAdquirido.hora" (change)="actualizarPrecioTraslados()">
+
+            </div>
+
+
+            <div class="col s12">
+                <label for="hora">Número de personas</label>
+                <input [ngClass]="{'invalid': validando && trasladoAdquirido.pasajeros<1 || validando && trasladoAdquirido.pasajeros== null} " type="number" id="personas" name="personas" (keyup)="verificarMaxPas()" [(ngModel)]="trasladoAdquirido.pasajeros">
+                <span *ngIf="validando && trasladoAdquirido.pasajeros<1 || validando && trasladoAdquirido.pasajeros== null" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+
+            </div>
+
+
+
+            <div class="col s12" *ngIf="esDireccionEspecifica">
+                <label *ngIf="this.desdeActual.idDesde==-1" for="desde">¿Desde donde sales?</label>
+                <textarea [ngClass]="{'invalid': validando && trasladoOtro.desde.length<1 && this.desdeActual.idDesde==-1}" *ngIf="this.desdeActual.idDesde==-1" id="desde" class="materialize-textarea" [(ngModel)]="trasladoOtro.desde" (keyup)="setDescripcionDesde()"></textarea>
+                <span *ngIf="validando && trasladoOtro.desde.length<1 && this.desdeActual.idDesde==-1" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+
+                <label *ngIf="this.haciaActual.idHacia==-1" for="hacia">¿Hacía donde vas?</label>
+                <textarea [ngClass]="{'invalid': validando && trasladoOtro.hacia.length<1 && this.haciaActual.idHacia==-1}" *ngIf="this.haciaActual.idHacia==-1" class="materialize-textarea" [(ngModel)]="trasladoOtro.hacia" (keyup)="setDescripcionHacia()"></textarea>
+                <span *ngIf="validando && trasladoOtro.hacia.length<1 && this.haciaActual.idHacia==-1" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+
+            </div>
+
+
+
+
+            <div *ngIf="esDireccionEspecifica" class="col s8">
+                <label for="tarifa">Tarifa</label>
+                <input type="number" id="tarifa" name="tarifa" (keyup)="this.mejorasOtros=[];getTotal(); verificarEdicion()" [(ngModel)]="trasladoOtro.tarifa">
+            </div>
+
+            <div class="col s4" *ngIf="esDireccionEspecifica">
+                <span><label >Divisa</label></span>
+                <select class="browser-default" name="divisas" required (change)="verificarEdicion(); getTotal()" [(ngModel)]="trasladoOtro.idDivisa">
+                            <option *ngFor="let divisa of divisas; " [value]="divisa.idDivisa">{{divisa.divisa}}</option> 
+                        </select>
+            </div>
+
+
+
+            <div class="col s12" *ngIf="!esDireccionEspecifica">
+                <label for="descripcion">Descripción</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="w3review" name="descripcion" rows="40" cols="50" style="height: 100px;" [(ngModel)]="trasladoAdquirido.descripcion" (keyup)="verificarEdicion()">
+                    At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies. 
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="esDireccionEspecifica">
+                <label for="descripcion">Descripción</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="w3review" name="descripcion" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="trasladoOtro.descripcion">
+                    At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="esDireccionEspecifica">
+                <label for="notas">Cancelaciones</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="w3review" name="notas" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="trasladoOtro.cancelaciones">
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="!esDireccionEspecifica">
+                <label for="notas">Notas del operador</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="w3review" name="notas" rows="40" cols="50" style="height: 100px;" [(ngModel)]="trasladoAdquirido.notas" (keyup)="verificarEdicion()">
+                    At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="esDireccionEspecifica">
+                <label for="notas">Notas</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="w3review" name="notas" rows="40" cols="50" style="height: 100px;" [(ngModel)]="trasladoOtro.notas" (keyup)="verificarEdicion()">
+                    At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+                    </textarea>
+            </div>
+
+            <div class="col s12" *ngIf="this.vehiculos.length>1 && !esDireccionEspecifica && !editing || editingCarrito">
+                Mejoras:
+                <br>
+                <div *ngFor="let vehiculo of costos">
+                    <p *ngIf="vehiculo.idVehiculo!= this.vehiculoActual.idVehiculo">
+                        <label>
+                        <input [checked]="esMejora(vehiculo.idVehiculo)"  id="{{vehiculo.idVehiculo}}_m" type="checkbox" class="filled-in" (change)="setMejoras(vehiculo.idVehiculo)" />
+                        <span style="color: white">{{vehiculo.vehiculo}}</span> &nbsp;<span style="color:rgb(146, 28, 28);" >(<span *ngIf="getDiferencia(vehiculo.idVehiculo)>0" >+</span>  {{getDiferencia(vehiculo.idVehiculo) | currency: divisaBase.divisa }})</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+
+
+            <div class="col s12" *ngIf="esDireccionEspecifica && !editing">
+                <br> Ingresa mejoras:
+                <br>
+
+                <div class="row">
+                    <div class="col s3">
+                        <span><label >Vehiculo</label></span>
+                        <select class="browser-default" name="vehiculosMejoras" required [(ngModel)]="mejoraOtro.idVehiculo">
+                             <option *ngFor="let vehiculo of vehiculosMejoras(); let ii = index"  [value]="vehiculo.idVehiculo">{{vehiculo.nombre}}</option> 
+                        </select>
+                    </div>
+
+                    <div class="col s3">
+                        <label for="tarifaMejora">Tarifa</label>
+                        <input type="number" id="tarifaMejora" name="tarifaMejora" [(ngModel)]="mejoraOtro.tarifa">
+                    </div>
+
+
+                    <div class="col s3">
+                        <span><label >Divisa</label></span>
+                        <select class="browser-default" name="divisas" [(ngModel)]="mejoraOtro.idDivisa">
+                            <option *ngFor="let divisa of divisas; " [value]="divisa.idDivisa">{{divisa.divisa}}</option> 
+                        </select>
+                    </div>
+
+                    <div *ngIf="esDireccionEspecifica" class="col s3">
+                        <label for=""></label>
+                        <br>
+                        <a class="waves-effect waves-light btn" (click)="agregarMejoraOtro()">agregar</a>
+                    </div>
+
+                    <div class="col s12" *ngIf="mejorasOtros.length>0">
+                        <table>
+                            <thead>
+                                <th>
+                                    Vehiculo
+                                </th>
+                                <th>
+                                    Tarifa
+                                </th>
+                                <th>
+                                    Diferencia(con comisiones)
+                                </th>
+                                <th>
+
+                                </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let mejora of mejorasOtros; let ii= index">
+                                    <td>
+                                        {{this.getNombreVehiculo(mejora.idVehiculo)}}
+                                    </td>
+                                    <td>
+                                        {{mejora.tarifa | currency: getDivisa(mejora.idDivisa).divisa}}
+                                    </td>
+                                    <td>
+                                        {{mejora.diferencia | currency: getDivisa(mejora.idDivisa).divisa}}
+
+                                    </td>
+                                    <td>
+                                        <i title="Eliminar" class="tiny material-icons " style="color:red;" (click)="eliminarMejor(ii)">clear</i>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <br>
+            <div class="col s12" style="margin-top: 10px; margin-bottom: 10px;">
+
+                Comisión de 5rives:
+                <b *ngIf="!mostrarComision5rives"> {{this.trasladoActual.comision}}% </b> &nbsp;
+                <input *ngIf="mostrarComision5rives" [(ngModel)]="comision5rivesNueva" type="number" id="5rivesTPAP" name="5rivesTPAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comision5rivesNueva=this.trasladoActual.comision; mostrarComision5rives=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComision5rives()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComision5rives=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+
+            </div>
+
+            <div class="col s12" *ngIf="cotizacion.comisionAgente==2" style="margin-top: 10px; margin-bottom: 10px;">
+                Comisión del agente:
+                <b *ngIf="!mostrarComisionAgente"> {{comisionAgente}}% </b> &nbsp;
+                <input *ngIf="mostrarComisionAgente" [(ngModel)]="comisionAgenteNueva" type="number" id="agentePAP" name="agentePAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comisionAgenteNueva=comisionAgente; mostrarComisionAgente=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComisionAgente()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComisionAgente=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+            </div>
+        </div>
+        <div *ngIf="completing">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información</h1>
+                </div>
+            </div>
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6 left">
+                    <label>Tipo Traslado</label>
+                    <select class="browser-default" #tipoTraslado (change)="completarInformacion(tipoTraslado.value, 'tipoTraslado')">
+                        <option value="" disabled selected>---Seleccionar---</option>
+                        <option value="Tren">Tren</option>
+                        <option value="Vuelo">Vuelo</option>
+                        <option value="Crucero">Crucero</option>
+                    </select>
+                </div>
+                <div class="input-field col s6">
+                    <label for="codigoR">Código de reserva</label>
+                    <input id="codigoR" type="text" #codigoR (change)="completarInformacion(codigoR.value, 'codigoR')">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a *ngIf="!editing  && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="agregar()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{  this.total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; AGREGAR</a>
+                <a *ngIf="editing  && !completing && editado  && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="abrirModalDetalle()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{  this.total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; ACTUALIZAR</a>
+                <a *ngIf="editing  && !completing && !editado && !editingCarrito" class="btn cta_naranja" id="cta_paso4" style="width: 100%;" (click)="cerrarModalEditar()">&nbsp;<span class="precio" style="width: 100%;">{{  this.total| currency: divisaBase.divisa}} ---</span></a>
+                <a *ngIf="editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="actualizarCarrito()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{  this.total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; ACTUALIZAR</a>
+
+                <a *ngIf="editing && completing" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="onComplete()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{  this.total| currency: divisaBase.divisa}}</span> &nbsp;&nbsp; COMPLETAR</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<!-- Modal detalle -->
+<div id="modalDetalleTraslado" class="modal">
+    <div class="modal-content">
+        <div class="row center">
+            <h1>¿Por qué realizaste ésta actualización..?</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea id="detalle" #detalle class="validate" rows="40" cols="50" style="height: 100px;"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a class="btn right" (click)="actualizar()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>

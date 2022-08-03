@@ -1,0 +1,54 @@
+
+/* FORM */
+.container-date textarea{
+    height: 180px;
+    overflow: auto;
+}
+
+i{
+    cursor: pointer;
+}
+
+/* TABLE */
+.container-table{
+    margin: 20px;
+    margin-top: 50px;
+}
+
+.options{
+    margin-bottom: 0px !important;
+}
+
+.wrapper-up, .wrapper-down{
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.wrapper-up{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.wrapper-down{
+    margin-top: 0px;
+}
+
+.scroll-up, .scroll-down{
+    min-width: 300% !important;
+    display: block;
+}
+
+.scroll-up{
+    height: 20px;
+}
+
+.scroll-down{
+    font-size: 15px;
+}
+
+table textarea{
+    overflow: auto;
+    height: 230px !important;
+    width: 100%;
+    background-color: transparent;
+}

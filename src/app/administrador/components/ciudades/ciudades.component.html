@@ -1,0 +1,284 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abrirNuevaCiudad()">Nueva ciudad</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE CIUDADES</h2>
+    </div>
+
+    <div class="row">
+        <div class="col s6">
+            <span><label >Continente</label></span>
+            <select id="contSelec" class="browser-default" name="contSelec" [(ngModel)]="continenteSelec" (change)="getPaisesVista()" required>
+                <option *ngFor="let continente of continentes; let ii = index" [value]="continente.idContinente">{{continente.nombre}}</option>  
+            </select>
+        </div>
+
+        <div class="col s6">
+            <span><label>País</label></span>
+            <select id="paisSelec" class="browser-default" name="paisSelec" [(ngModel)]="paisSelec" required (change)="getCiudadesByIdPais()">
+                <option *ngFor="let pais of paisesVista; let ii = index" [value]="pais.id">{{pais.nombre}}</option>  
+            </select>
+        </div>
+
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>
+                    PAÍS
+                </th>
+                <th>
+                    NOMBRE
+                </th>
+                <th></th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let ciudad of ciudadesByPais">
+                    <td>
+                        {{ciudad?.idCiudad}}
+                    </td>
+                    <td>
+                        {{getNombrePais(paisSelec)}}
+                    </td>
+                    <td>
+                        {{ciudad?.nombre}}
+                    </td>
+
+                    <td style="width: 200px;">
+                        <i class="small material-icons" (click)="editar(ciudad.idCiudad)" title="Editar" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                        <i class="small material-icons" (click)="eliminar(ciudad.idCiudad)" title="Eliminar" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar una nueva ciudad -->
+
+<div id="nuevaCiudad" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Ciudad</h2>
+        </div>
+
+        <div class="row">
+
+            <div class="col s12">
+                <span><label >Continente</label></span>
+                <select id="contSelecNuevo" class="browser-default" name="contSelecNuevo" [(ngModel)]="continenteSelecModal" (change)="getPaisesModal()" required>
+                        <option *ngFor="let continente of continentes; let ii = index" [value]="continente.idContinente">{{continente.nombre}}</option>  
+                 </select>
+            </div>
+
+            <div class="col s12">
+                <span><label>País</label></span>
+                <select id="paisSelecNuevo" class="browser-default" name="paisSelecNuevo" [(ngModel)]="ciudad.idPais" required>
+                    <option *ngFor="let pais of paisesModal; let ii = index" [value]="pais.id">{{pais.nombre}}</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="ciudad.nombre">
+            </div>
+
+        </div>
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            PORTADA
+        </div>
+
+        <image-upload #imagenesPortada id="imagenesPortada" [max]="20" buttonCaption="SELECCIONAR IMAGEN (700 x 800)" (removed)="onRemoved($event,1,0)" (uploadFinished)="onUploadFinished($event,1,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+
+        <!-- <table>
+            <tr>
+                <td>
+                    <image-upload #imagenesG1N id="imagenesG1N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 700)" (removed)="onRemoved($event,1,0)" (uploadFinished)="onUploadFinished($event,1,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesG2N id="imagenesG3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 700)" (removed)="onRemoved($event,1,1)" (uploadFinished)="onUploadFinished($event,1,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesG3N id="imagenesG3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 700)" (removed)="onRemoved($event,1,2)" (uploadFinished)="onUploadFinished($event,1,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+            </tr>
+        </table> -->
+        <br>
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            EVENTO
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <image-upload #imagenesM1N id="imagenesM1N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (400 x 400)" (removed)="onRemoved($event,2,0)" (uploadFinished)="onUploadFinished($event,2,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesM2N id="imagenesM2N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (400 x 400)" (removed)="onRemoved($event,2,1)" (uploadFinished)="onUploadFinished($event,2,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesM3N id="imagenesM3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (400 x 400)" (removed)="onRemoved($event,2,2)" (uploadFinished)="onUploadFinished($event,2,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            DAY BY DAY
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <image-upload #imagenesP1N id="imagenesP1N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 940)" (removed)="onRemoved($event,3,0)" (uploadFinished)="onUploadFinished($event,3,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesP2N id="imagenesP2N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 940)" (removed)="onRemoved($event,3,1)" (uploadFinished)="onUploadFinished($event,3,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesP3N id="imagenesP3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 940)" (removed)="onRemoved($event,3,2)" (uploadFinished)="onUploadFinished($event,3,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+            </tr>
+        </table>
+
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            OPCIONES
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <image-upload #imagenesO1N id="imagenesO1N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 400)" (removed)="onRemoved($event,4,0)" (uploadFinished)="onUploadFinished($event,4,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesO2N id="imagenesO2N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 400)" (removed)="onRemoved($event,4,1)" (uploadFinished)="onUploadFinished($event,4,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesO3N id="imagenesO3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 400)" (removed)="onRemoved($event,4,2)" (uploadFinished)="onUploadFinished($event,4,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage=""></image-upload>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="guardarCiudad()">Aceptar</a>
+    </div>
+</div>
+
+<!-- Modal para editar una ciudad -->
+
+<div id="editarCiudad" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Ciudad</h2>
+        </div>
+
+        <div class="row">
+
+            <div class="col s12">
+                <span><label >Continente</label></span>
+                <select id="contSelecNuevo" class="browser-default" name="contSelecNuevo" [(ngModel)]="ciudadActual.idContinente" (change)="getPaisesModal()" required>
+                        <option *ngFor="let continente of continentes; let ii = index" [value]="continente.idContinente">{{continente.nombre}}</option>  
+                 </select>
+            </div>
+
+            <div class="col s12">
+                <span><label>País</label></span>
+                <select id="paisSelecEditar" class="browser-default" name="paisSelecEditar" [(ngModel)]="ciudadActual.idpais" required>
+                    <option *ngFor="let pais of paisesModal; let ii = index" [value]="pais.id">{{pais.nombre}}</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="ciudadActual.nombre">
+            </div>
+
+
+
+        </div>
+
+
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            PORTADA
+        </div>
+
+        <image-upload *ngIf="ver" #imagenesPortadaE id="imagenesPortadaE" [max]="20" buttonCaption="SELECCIONAR IMAGEN (700 x 800)" (removed)="onRemoved($event,1,0)" (uploadFinished)="onUploadFinished($event,1,0)" [extensions]="['jpg']" [style]="customStyle"
+            dropBoxMessage="" [uploadedFiles]="this.imagenesPortadaPre"></image-upload>
+
+
+        <!-- <table *ngIf="ver">
+            <tr>
+                <td>
+                    <image-upload #imagenesG1E id="imagenesG1E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 700)" (removed)="onRemoved($event,1,0)" (uploadFinished)="onUploadFinished($event,1,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesGPrecargadas[0]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesG2E id="imagenesG3E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 700)" (removed)="onRemoved($event,1,1)" (uploadFinished)="onUploadFinished($event,1,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesGPrecargadas[1]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesG3E id="imagenesG3E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 700)" (removed)="onRemoved($event,1,2)" (uploadFinished)="onUploadFinished($event,1,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesGPrecargadas[2]"></image-upload>
+                </td>
+            </tr>
+        </table> -->
+        <br>
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            EVENTO
+        </div>
+        <table *ngIf="ver">
+            <tr>
+                <td>
+                    <image-upload #imagenesM1E id="imagenesM1E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (400 x 400)" (removed)="onRemoved($event,2,0)" (uploadFinished)="onUploadFinished($event,2,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesMPrecargadas[0]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesM2E id="imagenesM2E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (400 x 400)" (removed)="onRemoved($event,2,1)" (uploadFinished)="onUploadFinished($event,2,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesMPrecargadas[1]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesM3E id="imagenesM3E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (400 x 400)" (removed)="onRemoved($event,2,2)" (uploadFinished)="onUploadFinished($event,2,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesMPrecargadas[2]"></image-upload>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            DAY BY DAY
+        </div>
+        <table *ngIf="ver">
+            <tr>
+                <td>
+                    <image-upload #imagenesP1E id="imagenesP1E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 940)" (removed)="onRemoved($event,3,0)" (uploadFinished)="onUploadFinished($event,3,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesPPrecargadas[0]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesP2E id="imagenesP2E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 940)" (removed)="onRemoved($event,3,1)" (uploadFinished)="onUploadFinished($event,3,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesPPrecargadas[1]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesP3E id="imagenesP3E" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 940)" (removed)="onRemoved($event,3,2)" (uploadFinished)="onUploadFinished($event,3,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesPPrecargadas[2]"></image-upload>
+                </td>
+            </tr>
+        </table>
+
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            OPCIONES
+        </div>
+        <table *ngIf="ver">
+            <tr>
+                <td>
+                    <image-upload #imagenesO1N id="imagenesO1N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1 (700 x 400)" (removed)="onRemoved($event,4,0)" (uploadFinished)="onUploadFinished($event,4,0)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesOPrecargadas[0]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesO2N id="imagenesO2N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2 (700 x 400)" (removed)="onRemoved($event,4,1)" (uploadFinished)="onUploadFinished($event,4,1)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesOPrecargadas[1]"></image-upload>
+                </td>
+                <td>
+                    <image-upload #imagenesO3N id="imagenesO3N" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3 (700 x 400)" (removed)="onRemoved($event,4,2)" (uploadFinished)="onUploadFinished($event,4,2)" [extensions]="['jpg']" [style]="customStyle" dropBoxMessage="" [uploadedFiles]="this.imagenesOPrecargadas[2]"></image-upload>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="actualizarCiudad()">Aceptar</a>
+    </div>
+</div>

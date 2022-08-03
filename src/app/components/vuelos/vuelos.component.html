@@ -1,0 +1,258 @@
+<div class="row">
+    <form class="col s12 z-depth-2" #vueloForm="ngForm" (ngSubmit)="onSubmit(vueloForm)">
+
+        <div class="row">
+            <div class="input-field col s4">
+                <input
+                [ngClass]="{'invalid': validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)}" 
+                required 
+                id="comision" 
+                type="number" 
+                name="comision" 
+                #comision="ngModel" 
+                [(ngModel)]="vuelo.comision" 
+                (ngModelChange)="calcularComision()">
+                <label for="comision">Comisión 5rives (%)</label>
+                <span *ngIf="validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input 
+                [ngClass]="{'invalid': validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)}" 
+                required 
+                id="comisionAgente" 
+                type="number" 
+                name="comisionAgente" 
+                #comisionAgente="ngModel" 
+                [(ngModel)]="vuelo.comisionAgente" 
+                (ngModelChange)="calcularComision()">
+                <label for="comisionAgente">Comisión Agente (%)</label>
+                <span *ngIf="validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input required id="fechaViaje" type="text" class="datepicker fecha-vuelo" name="fecha" #fecha="ngModel" [(ngModel)]="vuelo.fecha" (change)="changeDateViaje()">
+                <label for="fechaViaje">Fecha</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input 
+                [ngClass]="{'invalid': validando && noViajeros.invalid || noViajeros.invalid && (noViajeros.dirty || noViajeros.touched)}" 
+                required 
+                id="viajeros" 
+                type="number" 
+                name="noViajeros" 
+                #noViajeros="ngModel" 
+                [(ngModel)]="vuelo.noViajeros">
+                <label for="viajeros">Viajeros</label>
+                <span *ngIf="validando && noViajeros.invalid || noViajeros.invalid && (noViajeros.dirty || noViajeros.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s6">
+                <span><label>Clase</label></span>
+                <select 
+                [ngClass]="{'invalid': validando && clase.invalid || clase.invalid && (clase.dirty || clase.touched), 'browser-default': true}" 
+                required 
+                id="vueloClase" 
+                name="clase" 
+                #clase="ngModel" 
+                [(ngModel)]="vuelo.clase"
+                #vueloClase  
+                (change)="buildDescription(vueloClase.value, 'clase')">
+                    <option value="" disabled selected>--Seleccionar--</option>
+                    <option *ngFor="let clase of clases" [value]="clase.clase">{{ clase.clase }}</option>
+                </select>
+                <span *ngIf="validando && clase.invalid || clase.invalid && (clase.dirty || clase.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input disabled type="text" id="autocomplete_origenVuelos" name="origen">
+                <label for="autocomplete_origenVuelos">Origen</label>
+            </div>
+            <div class="input-field col s6">
+                <input 
+                class="autocomplete" 
+                [ngClass]="{'invalid': vuelo?.valid || validando && vueloDestino === ''}" 
+                required 
+                autocomplete="off" 
+                type="text" 
+                id="autocomplete_destinoVuelos"
+                name="destino"
+                (click)="vuelo.valid = true">
+                <label for="autocomplete_destinoVuelos">Destino</label>
+                <span *ngIf="vuelo?.valid || validando && vueloDestino === ''" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s3">
+                <label>
+                    <input [checked]="this.vuelo.maletaPeso !== 0" id="checkMaleta" name="checkMaleta" type="checkbox" class="filled-in" (change)="showInputMaletaPeso()" [(ngModel)]="this.showMaleta" />
+                    <span>Agregar maleta</span>
+                </label>
+            </div>
+            <div *ngIf="this.showMaleta" id="showMaletaPeso" class="input-field col s4">
+                <input id="maletaPeso" type="number" name="maletaPeso" #maletaPeso="ngModel" [(ngModel)]="vuelo.maletaPeso" (ngModelChange)="buildDescription($event, 'maletaPeso')">
+                <label for="maletaPeso">Peso de maleta(Kg)</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12 right-align">
+                <a id="flightWithStopoverButton" class="waves-effect waves-light btn" (click)="showFlightWithStopover()">Vuelo con escala</a>
+            </div>
+        </div>
+
+        <div *ngIf="this.isEscala" id="flightWithStopover" class="stopoverContainer">
+            <div class="row center-align">
+                <div class="col s6">
+                    <h1>Ruta de escala</h1>
+                </div>
+                <div class="input-field col s6">
+                    <input [required]="isEscala" id="fechaEscala" type="text" class="datepicker fecha-escala" name="fechaEscala" #fecha="ngModel" [(ngModel)]="vueloEscala.fecha" (change)="changeDateEscala()">
+                    <label for="fechaEscala">Fecha</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s6">
+                    <input 
+                    [ngClass]="{'invalid': validando && tiempo.invalid || tiempo.invalid && (tiempo.dirty || tiempo.touched)}" 
+                    [required]="isEscala" 
+                    id="tiempoEscala" 
+                    type="text" 
+                    name="tiempo" 
+                    #tiempo="ngModel" 
+                    [(ngModel)]="vueloEscala.tiempo" 
+                    (ngModelChange)="buildDescription($event, 'tiempoEscala')">
+                    <label for="tiempoEscala">Tiempo de escala</label>
+                    <span *ngIf="validando && tiempo.invalid || tiempo.invalid && (tiempo.dirty || tiempo.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s6">
+                    <input 
+                    [ngClass]="{'invalid': validando && lugar.invalid || lugar.invalid && (lugar.dirty || lugar.touched)}" 
+                    [required]="isEscala" 
+                    id="origenRuta" 
+                    type="text" 
+                    name="lugar" 
+                    #lugar="ngModel" 
+                    [(ngModel)]="vueloEscala.lugar" 
+                    (ngModelChange)="buildDescription($event, 'lugarEscala')">
+                    <label for="origenRuta">Lugar de escala</label>
+                    <span *ngIf="validando && lugar.invalid || lugar.invalid && (lugar.dirty || lugar.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s4">
+                <input 
+                class="timepicker"
+                [ngClass]="{'invalid': validando && horaSalida.invalid || horaSalida.invalid && (horaSalida.dirty || horaSalida.touched)}" 
+                required 
+                id="horaSalida" 
+                type="text" 
+                name="horaSalida" 
+                #horaSalida="ngModel" 
+                [(ngModel)]="vuelo.horaSalida" 
+                (change)="buildDescription($event, 'horaSalida')">
+                <label for="horaSalida">Hora de salida</label>
+                <span *ngIf="validando && vuelo.horaSalida === '' && horaSalida.invalid || vuelo.horaSalida === '' && horaSalida.invalid && horaSalida.touched" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input
+                class="timepicker" 
+                [ngClass]="{'invalid': validando && horaLlegada.invalid || horaLlegada.invalid && (horaLlegada.dirty || horaLlegada.touched)}" 
+                required 
+                id="horaLlegada1" 
+                type="text" 
+                name="horaLlegada" 
+                #horaLlegada="ngModel" 
+                [(ngModel)]="vuelo.horaLlegada" 
+                (change)="buildDescription($event, 'horaLlegada')">
+                <label for="horaLlegada1">Hora de Llegada</label>
+                <span *ngIf="validando && vuelo.horaLlegada === '' && horaLlegada.invalid || vuelo.horaLlegada === '' && horaLlegada.invalid && horaSalida.touched" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s4">
+                <input 
+                [ngClass]="{'invalid': validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)}" 
+                required
+                id="tarifa" 
+                type="number" 
+                name="tarifa" 
+                #tarifa="ngModel" 
+                [(ngModel)]="vuelo.tarifa" 
+                (ngModelChange)="vueloTotal($event)">
+                <label for="tarifa">Tarifa</label>
+                <span *ngIf="validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <label for="descripcion">Descripción</label>
+                <textarea id="descripcion" name="descripcion" #descripcion="ngModel" [(ngModel)]="vuelo.descripcion" rows="40" cols="50" style="height: 100px;">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <label for="notas">Notas del operador</label>
+                <textarea id="notas" rows="40" cols="50" style="height: 100px;" name="notas" #notas="ngModel" [(ngModel)]="vuelo.notas">
+                </textarea>
+            </div>
+        </div>
+
+        <div *ngIf="!editing || editingCarrito " class="row">
+            <div class="col s12">
+                <ul class="collapsible">
+                    <li>
+                        <div class="collapsible-header center-align">
+                            DESPLEGAR MEJORAS DE VUELO
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="row">
+                                <div *ngFor="let clase of clases" class="col s12">
+                                    <label>
+                                        <input [checked]="clase.tarifa > 0" [disabled]="!vuelo.tarifa || actualClase.idClase === clase.idClase" [id]="'mejoraVuelo' + clase.idClase" (click)="cargarMejoras(clase)" type="checkbox" />
+                                        <span>
+                                            {{ clase.clase }} (<span *ngIf="clase.tarifa > 0">+</span>{{ clase.tarifa | currency: cotizacion.divisa }})
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col s12" style="margin-bottom: 25px;">
+            <button *ngIf="editing && !editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="abrirModalDetalle()">{{ total | currency: cotizacion.divisa }} Actualizar</button>
+            <button *ngIf="!editing && !editingCarrito" type="submit" style="width: 100%;" class="btn amber darken-2">{{ total | currency: cotizacion.divisa }} Agregar</button>
+            <button *ngIf="editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="updateCarrito(vueloForm)">{{ total | currency: cotizacion.divisa }} Actualizar</button>
+
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal detalle -->
+<div id="modalDetalleVuelo" class="modal">
+    <div class="modal-content">
+        <div class="row center">
+            <h1>¿Por qué realizaste ésta actualización?</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea id="detalle" #detalle rows="40" cols="50" style="height: 100px;"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a class="btn right" (click)="onUpdate()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>

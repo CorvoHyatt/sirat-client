@@ -1,0 +1,20 @@
+<div class="panel">
+    <div class="row center">
+        <div class="col s12">
+            <h1>Ingresar el archivo de xlsx</h1>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s12">
+            <input type="file" name="Upload CSV" id="txtFileUploadCYC" (change)="uploadListener($event)" accept=".xlsx" #csvReader />
+        </div>
+    </div>
+    <div *ngIf="procesar" class="row">
+        <div class="col s12">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+            <h4 class="center">Espere un momento por favor, su archivo está siendo procesado.</h4>
+        </div>
+    </div>
+</div>

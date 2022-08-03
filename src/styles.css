@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    overflow-y: auto !important;
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.mat-dialog-container {
+    padding: 0 !important;
+}
+
+.margenes20 {
+    margin: 20px;
+}
+
+.padding20 {
+    padding: 20px;
+}
+
+.panel {
+    padding-left: 300px;
+}
+
+.centrado {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.swal2-input[type=number] {
+    max-width: 100% !important;
+    min-width: 100% !important;
+}
+
+.pointer {
+    cursor: pointer;
+}

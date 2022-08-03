@@ -1,0 +1,29 @@
+.container-table {
+    margin: 20px;
+    margin-top: 50px;
+}
+
+.options {
+    margin-bottom: 0px !important;
+}
+
+table textarea {
+    overflow: auto;
+    height: 80px !important;
+    width: 100%;
+    background-color: transparent;
+}
+
+i {
+    cursor: pointer;
+}
+
+.input-field {
+    margin-bottom: 4px !important;
+    margin-top: 4px !important;
+}
+
+.modal {
+    width: 75% !important;
+    height: 75% !important;
+}

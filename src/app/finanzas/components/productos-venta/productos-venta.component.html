@@ -1,0 +1,513 @@
+<div style="padding: 50px">
+    <div class="row">
+        <div class="input-field col s6">
+            <select #select (change)="filtrarProductos(select.value)">
+                <option value="0" selected>ACTIVOS</option>
+                <option value="3">REEMBOLSABLES</option>
+                <option value="2">REEMBOLSADOS</option>
+                <option value="100">CANCELADOS</option>
+            </select>
+            <label>Filtrar Productos</label>
+        </div>
+        <div class="col s6 center">
+            <a style="cursor: pointer;" (click)="navegar()">Ir a detalles generales</a>
+        </div>
+    </div>
+
+    <div *ngIf="filtroActivo === 0" class="row">
+        <div class="col s12">
+            <div *ngFor="let destino of destinos; let i = index">
+                <div class="center">
+                    {{ destino.ciudad }}, {{ destino.pais }}
+                </div>
+                <table class="highlight centered responsive-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Costo cotizado</th>
+                            <th>Precio Comprado</th>
+                            <th>Comisión agente</th>
+                            <th>Ganancia estimada</th>
+                            <th>Ganancia real</th>
+                            <th>Perdida</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        <tr *ngFor="let producto of destino.productos; let ii = index">
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.type }}</td>
+                            <td>{{ producto.precioCotizado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.precioComprado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.comAgente | currency: cotizacion.divisa }} ({{ producto.comisionAgente }}%)</td>
+                            <td>{{ (producto.gananciaEstimada) | currency: cotizacion.divisa }} ({{ producto.comision }}%)</td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'green-text': producto.gananciaReal > 0, 'red-text': producto.gananciaReal < 0}">
+                                {{ producto.gananciaReal | currency: cotizacion.divisa }} ({{ round(producto.comisionGReal - producto.comision) }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'red-text': producto.perdida > 0, 'green-text': producto.perdida < 0}">
+                                {{ producto.perdida | currency: cotizacion.divisa }} ({{ producto.comisionPReal }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td>
+                                <span class="material-icons dropdown-trigger" [attr.data-target]="'accionesProductos' + ii">more_vert</span>
+                                <ul [id]="'accionesProductos' + ii" class='dropdown-content custom-dropdown center'>
+                                    <li>
+                                        <a (click)="actualizarEstadoProducto(producto.id, producto.tipo, 3, true);"><span class="material-icons center">view_module</span>Reembolsable</a>
+                                        <!-- <a *ngIf="producto.cantidadMXN !== -1 && producto.cantidadDivisa !== -1" (click)="verInfoReembolso(producto)"><span class="material-icons center">view_module</span>Ver Reembolso</a> -->
+                                    </li>
+                                    <li>
+                                        <a (click)="cargarInfoCompra(producto)"><span class="material-icons center">visibility</span>Ver pagos</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <!-- <tr *ngIf="destino.productos.length > 0">
+                            <td colspan="2">
+                                <strong>Totales</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalCostoC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPrecioC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalComAgente | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaEstimada | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaReal | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPerdida | currency: cotizacion.divisa }}</strong>
+                            </td>
+                        </tr> -->
+                        <tr *ngIf="destino.productos.length === 0">
+                            <td class="center" colspan="9">
+                                No hay productos para mostrar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="filtroActivo === 2" class="row">
+        <div class="col s12">
+            <div *ngFor="let destino of destinos; let i = index">
+                <div class="center">
+                    {{ destino.ciudad }}, {{ destino.pais }}
+                </div>
+                <table class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Costo cotizado</th>
+                            <th>Precio Comprado</th>
+                            <th>Comisión agente</th>
+                            <th>Ganancia estimada</th>
+                            <th>Ganancia real</th>
+                            <th>Perdida</th>
+                            <th>Reembolso</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        <tr *ngFor="let producto of destino.productos; let ii = index">
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.type }}</td>
+                            <td>{{ producto.precioCotizado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.precioComprado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.comAgente | currency: cotizacion.divisa }} ({{ producto.comisionAgente }}%)</td>
+                            <td>{{ (producto.gananciaEstimada) | currency: cotizacion.divisa }} ({{ producto.comision }}%)</td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'green-text': producto.gananciaReal > 0, 'red-text': producto.gananciaReal < 0}">
+                                {{ producto.gananciaReal | currency: cotizacion.divisa }} ({{ round(producto.comisionGReal - producto.comision) }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'red-text': producto.perdida > 0, 'green-text': producto.perdida < 0}">
+                                {{ producto.perdida | currency: cotizacion.divisa }} ({{ producto.comisionPReal }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td>
+                                <span (click)="verInfoReembolso(producto)" class="material-icons pointer">visibility</span>
+                            </td>
+                            <!-- <td *ngIf="producto.cantidadMXN !== -1 && producto.cantidadDivisa !== -1" class="green-text pointer" (click)="verInfoReembolso(producto)">
+                                <span class="material-icons">check</span>
+                                Reembolsado
+                            </td> -->
+                        </tr>
+                        <!-- <tr *ngIf="destino.productos.length > 0">
+                            <td colspan="2">
+                                <strong>Totales</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalCostoC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPrecioC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalComAgente | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaEstimada | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaReal | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPerdida | currency: cotizacion.divisa }}</strong>
+                            </td>
+                        </tr> -->
+                        <tr *ngIf="destino.productos.length === 0">
+                            <td class="center" colspan="9">
+                                No hay productos para mostrar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="filtroActivo === 3" class="row">
+        <div class="col s12">
+            <div *ngFor="let destino of destinos; let i = index">
+                <div class="center">
+                    {{ destino.ciudad }}, {{ destino.pais }}
+                </div>
+                <table class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <th>Costo cotizado</th>
+                            <th>Precio Comprado</th>
+                            <th>Comisión agente</th>
+                            <th>Ganancia estimada</th>
+                            <th>Ganancia real</th>
+                            <th>Perdida</th>
+                            <th>Reembolso</th>
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        <tr *ngFor="let producto of destino.productos; let ii = index">
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.type }}</td>
+                            <td>{{ producto.precioCotizado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.precioComprado | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.comAgente | currency: cotizacion.divisa }} ({{ producto.comisionAgente }}%)</td>
+                            <td>{{ (producto.gananciaEstimada) | currency: cotizacion.divisa }} ({{ producto.comision }}%)</td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'green-text': producto.gananciaReal > 0, 'red-text': producto.gananciaReal < 0}">
+                                {{ producto.gananciaReal | currency: cotizacion.divisa }} ({{ round(producto.comisionGReal - producto.comision) }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td *ngIf="producto.precioComprado > 0" [ngClass]="{'red-text': producto.perdida > 0, 'green-text': producto.perdida < 0}">
+                                {{ producto.perdida | currency: cotizacion.divisa }} ({{ producto.comisionPReal }}%)
+                            </td>
+                            <td *ngIf="producto.precioComprado === 0">
+                                Pendiente
+                            </td>
+                            <td>
+                                <span (click)="cargarInfoReembolso(i, ii)" class="material-icons pointer">settings_backup_restore</span>
+                            </td>
+                            <!-- <td *ngIf="producto.cantidadMXN !== -1 && producto.cantidadDivisa !== -1" class="green-text pointer" (click)="verInfoReembolso(producto)">
+                                <span class="material-icons">check</span>
+                                Reembolsado
+                            </td> -->
+                        </tr>
+                        <!-- <tr *ngIf="destino.productos.length > 0">
+                            <td colspan="2">
+                                <strong>Totales</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalCostoC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPrecioC | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalComAgente | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaEstimada | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalGananciaReal | currency: cotizacion.divisa }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ totalPerdida | currency: cotizacion.divisa }}</strong>
+                            </td>
+                        </tr> -->
+                        <tr *ngIf="destino.productos.length === 0">
+                            <td class="center" colspan="9">
+                                No hay productos para mostrar.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="filtroActivo === 100" class="row">
+        <div class="col s12">
+            <div *ngFor="let destino of destinos; let i = index">
+                <div class="center">
+                    {{ destino.ciudad }}, {{ destino.pais }}
+                </div>
+                <table class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Producto</th>
+                            <!-- <th>Reanudar</th> -->
+                        </tr>
+                    </thead>
+    
+                    <tbody>
+                        <tr *ngFor="let producto of destino.productos; let ii = index">
+                            <td>{{ producto.id }}</td>
+                            <td>{{ producto.type }}</td>
+                            <!-- <td class="pointer" (click)="reanudarProducto(producto)">
+                                <i class="material-icons">sync</i>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalReembolsarServicio" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Reembolsar</h1>
+        </div>
+    </div>
+    <div class="modal-content modal-reembolso">
+        <form #reembolsosForm="ngForm">
+            <div class="row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Cantidad</th>
+                            <th>Porcentaje</th>
+                            <th>
+                                Reembolso por
+                                <label>
+                                    <input class="with-gap" name="group1" type="radio" checked (click)="cambiarTipoReembolso(1)" />
+                                    <span>Cantidad</span>
+                                </label> &nbsp;
+                                <label>
+                                    <input class="with-gap" name="group1" type="radio" (click)="cambiarTipoReembolso(2)"/>
+                                    <span>Porcentaje</span>
+                                </label>
+                            </th>
+                            <th>Reembolso ({{ tipoReembolso === 2 ? '$' : '%'}})</th>
+                        </tr>
+                    </thead>
+            
+                    <tbody>
+                        <tr>
+                            <td>Tarifa</td>
+                            <td>{{ producto.tarifa | currency: cotizacion.divisa }}</td>
+                            <td>100%</td>
+                            <td>
+                                <input class="inputs" type="number" value="0" (input)="tipoInput(+$event.target.value, 'montoComprado')">
+                            </td>
+                            <td>
+                                <span *ngIf="tipoReembolso === 2">{{ calculoTarifa | currency: cotizacion.divisa }}</span>
+                                <span *ngIf="tipoReembolso === 1">{{ calculoTarifa.toFixed(2) }}%</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ganancia 5 Rives</td>
+                            <td>{{ reembolso.ganancia5 | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.comision }}%</td>
+                            <td>
+                                <input class="inputs" (input)="tipoInput(+$event.target.value, 'comision5')" type="number" value="0">
+                            </td>
+                            <td>
+                                <span *ngIf="tipoReembolso === 2">{{ calculoComision5 | currency: cotizacion.divisa }}</span>
+                                <span *ngIf="tipoReembolso === 1">{{ calculoComision5.toFixed(2) }}%</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ganancia Agencia</td>
+                            <td>{{ reembolso.gananciaA | currency: cotizacion.divisa }}</td>
+                            <td>{{ producto.comisionAgente }}%</td>
+                            <td>
+                                <input class="inputs" (input)="tipoInput(+$event.target.value, 'comisionA')" type="number" value="0">
+                            </td>
+                            <td>
+                                <span *ngIf="tipoReembolso === 2">{{ calculoComisionA | currency: cotizacion.divisa }}</span>
+                                <span *ngIf="tipoReembolso === 1">{{ calculoComisionA.toFixed(2) }}%</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Monto Cotizado</td>
+                            <td>{{ reembolso.cantidadCotizada | currency: cotizacion.divisa }}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input required id="reembolso" type="text" name="reembolsoS" #reembolsoS="ngModel" [(ngModel)]="reembolso.reembolsoS">
+                    <label for="reembolso">Reembolso</label>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="cuentaEmisora" type="text" name="cuentaEmisora" #cuentaEmisora="ngModel" [(ngModel)]="reembolso.cuentaEmisora">
+                    <label for="cuentaEmisora">Cuenta emisora</label>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="cuentaReceptora" type="text" name="cuentaReceptora" #cuentaReceptora="ngModel" [(ngModel)]="reembolso.cuentaReceptora">
+                    <label for="cuentaReceptora">Cuenta receptora</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="concepto">Concepto</label>
+                    <textarea id="concepto" rows="40" cols="50" style="height: 100px;"  name="concepto" #concepto="ngModel" [(ngModel)]="reembolso.concepto"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <p>¿Sigue en compras?</p>
+                    <label>
+                        <input class="with-gap" name="group2" type="radio" checked (click)="cambiarEstadoEliminacion(0)"/>
+                        <span>Si</span>
+                    </label> &nbsp;
+                    <label>
+                        <input class="with-gap" name="group2" type="radio" (click)="cambiarEstadoEliminacion(1)"/>
+                        <span>No</span>
+                    </label>
+                </div>
+            </div>
+            {{productoEliminado}}{{reembolso.eliminado}}
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn blue darken-4" (click)="agregarReembolso()" [disabled]="reembolsosForm.invalid">Agregar reembolso {{ reembolso.cantidadMXN | currency: cotizacion.divisa }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="modalVerReembolso" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Información de reembolso</h1>
+        </div>
+    </div>
+    <div class="modal-content">
+        <div class="row center">
+            <div class="col s3 center">
+                <strong>
+                    <p>Costo facturado</p>
+                    {{ producto.precioCotizado | currency: cotizacion.divisa }}
+                </strong>
+            </div>
+            <div class="col s3">
+                <p>Divisa</p>
+                {{ cotizacion.divisa }}
+            </div>
+            <div class="col s3">
+                <p>Ganancia 5rives</p>
+                {{ calculoComision5 + (producto.tarifa - (producto.tarifa * (producto.porcentaje / 100))) | currency: cotizacion.divisa }}
+            </div>
+            <div class="col s3">
+                <p>Ganancia Agente</p>
+                {{ calculoComisionA | currency: cotizacion.divisa }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col offset-s9 s3 center">
+                <strong>
+                    <p>Total reembolsado</p>
+                    {{ totalAReembolsar | currency: cotizacion.divisa }}
+                </strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalInfoCompra" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Historial</h1>
+        </div>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <table class="highlight centered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                        <th>Divisa</th>
+                        <th>Tarjeta</th>
+                        <th>Notas</th>
+                        <th>Archivos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pago of historialPagos">
+                        <td>{{pago.idProductosCostosParciales}}</td>
+                        <td>{{pago.fecha | date: 'MMM d, y'}}</td>
+                        <td>{{pago.pagoParcial | currency: pago.divisa}}</td>
+                        <td>{{pago.divisa}}</td>
+                        <td>{{pago.tarjeta}}</td>
+                        <td>{{pago.nota}}</td>
+                        <td>
+                            <span class="material-icons red-text pointer">picture_as_pdf</span>
+                            <span class="material-icons green-text pointer">text_snippet</span>
+                        </td>
+                    </tr>
+                    <tr *ngIf="historialPagos.length === 0">
+                        <td class="center" colspan="7">
+                            No se encontró información para mostrar.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

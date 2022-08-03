@@ -1,0 +1,22 @@
+.header-country {
+    height: 5vh;
+    font-size: 3vh;
+    color: #fff;
+}
+
+.datepicker {
+    z-index: 999999999 !important;
+}
+
+#modalCompletarTraslado {
+    z-index: 99998 !important;
+}
+
+.completar {
+    cursor: pointer;
+}
+
+.imgPrecargada {
+    width: 100%;
+    height: 100%;
+}

@@ -1,0 +1,42 @@
+<div class="panel">
+    <div class="row center">
+        <div class="col s12">
+            <h1>Ingresar el archivo de xlsx</h1>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s12">
+            <input type="file" name="Upload CSV" id="txtFileUploadCYC" (change)="uploadListener($event)" accept=".xlsx" #csvReader />
+        </div>
+    </div>
+    <div *ngIf="procesar" class="row">
+        <div class="col s12">
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+            <h4 class="center">Procesando archivo</h4>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="modalLoading" class="modal" style="width: 300px !important; text-align: center;">
+    <div class="modal-content">
+        <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <br> {{textPreloader}}
+    </div>
+
+</div>

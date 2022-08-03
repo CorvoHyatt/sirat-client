@@ -1,0 +1,90 @@
+<div>
+    <div class="row center">
+        <div class="col s12">
+            <h1>{{ cotizacion?.ref }}</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s12">
+            <h3>Del {{ cotizacion?.fechaInicio }} al {{ cotizacion?.fechaFinal }}</h3>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Adultos:</strong>
+        </div>
+        <div class="col s6">
+            {{ cotizacion?.numM }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Menores de 18:</strong>
+        </div>
+        <div class="col s6">
+            {{ cotizacion?.num18 }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Menores de 12:</strong>
+        </div>
+        <div class="col s6">
+            {{ cotizacion?.num12 }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s12">
+            <h1>Desglose de tarifa total</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Tarifa neta <br> (Solo servicios)</strong>
+        </div>
+        <div class="col s6">
+            {{ tarifaSNeta | currency: cotizacion.divisa }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Tarifa + com <br> (Solo servicios)</strong>
+        </div>
+        <div class="col s6">
+            {{ tarifaSComision | currency: cotizacion.divisa }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Tarifa neta <br> (Hoteles)</strong>
+        </div>
+        <div class="col s6">
+            {{ tarifaHNeta | currency: cotizacion.divisa }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Tarifa + com <br> (Hoteles)</strong>
+        </div>
+        <div class="col s6">
+            {{ tarifaHComision | currency: cotizacion.divisa }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s6">
+            <strong>Tarifa total neta <br> (General)</strong>
+        </div>
+        <div class="col s6">
+            {{ (tarifaHNeta + tarifaSNeta) | currency: cotizacion.divisa }}
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s12">
+            <strong style="font-size: 25px;">Tarifa total: {{ (tarifaHComision + tarifaSComision) | currency: cotizacion.divisa }}</strong>
+            <strong *ngIf="diferenciaTarifa > 0 && mostrarPrecio" class="red-text">{{ diferenciaTarifa | currency: cotizacion.divisa }}</strong>
+            <strong *ngIf="diferenciaTarifa < 0 && mostrarPrecio" class="green-text">{{ diferenciaTarifa | currency: cotizacion.divisa }}</strong>
+        </div>
+    </div>
+</div>

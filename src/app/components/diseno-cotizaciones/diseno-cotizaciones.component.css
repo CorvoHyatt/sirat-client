@@ -1,0 +1,13 @@
+
+i{
+    cursor: pointer;
+}
+
+#modalTransferir{
+    width: 30% !important;
+}
+
+.icon-style-disabled{
+    cursor: not-allowed;
+    color: #ccc;
+}

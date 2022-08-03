@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+body{
+    font-family: 'Montserrat', sans-serif;
+    background: #ffffff;
+}
+*{
+    box-sizing: initial !important;
+}
+.contenedor h1, h1{
+    font-weight: 500;
+    font-size: 20px !important;
+    text-align: center;
+    margin: 10px 0px 0px !important;
+}
+.contenedor h2{
+    font-weight: 700;
+    font-size: 30px;
+    text-align: center;
+}
+.contenedor h3{
+    font-weight: 500;
+    text-align: center;
+}
+.contenedor p{
+    line-height: 18px;
+}
+.container{
+    width: 250px !important;
+    background-color: #f8f8f8;
+    position: fixed;
+    left: 0px;
+    top: 65px;
+    height: 90%;
+    padding: 20px;
+    box-shadow: 2px 0px 4px #ccc;
+    overflow: scroll;
+}
+
+.contenedor{
+    width: 707px !important;
+    max-height: 1000px !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+.contenedor td, .contenedor th, .contenedor tr{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    position: relative;
+}
+.contenedor .seccion{
+    margin: 0px 0px 30px;
+    min-height: 1000px;
+    max-height: 1000px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px grey;
+}
+.contenedor .logo{
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    background: #fff;
+    margin-top: -21px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+}
+.contenedor .logo img{
+    width: 70%;
+    display: block;
+    margin: 0px auto 20px;
+}
+.contenedor .img_portada img{
+    width: auto;
+    height: auto;
+    float: right;
+}
+
+/*AJUSTE TAM*/
+
+.tamtab {
+    margin: 0px 0px 0px 35px; 
+    width: 90%;
+}
+
+/*INVOICE*/
+
+.pth2invoice {
+    color: #241937; 
+    font-size: 30px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.pth2ordcom {
+    color: #fff; 
+    font-size: 30px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.pth3invoice {
+    color: #107d90; 
+    font-size: 15px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+}
+.pth3ordcom {
+    color: #fff; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+}
+.pth4ordcom {
+    color: #21d8de; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+}
+.pth5ordcom {
+    color: #fff; 
+    font-size: 10px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+}
+.letinvoice {
+    position: absolute;
+    top: 9px;
+    left: 120px;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+.letordcom {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+.tsh2invoice {
+    background-color: #241937; 
+    color: #fff;
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px; 
+    padding: 10px;
+    margin: 20px 20px;
+}
+.tsh2ordcom {
+    background-color: #fff; 
+    color: #241937;
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px; 
+    padding: 10px;
+    margin: 20px 20px;
+}
+.tsh2ordcomp {
+    color: #fff;
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px; 
+    padding: 10px;
+    margin: 20px 20px;
+}
+.p_txt1h1invoice {
+    color: #000; 
+    font-size: 12px;  
+    font-family: 'Montserrat', sans-serif;
+}
+.p_txt1h1ordcom {
+    color: #241937; 
+    font-size: 12px;  
+    font-family: 'Montserrat', sans-serif;
+}
+.p_t1h1invoice {
+    text-align: justify; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+}
+.bth1m5ordcom { 
+    width: 5%; 
+}
+.bth1m15ordcom { 
+    width: 15%; 
+}
+.bth1m20ordcom { 
+    width: 20%; 
+}
+.bth1m40ordcom { 
+    width: 40%; 
+}
+.bth1m10invoice { 
+    width: 10%; 
+    border: #241937 2px solid;
+}
+.bth1m20invoice { 
+    width: 20%; 
+    border: #241937 2px solid;
+}
+.bth1m40invoice { 
+    width: 40%; 
+    border: #241937 2px solid;
+}
+.cazth1invoice {
+    background: #e0e8ea;
+}
+.cazth1ordcom {
+    background: #fff;
+}
+.ageinvoice {
+    color: #241937;
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.agedateinvoice {
+    color: #241937;
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+}
+.totalinvoice {
+    color: #107d90;
+    font-size: 25px;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.txfooterinvoice {
+    background-color: #107d90;
+    color: #fff;
+    font-size: 8px;
+    padding: 15px;
+    letter-spacing: 1px;
+}
+.txfooterordcom {
+    background-color: #21d8de;
+    color: #241937;
+    font-size: 10px;
+    padding: 15px;
+    letter-spacing: 1px;
+    text-align: justify;
+}
+.tth2ordcom {
+    font-size: 20px;
+    color: #21d8de;
+    font-family: 'Spartan', sans-serif;
+    line-height: 0.5;
+    padding: 15px;
+    font-weight: bold;
+}
+.txcajamarino {
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+}
+.txcajaclaro {
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+    color: #241937;
+}
+.cajamarino {  
+    width: 400px;    
+    background-color: #241937; 
+    margin: 0 0 25px; 
+    overflow: hidden; 
+    padding: 20px; 
+    border-radius: 35px 35px 35px 35px;
+    margin: 0px 0px 0px 85px;
+}
+.cajaclaro {  
+    width: 400px;    
+    background-color: #21d8de; 
+    margin: 0 0 25px; 
+    overflow: hidden; 
+    padding: 20px; 
+    border-radius: 35px 35px 35px 35px;
+    margin: 0px 0px 0px 85px;
+} 
+.cajitaazul {  
+    width: 100px;    
+    background-color: #21d8de; 
+    overflow: hidden; 
+    padding: 10px; 
+    border-radius: 15px 15px 15px 15px;
+    margin: 0px 0px 0px 170px;
+} 
+.cajitaazul2 {  
+    width: 100px;    
+    background-color: #21d8de; 
+    overflow: hidden; 
+    padding: 10px; 
+    border-radius: 15px 15px 15px 15px;
+    margin: -48px 0px 0px 332px;
+} 
+/*INVOICE FIN*/
+
+/*HOJA1*/
+
+.hoja1 h3 span{
+    color: #ffa400;
+}
+.hoja1 table, .hoja4 table{
+    height: auto;
+}
+.hoja1 span{
+    text-align: center;
+}
+.hoja1 h3{
+    text-transform: uppercase;
+}
+.hoja1 img, .hoja2 img, .hoja3 img, .hoja4 img, .hoja5 img{
+    width: 100%;
+    display: block;
+margin-left: auto;
+margin-right: auto;
+}
+.hoja1 p{
+    margin: 5px 0px;
+}
+.hoja1 h3{
+    margin: 10px 0px;
+}
+/*HOJA1 FIN*/

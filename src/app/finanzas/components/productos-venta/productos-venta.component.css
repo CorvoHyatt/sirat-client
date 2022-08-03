@@ -1,0 +1,16 @@
+.pointer{
+    cursor: pointer;
+}
+
+#modalInfoCompra {
+    width: 80%;
+}
+
+.custom-dropdown {
+    width: 165px !important;
+}
+
+.modal-reembolso table [type="radio"]+span {
+    font-size: .8rem;
+    padding-left: 24px;
+}

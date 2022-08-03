@@ -1,0 +1,750 @@
+<div class="row">
+    <form class="col s12 z-depth-2" #hotelForm="ngForm" (ngSubmit)="onSubmit(hotelForm)">
+        <div class="row">
+            <div class="col s6" style="padding: 0px !important; border-radius: 0 !important;">
+                <a style="width: 100%;" type="button" class="waves-light btn col s6" (click)="showContainer(1)">Datos precargados</a>
+            </div>
+            <div class="col s6" style="padding: 0px !important; border-radius: 0 !important;">
+                <a style="width: 100%;" type="button" class="waves-light btn col s6" (click)="showContainer(2)">Ingresar datos</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <h1 class="center-align">{{ title }}</h1>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length > 0 || sectionActivated === 2">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)}" 
+                    required 
+                    id="nombre" 
+                    type="text" 
+                    name="nombre" 
+                    #nombre="ngModel" 
+                    [(ngModel)]="hotel.nombre"
+                    (ngModelChange)="cargarDescripcion($event)">
+                    <label for="nombre">*Nombre de hotel</label>
+                    <span *ngIf="validando && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s5">
+                    <input id="direccion" type="text" name="direccion" #direccion="ngModel" [(ngModel)]="hotel.direccion">
+                    <label for="direccion">Dirección completa</label>
+                </div>
+                <div class="input-field col s3">
+                    <input id="telefono" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="hotel.telefono">
+                    <label for="telefono">Teléfono</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <input required id="noPersonas" type="number" name="noPersonas" #noPersonas="ngModel" [(ngModel)]="hotel.noPersonas" (ngModelChange)="cambiarNumeroPersonas($event)">
+                    <label for="noPersonas">Número de personas</label>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)}" 
+                    required 
+                    id="comisionInterna" 
+                    type="number" 
+                    name="comision" 
+                    #comision="ngModel" 
+                    [(ngModel)]="hotel.comision" 
+                    (ngModelChange)="cambiarComisiones($event, '5Rives')">
+                    <label for="comisionInterna">*Comisión 5rives (%)</label>
+                    <span *ngIf="validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)}" 
+                    required 
+                    id="comisionAgente" 
+                    type="number" 
+                    name="comisionAgente" 
+                    #comisionAgente="ngModel" 
+                    [(ngModel)]="hotel.comisionAgente" 
+                    (ngModelChange)="cambiarComisiones($event, 'Agente')">
+                    <label for="comisionAgente">*Comisión Agente (%)</label>
+                    <span *ngIf="validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s6">
+                    <input id="checkIn" type="text" class="datepicker datepicker-checkIn" name="checkIn" #checkIn="ngModel" [(ngModel)]="hotel.checkIn">
+                    <label for="checkIn">*Check In</label>
+                </div>
+                <div class="input-field col s6">
+                    <input id="checkOut" type="text" class="datepicker datepicker-checkOut" name="checkOut" #checkOut="ngModel" [(ngModel)]="hotel.checkOut">
+                    <label for="checkOut">*Check Out</label>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length === 0 && sectionActivated === 1" class="center">
+            <h2>
+                No se encontraron tarifas de hoteles precargadas para el destino "{{ destino.ciudad }}, {{ destino.pais }}", por favor ingrese su hotel desde la seccion "Ingresar Datos" o contacte al administrador para registrar una nueva tarifa de hotel.
+            </h2>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length > 0" id="static">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input disabled type="text" id="autocomplete_ciudad">
+                    <label for="autocomplete_ciudad">Ciudad</label>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>*Opciones de tarifas</label></span>
+                    <select 
+                    [ngClass]="{'invalid': validando && opcionTarifa.invalid || opcionTarifa.invalid && (opcionTarifa.dirty || opcionTarifa.touched), 'browser-default': true}"
+                    [required]="sectionActivated === 1" 
+                    id="opcionHotelTarifa" 
+                    name="opcionTarifa" 
+                    #opcionTarifa="ngModel" 
+                    [(ngModel)]="hotel.opcionTarifa" 
+                    #opcion 
+                    (change)="cargarOpcionTarifa(opcion.value)">
+                        <option value="null" disabled selected>--Seleccionar--</option>
+                        <option 
+                        *ngFor="let opcion of opcionesHotelesTarifas; index as i"
+                        [selected]="opcion.idHotelTarifa === actualHotel.idHotelTarifa" 
+                        [value]="opcion.idHotelTarifa">{{ opcion.nombre }}{{ i + 1 }}</option>
+                    </select>
+                    <span *ngIf="validando && opcionTarifa.invalid || opcionTarifa.invalid && (opcionTarifa.dirty || opcionTarifa.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>*Categoría</label></span>
+                    <select 
+                    [ngClass]="{'invalid': validando && opcionTarifa.invalid || opcionTarifa.invalid && (opcionTarifa.dirty || opcionTarifa.touched), 'browser-default': true}"
+                    [required]="sectionActivated === 1" 
+                    id="hotelCategoria1" 
+                    name="opcionCategoria" 
+                    #opcionCategoria="ngModel" 
+                    [(ngModel)]="hotel.opcionCategoria" 
+                    #category 
+                    (change)="changeCategory(category.value)">
+                        <option value="null" disabled selected>--Seleccionar--</option>
+                        <option 
+                        *ngFor="let categoria of categorias"
+                        [selected]="categoria.categoria === hotel.categoria" 
+                        [value]="categoria.categoria">{{ categoria.categoria }}</option>
+                    </select>
+                    <span *ngIf="validando && opcionCategoria.invalid || opcionCategoria.invalid && (opcionCategoria.dirty || opcionCategoria.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="dynamic" class="hidden">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input disabled type="text" id="ciudadS2">
+                    <label for="ciudadS2">Ciudad</label>
+                </div>
+                <!-- <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && categoria.invalid || categoria.invalid && (categoria.dirty || categoria.touched)}" 
+                    [required]="sectionActivated === 2" 
+                    id="categoria" 
+                    type="text" 
+                    name="categoria" 
+                    #categoria="ngModel" 
+                    [(ngModel)]="hotel.categoria">
+                    <label for="categoria">Categoría</label>
+                    <span *ngIf="validando && categoria.invalid || categoria.invalid && (categoria.dirty || categoria.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div> -->
+                <div class="input-field col s6">
+                    <input 
+                    [ngClass]="{'invalid': validando && estrellas.invalid || estrellas.invalid && (estrellas.dirty || estrellas.touched)}" 
+                    [required]="sectionActivated === 2" 
+                    id="estrellas" 
+                    type="number" 
+                    name="estrellas" 
+                    #estrellas="ngModel" 
+                    [(ngModel)]="hotel.estrellas">
+                    <label for="estrellas">Estrellas</label>
+                    <span *ngIf="validando && estrellas.invalid || estrellas.invalid && (estrellas.dirty || estrellas.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && cityTax.invalid || cityTax.invalid && (cityTax.dirty || cityTax.touched)}" 
+                    [required]="sectionActivated === 2" 
+                    id="cityTax" 
+                    type="number" 
+                    name="cityTax" 
+                    #cityTax="ngModel" 
+                    [(ngModel)]="hotel.cityTax" 
+                    (ngModelChange)="dynamicPlan($event, 'cityTax')">
+                    <label for="cityTax">City tax.</label>
+                    <span *ngIf="validando && cityTax.invalid || cityTax.invalid && (cityTax.dirty || cityTax.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && desayunoBase.invalid || desayunoBase.invalid && (desayunoBase.dirty || desayunoBase.touched)}" 
+                    [required]="sectionActivated === 2" 
+                    id="desayuno" 
+                    type="number" 
+                    name="desayunoBase" 
+                    #desayunoBase="ngModel" 
+                    [(ngModel)]="hotel.desayunoBase" 
+                    (ngModelChange)="dynamicPlan($event, 'desayuno')">
+                    <label for="desayuno">Precio desayuno</label>
+                    <span *ngIf="validando && desayunoBase.invalid || desayunoBase.invalid && (desayunoBase.dirty || desayunoBase.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validando && cantidadDesayunos.invalid || cantidadDesayunos.invalid && (cantidadDesayunos.dirty || cantidadDesayunos.touched)}" 
+                    [required]="sectionActivated === 2" 
+                    id="cantidadDesayunos" 
+                    type="number" 
+                    name="cantidadDesayunos" 
+                    #cantidadDesayunos="ngModel" 
+                    [(ngModel)]="hotel.cantidadDesayunos" 
+                    (ngModelChange)="dynamicPlan($event, 'cantidadDesayunos')">
+                    <label for="cantidadDesayuno">Cantidad desayunos</label>
+                    <span *ngIf="validando && cantidadDesayunos.invalid || cantidadDesayunos.invalid  && (cantidadDesayunos.dirty || cantidadDesayunos.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="sectionActivated === 2 || (opcionesHotelesTarifas.length > 0 && actualCategoria.idCategoria)" class="row">
+            <div class="col s12 center">
+                <h2>
+                    Habitaciones
+                    <a (click)="nuevaHabitacion()" [attr.disabled]="personasRestates === 0 ? true : null" class="btn-floating btn-small blue">
+                        <i class="material-icons">add</i>
+                    </a>
+                </h2>
+                <span *ngIf="validando && hotelHabitaciones.length === 0" class="helper-text red-text text-darken-2">Es obligatorio agregar por lo menos 1 habitación</span>
+            </div>
+        </div>
+        <div *ngIf="hotelHabitaciones.length > 0" class="row">
+            <div class="col s12">
+                <table class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>Cant. Habitaciones</th>
+                            <th>No. personas</th>
+                            <th>Tipo de habitación</th>
+                            <th>Tipo de categoría</th>
+                            <th>Tipo de cama</th>
+                            <th>Tarifa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let hotelHabitacion of hotelHabitaciones; let i = index">
+                            <td>{{ hotelHabitacion.cantidadHabitaciones }}</td>
+                            <td>{{ hotelHabitacion.noPersonas }}</td>
+                            <td>{{ hotelHabitacion.tipoHabitacion }}</td>
+                            <td>{{ hotelHabitacion.tipoCategoria }}</td>
+                            <td>{{ hotelHabitacion.tipoCama }}</td>
+                            <td>{{ hotelHabitacion.total | currency: cotizacion.divisa }}</td>
+                            <td>
+                                <span style="width: 147px" class="material-icons dropdown-trigger" [attr.data-target]="'accionesHabitaciones' + i">more_vert</span>
+                                <ul [id]="'accionesHabitaciones' + i" class='dropdown-content'>
+                                    <li>
+                                        <a (click)="cargarHabitacion(i)"><span class="material-icons">edit</span>Editar</a>
+                                    </li>
+                                    <li>
+                                        <a (click)="eliminarHabitacion(i, hotelHabitacion.i, hotelHabitacion.idHotelHabitacion)"><span class="material-icons">delete_forever</span>Eliminar</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div *ngIf="sectionActivated === 2 && hotelHabitaciones.length > 0 && !editing ||sectionActivated === 2 && hotelHabitaciones.length > 0 && editingCarrito" class="row">
+            <div class="col s12">
+                <h2 class="center">
+                    Mejoras de hotel
+                    <a [attr.disabled]="hotelManualUpgrade.adding ? true : null" href="#modalMejoras" (click)="iniciarNuevaMejora()" class="modal-trigger btn-floating btn-small blue">
+                        <i class="material-icons">add</i>
+                    </a>
+                </h2>
+            </div>
+            <div *ngIf="hotelManualUpgrade.adding" class="col s12">
+                <table class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>Nombre de hotel</th>
+                            <th>Dirección</th>
+                            <th>Teléfono</th>
+                            <th>Categoría</th>
+                            <th>Estrellas</th>
+                            <th>Comisión Agente</th>
+                            <th>Diferencia</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>{{ hotelManualUpgrade.nombre }}</td>
+                            <td>{{ hotelManualUpgrade.direccion }}</td>
+                            <td>{{ hotelManualUpgrade.telefono }}</td>
+                            <td>{{ hotelManualUpgrade.categoria }}</td>
+                            <td>{{ hotelManualUpgrade.estrellas }}</td>
+                            <td>{{ hotelManualUpgrade.comisionAgente }}</td>
+                            <td>
+                                <span *ngIf="hotelManualUpgrade.diferencia > 0">+</span>{{ hotelManualUpgrade.diferencia | currency: cotizacion.divisa }}</td>
+                            <td>
+                                <span style="width: 147px" id="dropdownMejorasManual" class="material-icons dropdown-trigger" [attr.data-target]="'accionesMejorasManual'">more_vert</span>
+                                <ul [id]="'accionesMejorasManual'" class='dropdown-content'>
+                                    <li>
+                                        <a (click)="cargarMejoraManual()"><span class="material-icons">edit</span>Editar</a>
+                                    </li>
+                                    <li>
+                                        <a (click)="eliminarMejoraManual(hotelManualUpgrade.idHotelAdquirido)"><span class="material-icons">delete_forever</span>Eliminar</a>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length > 0 || sectionActivated === 2">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input [ngClass]="{'invalid': validando && otros.invalid || otros.invalid && (otros.dirty || otros.touched)}" required id="otros" type="number" name="otros" #otros="ngModel" [(ngModel)]="hotel.otros">
+                    <label for="otros">Otros costos o descuentos</label>
+                    <span *ngIf="otros.invalid && (otros.dirty || otros.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s6">
+                    <a class="btn btn-small" (click)="alterTotal('add')">
+                        <i class="material-icons center">add</i>
+                    </a>&nbsp;
+                    <a class="btn btn-small red" (click)="alterTotal('less')">
+                        <i class="material-icons center">horizontal_rule</i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="descripcion">Descripción</label>
+                    <textarea id="descripcion" rows="40" cols="50" style="height: 100px;" name="descripcion" #descripcion="ngModel" [(ngModel)]="hotel.descripcion">
+                    </textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="notas">Notas del operador</label>
+                    <textarea id="notas" rows="40" cols="50" style="height: 100px;" name="notas" #notas="ngModel" [(ngModel)]="hotel.notas">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="sectionActivated === 1 && hotelHabitaciones.length > 0 && (this.editingCarrito || !editing)" class="row">
+            <div class="col s12">
+                <ul class="collapsible">
+                    <li>
+                        <div class="collapsible-header center-align">
+                            DESPLEGAR MEJORAS DE HOTEL
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="row">
+                                <div class="col s12">
+                                    <table class="highlight centered">
+                                        <thead>
+                                            <tr>
+                                                <th>Agregar mejora</th>
+                                                <th>Cant. Habitaciones</th>
+                                                <th>No. personas</th>
+                                                <th>Tipo de habitación</th>
+                                                <th>Tipo de categoría</th>
+                                                <th>Tipo de cama</th>
+                                                <th>Diferencia</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr *ngFor="let upgrade of hotelHabitacionesUDB; let i = index">
+                                                <td>
+                                                    <label>
+                                                        <input [id]="'checkHabitacion-' + i" type="checkbox" [checked]="upgrade.conMejoras" (click)="agregarMejoraDB(upgrade.i, upgrade, i)" />
+                                                        <span></span>
+                                                    </label>
+                                                </td>
+                                                <td>{{ upgrade.cantidadHabitaciones }}</td>
+                                                <td>{{ upgrade.noPersonas }}</td>
+                                                <td>{{ upgrade.tipoHabitacion }}</td>
+                                                <td>{{ upgrade.tipoCategoria }}</td>
+                                                <td>{{ upgrade.tipoCama }}</td>
+                                                <td><span *ngIf="upgrade.diferencia > 0">+</span>{{ upgrade.diferencia | currency: cotizacion.divisa }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length > 0 || sectionActivated === 2">
+            <div class="row">
+                <div class="col s12">
+                    <label>
+                        <input id="checkImagenes" type="checkbox" (click)="cargarCollapsibleImagenes()" />
+                        <span>Agregar imágenes</span>
+                    </label>
+                </div>
+            </div>
+            <ul id="collapsibleImagenes" class="collapsible popout">
+                <li>
+                    <div class="collapsible-body">
+                        <div style="margin-bottom: 0px !important" class="row valign-wrapper">
+                            <div class="col s6 file-field input-field center-align">
+                                <div style="width: 100%" class="btn">
+                                    <span>Imagen 1</span>
+                                    <input type="file" (change)="cargarImagen1($event.target.files)">
+                                </div>
+                                <div style="display: none" class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                            <div class="col s6 file-field input-field center-align">
+                                <div style="width: 100%" class="btn">
+                                    <span>Imagen 2</span>
+                                    <input type="file" (change)="cargarImagen2($event.target.files)">
+                                </div>
+                                <div style="display: none" class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!editingCarrito && !editing"  class="row valign-wrapper">
+                            <div class="col s6 center">
+                                <i *ngIf="imagen1?.blob" class="material-icons pointer right" (click)="eliminarImagenHotel(1)">close</i><br>
+                                <img class="responsive-img" [src]="imagen1?.blob" alt="Sin imagen" height="450" width="500">
+                            </div>
+                            <div class="col s6 center">
+                                <i *ngIf="imagen2?.blob" class="material-icons pointer right" (click)="eliminarImagenHotel(2)">close</i><br>
+                                <img class="responsive-img" [src]="imagen2?.blob" alt="Sin imagen" height="450" width="500">
+                            </div>
+                        </div>
+                        <div *ngIf="editingCarrito || editing"  class="row valign-wrapper">
+                            <div class="col s6 center">
+                                <i *ngIf="imagen1?.img" class="material-icons pointer right" (click)="eliminarImagenHotel(1)">close</i><br>
+                                <img class="responsive-img" [src]="imagen1?.img" alt="Sin imagen" height="450" width="500">
+                            </div>
+                            <div class="col s6 center">
+                                <i *ngIf="imagen2?.img" class="material-icons pointer right" (click)="eliminarImagenHotel(2)">close</i><br>
+                                <img class="responsive-img" [src]="imagen2?.img" alt="Sin imagen" height="450" width="500">
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="opcionesHotelesTarifas.length > 0 || sectionActivated === 2" class="col s12" style="margin-bottom: 25px;">
+            <button *ngIf="sectionActivated === 1 && editing && !editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="onUpdate(hotelForm)">{{ totalStatic | currency: cotizacion.divisa }} Actualizar</button>
+            <button *ngIf="sectionActivated === 1 && !editing && !editingCarrito" type="submit" style="width: 100%;" class="btn amber darken-2">{{ totalStatic | currency: cotizacion.divisa }} Agregar</button>
+            <button *ngIf="sectionActivated === 2 && editing && !editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="onUpdate(hotelForm)">{{ totalDynamic | currency: cotizacion.divisa }} Actualizar</button>
+            <button *ngIf="sectionActivated === 2 && !editing && !editingCarrito" type="submit" style="width: 100%;" class="btn amber darken-2">{{ totalDynamic | currency: cotizacion.divisa }} Agregar</button>
+            <button *ngIf="editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="updateCarrito(hotelForm)">{{ sectionActivated === 1 ? totalStatic : totalDynamic | currency: cotizacion.divisa }} Actualizar</button>
+
+        </div>
+
+    </form>
+</div>
+
+
+<!-- Modal Agregar Mejora -->
+<div style="width: 90% !important;" id="modalMejoras" class="modal">
+    <i class="material-icons right pointer" style="margin: 8px;" (click)="reiniciarMejoraManual()">close</i>
+    <div class="modal-content">
+        <h2 class="center">{{ !editingCarrito ? 'Agregar mejora para hotel' : 'Actualizar mejora para de hotel' }}</h2>
+        <form #hotelUpgradeForm="ngForm">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)}" 
+                    required 
+                    id="nombreHUpgrade" 
+                    type="text" 
+                    name="nombre" 
+                    #nombre="ngModel" 
+                    [(ngModel)]="hotelManualUpgrade.nombre">
+                    <label for="nombreHUpgrade">Nombre de hotel</label>
+                    <span *ngIf="validandoUpgrade && nombre.invalid || nombre.invalid && (nombre.dirty || nombre.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s5">
+                    <input id="direccionUpgrade" type="text" name="direccion" #direccion="ngModel" [(ngModel)]="hotelManualUpgrade.direccion">
+                    <label for="direccionUpgrade">Dirección</label>
+                </div>
+                <div class="input-field col s3">
+                    <input id="telefonoUpgrade" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="hotelManualUpgrade.telefono">
+                    <label for="telefonoUpgrade">Teléfono</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s3">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && categoriaM.invalid || categoriaM.invalid && (categoriaM.dirty || categoriaM.touched)}" 
+                    required 
+                    id="categoriaHUpgrade" 
+                    type="text" 
+                    name="categoriaM" 
+                    #categoriaM="ngModel" 
+                    [(ngModel)]="hotelManualUpgrade.categoriaM">
+                    <label for="categoriaHUpgrade">Categoría</label>
+                    <span *ngIf="validandoUpgrade && categoriaM.invalid || categoriaM.invalid && (categoriaM.dirty || categoriaM.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s3">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && estrellasM.invalid || estrellasM.invalid && (estrellasM.dirty || estrellasM.touched)}" 
+                    required 
+                    id="estrellasHUpgrade" 
+                    type="number" 
+                    name="estrellasM" 
+                    #estrellasM="ngModel" 
+                    [(ngModel)]="hotelManualUpgrade.estrellasM">
+                    <label for="estrellasHUpgrade">Número de estrellas</label>
+                    <span *ngIf="validandoUpgrade && estrellasM.invalid || estrellasM.invalid && (estrellasM.dirty || estrellasM.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s3">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && noPersonas.invalid || noPersonas.invalid && (noPersonas.dirty || noPersonas.touched)}" 
+                    required 
+                    id="noPersonasMejora" 
+                    type="number" 
+                    name="noPersonas" 
+                    #noPersonas="ngModel" 
+                    [(ngModel)]="hotelManualUpgrade.noPersonas">
+                    <label for="noPersonasMejora">Número de personas</label>
+                    <span *ngIf="validandoUpgrade && noPersonas.invalid || noPersonas.invalid && (noPersonas.dirty || noPersonas.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s3">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)}" 
+                    required 
+                    id="comisionAHUpgrade" 
+                    type="number" 
+                    name="comisionAgente" 
+                    #comisionAgente="ngModel" 
+                    [(ngModel)]="hotelManualUpgrade.comisionAgente" 
+                    (ngModelChange)="cambiarComisionAgente($event)">
+                    <label for="comisionAHUpgrade">Comisión agente</label>
+                    <span *ngIf="validandoUpgrade && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h2 class="center">Mejoras de habitaciones</h2>
+                </div>
+                <div class="col s12">
+                    <table class="highlight centered">
+                        <thead>
+                            <tr>
+                                <th>Tarifa</th>
+                                <th>Tipo de habitación</th>
+                                <th>Tipo de cama</th>
+                                <th>Tipo de categoría</th>
+                                <th>Cant. Habitaciones</th>
+                                <th>No. personas</th>
+                                <th>Diferencia</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let mejora of hotelHabitacionesUM; index as i; trackBy: trackByItems">
+                                <td>
+                                    <div class="input-field">
+                                        <input
+                                        [value]="mejora.tarifa" 
+                                        type="number" 
+                                        name="tarifa" 
+                                        #tarifa="ngModel" 
+                                        [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="mejora.tarifa" 
+                                        (ngModelChange)="calcularDiferenciaManual($event, mejora.hasOwnProperty('i') ? mejora.i : mejora.idHabitacion, i, hotelManualUpgrade.comisionAgente)">
+                                    </div>
+                                </td>
+                                <td>
+                                    <select 
+                                    [value]="mejora.tipoHabitacion" 
+                                    class="browser-default" 
+                                    name="tipoHabitacion" 
+                                    #tipoHabitacion="ngModel" 
+                                    [ngModelOptions]="{standalone: true}" 
+                                    [(ngModel)]="mejora.tipoHabitacion">
+                                        <option value="" disabled>--Seleccionar--</option>
+                                        <option value="Doble" selected>Doble</option>
+                                        <option value="Triple">Triple</option>
+                                    </select>
+                                </td>
+                                <td>{{ mejora.tipoCama }}</td>
+                                <td>{{ mejora.tipoCategoria }}</td>
+                                <td>{{ mejora.cantidadHabitaciones }}</td>
+                                <td>{{ mejora.noPersonas }}</td>
+                                <td><span *ngIf="mejora.diferencia > 0">+</span>{{ mejora.diferencia | currency: cotizacion.divisa }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="agregarMejoraManual(hotelUpgradeForm)">{{ totalHotelMM | currency: cotizacion.divisa }} {{ hotelManualUpgrade.edit ? 'Actualizar' : 'Agregar' }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Agregar Habitación -->
+<div style="width: 90% !important;" id="modalHabitacion" class="modal">
+    <i class="material-icons right" style="margin: 8px; cursor: pointer;" (click)="cerrarModalAH()">close</i>
+    <div class="modal-content">
+        <h3 class="center">
+            {{ !hotelHabitacion.edit ? 'Agregar Habitación' : 'Editar Habitación' }} <br>
+            <span style="font-size: 12px; padding-top: 0px">({{ daysInHotel + holidaysInHotel }} Noches)</span>
+        </h3>
+        <form #habitacionForm="ngForm">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)}" 
+                    required 
+                    id="tarifaHabitacion" 
+                    type="number" 
+                    name="tarifa" 
+                    #tarifa="ngModel" 
+                    [(ngModel)]="hotelHabitacion.tarifa" 
+                    (ngModelChange)="calcularTarifaHabitacion($event)">
+                    <label for="tarifaHabitacion">Tarifa por noche</label>
+                    <span *ngIf="validandoUpgrade && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input
+                    id="numeroPersonas" 
+                    type="number" 
+                    name="noPersonas" 
+                    #noPersonas="ngModel" 
+                    [(ngModel)]="hotelHabitacion.noPersonas" 
+                    (ngModelChange)="validarNumeroPersonas($event)">
+                    <label for="numeroPersonas">No. Personas</label>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && cantidadHabitaciones.invalid || cantidadHabitaciones.invalid && (cantidadHabitaciones.dirty || cantidadHabitaciones.touched)}"
+                    required 
+                    id="cantHabitacion" 
+                    type="number" 
+                    name="cantidadHabitaciones" 
+                    #cantidadHabitaciones="ngModel" 
+                    [(ngModel)]="hotelHabitacion.cantidadHabitaciones"
+                    (ngModelChange)="tarifaPorCantHabitaciones($event)">
+                    <label for="cantHabitacion">Cant. Habitaciones</label>
+                    <span *ngIf="validandoUpgrade && cantidadHabitaciones.invalid || cantidadHabitaciones.invalid && (cantidadHabitaciones.dirty || cantidadHabitaciones.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && tipoCama.invalid || tipoCama.invalid && (tipoCama.dirty || tipoCama.touched)}"
+                    required 
+                    id="tipoCama" 
+                    type="text" 
+                    name="tipoCama" 
+                    #tipoCama="ngModel" 
+                    [(ngModel)]="hotelHabitacion.tipoCama">
+                    <label for="tipoCama">Tipo de cama</label>
+                    <span *ngIf="validandoUpgrade && tipoCama.invalid || tipoCama.invalid && (tipoCama.dirty || tipoCama.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoUpgrade && tipoCategoria.invalid || tipoCategoria.invalid && (tipoCategoria.dirty || tipoCategoria.touched)}"
+                    required 
+                    id="tipoCategoria" 
+                    type="text" 
+                    name="tipoCategoria" 
+                    #tipoCategoria="ngModel" 
+                    [(ngModel)]="hotelHabitacion.tipoCategoria">
+                    <label for="tipoCategoria">Tipo de categoría</label>
+                    <span *ngIf="validandoUpgrade && tipoCategoria.invalid || tipoCategoria.invalid && (tipoCategoria.dirty || tipoCategoria.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>Tipo de Habitación</label></span>
+                    <select [required]="sectionActivated === 2" id="tipoHabitacionM" #tipoHabitacion class="browser-default validate" (change)="cambiarTipoHabitacion(tipoHabitacion.value)">
+                        <option value="Doble" selected>Doble</option>
+                        <option value="Triple">Triple</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="agregarHabitacion(habitacionForm)">{{ totalHabitacion | currency: cotizacion.divisa }} {{ hotelHabitacion.edit ? 'Actualizar' : 'Agregar' }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal ingresar otra categoría -->
+<div style="width: 90% !important;" id="modalCategoria" class="modal">
+    <i class="material-icons right pointer modal-close" (click)="reiniciarCategoria()">close</i>
+    <div class="modal-content">
+        <h3 class="center">
+            Ingresar otra categoría
+        </h3>
+        <form #categoriaForm="ngForm">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input
+                    [ngClass]="{'invalid': validandoCategoria && nombreC.invalid || nombreC.invalid && (nombreC.dirty || nombreC.touched)}"
+                    required
+                    id="nombreC" 
+                    type="text" 
+                    name="nombreC" 
+                    #nombreC="ngModel" 
+                    [(ngModel)]="nuevaCategoria.nombre">
+                    <label for="nombreC">Categoría</label>
+                    <span *ngIf="validandoCategoria && nombreC.invalid || nombreC.invalid && (nombreC.dirty || nombreC.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoCategoria && estrellasC.invalid || estrellasC.invalid && (estrellasC.dirty || estrellasC.touched)}"
+                    required 
+                    id="estrellasC" 
+                    type="number" 
+                    name="estrellasC" 
+                    #estrellasC="ngModel" 
+                    [(ngModel)]="nuevaCategoria.estrellas">
+                    <label for="estrellasC">Estrellas</label>
+                    <span *ngIf="validandoCategoria && estrellasC.invalid || estrellasC.invalid && (estrellasC.dirty || estrellasC.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+                <div class="input-field col s4">
+                    <input 
+                    [ngClass]="{'invalid': validandoCategoria && tarifaC.invalid || tarifaC.invalid && (tarifaC.dirty || tarifaC.touched)}" 
+                    required 
+                    id="tarifaC" 
+                    type="number" 
+                    name="tarifaC" 
+                    #tarifaC="ngModel" 
+                    [(ngModel)]="nuevaCategoria.tarifa">
+                    <label for="tarifaC">Tarifa</label>
+                    <span *ngIf="validandoCategoria && tarifaC.invalid || tarifaC.invalid && (tarifaC.dirty || tarifaC.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="agregarCategoria(categoriaForm)">Agregar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

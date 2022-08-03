@@ -1,0 +1,314 @@
+<div style="margin: 20px;">
+    <div class="row">
+        <div class="col s4 center">
+            <a class="modal-trigger" href="#modalDestinoVersiones" (click)="mostrarMAD()">
+                Agregar destino
+                <span class="material-icons">travel_explore</span>
+            </a>
+        </div>
+        <div class="col s4 center">
+            <a class="modal-trigger" href="#modalNuevaVersion">
+                Ver cotización
+                <span class="material-icons">wysiwyg</span>
+            </a>
+        </div>
+    </div>
+    <div *ngFor="let destino of destinos; let i = index">
+        <div class="row light-blue darken-2 header-country valign-wrapper">
+            <div class="col s9 center-align">
+                {{ destino.ciudad }}, {{ destino.pais }}
+            </div>
+            <div class="col s3 center-align" style="padding: 0px">
+                <select class="browser-default selectAddProduct" [id]="'addP' + i" #addP (change)="addProduct(addP.value, destino, i)">
+                    <option value="0" disabled selected>-Agregar nuevo producto-</option>
+                    <option value="1">Traslado</option>
+                    <option value="2">Disposición de chófer</option>
+                    <option value="3">Tour privado a pie</option>
+                    <option value="4">Tour privado en transporte</option>
+                    <option value="5">Tour en grupo</option>
+                    <option value="6">Actividad</option>
+                    <option value="7">Hotel</option>
+                    <option value="8">Vuelo</option>
+                    <option value="9">Tren</option>
+                    <option value="10">Extra</option>
+                    <option value="12">Renta de vehículos</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <table *ngIf="destino.productos.length > 0" class="centered highlight">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Tarifa ({{ cotizacion?.divisa }})</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let product of destino.productos; let ii = index">
+                        <td [ngClass]="{'linea bg-no-aplica': !product.valido}">{{ product.id }}</td>
+                        <td [ngClass]="{'linea bg-no-aplica': !product.valido}">
+                            {{ product.type }}
+                            <span style="font-size: 10px;" class="green-text text-accent-4">
+                                {{ product.opcional === 1 ? '[Opcional]' : '' }}
+                            </span>
+                        </td>
+                        <td [ngClass]="{'linea bg-no-aplica': !product.valido}">{{ product.precio | currency: cotizacion?.divisa }}</td>
+                        <td [ngClass]="{'bg-no-aplica': !product.valido}">
+                            <i *ngIf="product.valido" class="material-icons" (click)="changeProductToUpdate(product, destino)">edit</i>&nbsp;
+                            <i class="material-icons" (click)="eliminarProducto(product, i, ii)">delete</i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 *ngIf="destino.productos.length === 0" class="center">
+                No se encontraron productos en este destino.
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s6 right-align">
+            <a class="btn" (click)="onUpdate(true)">Guardar nueva versión</a>
+        </div>
+        <div class="col s6">
+            <a (click)="redirectToHome()" class="btn">Ir a inicio</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal add product -->
+<div *ngIf="type !== 0" id="modalAddProducts" class="modal modalAddProducts">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;" (click)="this.type = 0">close</i>
+    </div>
+    <div class="modal-content">
+        <div [ngSwitch]="type">
+            <div *ngSwitchCase="1" class="row">
+                <h1 class="center">Traslado</h1>
+                <app-traslados [adding]="true"></app-traslados>
+            </div>
+            <div *ngSwitchCase="2" class="row">
+                <h1 class="center">Disposición de chofer</h1>
+                <app-disposiciones [adding]="true"></app-disposiciones>
+            </div>
+            <div *ngSwitchCase="3" class="row">
+                <h1 class="center">Tour privado a pie</h1>
+                <app-tours-privados-apie [totalPasajeros]="totalPasajeros" [adding]="true"></app-tours-privados-apie>
+            </div>
+            <div *ngSwitchCase="4" class="row">
+                <h1 class="center">Tour privado en transporte</h1>
+                <app-tours-privados-entransporte [totalPasajeros]="totalPasajeros" [adding]="true"></app-tours-privados-entransporte>
+            </div>
+            <div *ngSwitchCase="5" class="row">
+                <h1 class="center">Tour privado en grupo</h1>
+                <app-tours-privados-en-grupo [totalPasajeros]="totalPasajeros" [adding]="true"></app-tours-privados-en-grupo>
+            </div>
+            <div *ngSwitchCase="6" class="row">
+                <h1 class="center">Actividad</h1>
+                <app-actividades [adding]="true"></app-actividades>
+            </div>
+            <div id="hotelInModalAdd" *ngSwitchCase="7" class="row">
+                <h1 class="center">Hotel</h1>
+                <app-hotel [adding]="true"></app-hotel>
+            </div>
+            <div *ngSwitchCase="8" class="row">
+                <h1 class="center">Vuelo</h1>
+                <app-vuelos [adding]="true"></app-vuelos>
+            </div>
+            <div *ngSwitchCase="9" class="row">
+                <h1 class="center">Tren</h1>
+                <app-trenes [adding]="true"></app-trenes>
+            </div>
+            <div *ngSwitchCase="10" class="row">
+                <h1 class="center">Extra</h1>
+                <app-extras [adding]="true"></app-extras>
+            </div>
+            <div *ngSwitchCase="12" class="row">
+                <h1 class="center">Renta de vehículos</h1>
+                <app-renta-vehiculos [adding]="true"></app-renta-vehiculos>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal edit product -->
+<div *ngIf="typeToSend !== 0" id="modalSendProducts" class="modal modalSendProducts">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;" (click)="this.type = 0">close</i>
+    </div>
+    <div class="modal-content">
+        <div [ngSwitch]="typeToSend">
+            <div *ngSwitchCase="1" class="row">
+                <h1 class="center">Traslado</h1>
+                <app-traslados [editing]="true" [tipoTraslado]="1"></app-traslados>
+            </div>
+            <div *ngSwitchCase="2" class="row">
+                <h1 class="center">Disposición de chofer</h1>
+                <app-disposiciones [editing]="true"></app-disposiciones>
+            </div>
+            <div *ngSwitchCase="3" class="row">
+                <h1 class="center">Tour privado a pie</h1>
+                <app-tours-privados-apie [editing]="true"></app-tours-privados-apie>
+            </div>
+            <div *ngSwitchCase="4" class="row">
+                <h1 class="center">Tour privado en transporte</h1>
+                <app-tours-privados-entransporte [editing]="true"></app-tours-privados-entransporte>
+            </div>
+            <div *ngSwitchCase="5" class="row">
+                <h1 class="center">Tour privado en grupo</h1>
+                <app-tours-privados-en-grupo [editing]="true"></app-tours-privados-en-grupo>
+            </div>
+            <div *ngSwitchCase="6" class="row">
+                <h1 class="center">Actividad</h1>
+                <app-actividades [editing]="true"></app-actividades>
+            </div>
+            <div *ngSwitchCase="7" class="row">
+                <h1 class="center">Hotel</h1>
+                <app-hotel [editing]="true"></app-hotel>
+            </div>
+            <div *ngSwitchCase="8" class="row">
+                <h1 class="center">Vuelo</h1>
+                <app-vuelos [editing]="true"></app-vuelos>
+            </div>
+            <div *ngSwitchCase="9" class="row">
+                <h1 class="center">Tren</h1>
+                <app-trenes [editing]="true"></app-trenes>
+            </div>
+            <div *ngSwitchCase="10" class="row">
+                <h1 class="center">Extra</h1>
+                <app-extras [editing]="true"></app-extras>
+            </div>
+            <div *ngSwitchCase="11" class="row">
+                <h1 class="center">Traslado Otro</h1>
+                <app-traslados [editing]="true" [tipoTraslado]="2"></app-traslados>
+            </div>
+            <div *ngSwitchCase="12" class="row">
+                <h1 class="center">Vehículo en renta</h1>
+                <app-renta-vehiculos [editing]="true" [mostrarMejora]="false"></app-renta-vehiculos>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Structure -->
+<div id="modalNuevaVersion" class="modal modalNuevaVersion">
+    <div *ngIf="cotizacion" class="modal-content">
+        <div class="row">
+            <div class="col s6">
+                Agente: {{ usuario.nombre }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s6">
+                <span><label >Agencia</label></span>
+                <select class="browser-default" #agencia id="agencia" name="agencias" required [(ngModel)]="cotizacion.idAgencia" (change)="getAgentes(agencia.value)">
+                    <option *ngFor="let agencia of agencias" [value]="agencia.idAgencia">{{ agencia.nombre }}</option> 
+                </select>
+            </div>
+            <div class="input-field col s6">
+                <span><label >Agente</label></span>
+                <select class="browser-default" name="agente" required [(ngModel)]="cotizacion.idAgente" (change)="modificacion(true)">
+                    <option *ngFor="let agente of agentes" [value]="agente.idAgente">{{ agente.nombre }} {{ agente.apellidos }}</option> 
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input id="responsable" type="text" class="validate" [(ngModel)]="cotizacion.titulo" (change)="modificacion(true)">
+                <label for="responsable">Titulo</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s6">
+                <input id="viajeroNombre" type="text" class="validate" [(ngModel)]="cotizacion.viajeroNombre" (change)="modificacion(true)">
+                <label for="viajeroNombre">Nombre Viajero</label>
+            </div>
+            <div class="input-field col s6">
+                <input id="viajeroApellido" type="text" class="validate" [(ngModel)]="cotizacion.viajeroApellido" (change)="modificacion(true)">
+                <label for="viajeroApellido">Apellido Viajero</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s6">
+                <label for="start">Del:</label>
+                <input type="date" id="del" name="trip-start" [(ngModel)]="cotizacion.fechaInicio" (change)="modificacion(true)">
+            </div>
+            <div class="col s6">
+                <label for="start">al:</label>
+                <input type="date" id="al" name="trip-end" [(ngModel)]="cotizacion.fechaFinal" (change)="modificacion(true)">
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s4">
+                <input id="adultos" type="number" class="validate" [(ngModel)]="cotizacion.numM" (change)="modificacion(true)">
+                <label for="adultos">Adultos</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="menore18" type="number" class="validate" [(ngModel)]="cotizacion.num18" (change)="modificacion(true)">
+                <label for="menores18">Menores de 18</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="menore12" type="number" class="validate" [(ngModel)]="cotizacion.num12" (change)="modificacion(true)">
+                <label for="menores12">Menores de 12</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s6">
+                <span><label >Divisa de la cotización</label></span>
+                <select class="browser-default" id="divisa" name="divisa" required [(ngModel)]="cotizacion.divisa" (change)="modificacion(true)">
+                    <option value="1">MXN</option>
+                    <option value="2">USD</option> 
+                    <option value="3">EUR</option> 
+                </select>
+            </div>
+            <div class="input-field col s6">
+                <span><label >Comisión del agente de viaje</label></span>
+                <select class="browser-default" name="carreraEE" required [(ngModel)]="cotizacion.comisionAgente" (change)="modificacion(true)">
+                    <option  value="1">Tarifa neta</option>
+                    <option  value="2">Comisión del agente incluida</option> 
+                </select>
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col s6">
+                <strong>Estado: </strong> {{ cotizacion.estado === 0 ? 'Pendiente' : cotizacion.estado === 1 ? 'Enviada' : cotizacion.estado === 100 ? 'Recibida por cotizador' : cotizacion.estado === 2 ? 'Rechazada' : cotizacion.estado === 3 ? 'Confirmada'
+                : cotizacion.estado === 4 ? 'Garantizada' : 'Completada' }}
+            </div>
+            <div class="col s6">
+                <strong>Versión: </strong> {{ cotizacion.version }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close btn-flat" (click)="redirect()">Cancelar</a>
+        <a class="btn" (click)="continuar()">Continuar</a>
+    </div>
+</div>
+
+<!-- Modal validación -->
+<div id="modalValidation" class="modal modalValidation">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <h2 class="center">Espere un momento mientras validamos los datos.</h2>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Destino -->
+<div id="modalDestinoVersiones" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <div *ngIf="nd" class="modal-content">
+        <h1 class="center">Seleccionar destino</h1>
+        <app-destino></app-destino>
+    </div>
+</div>

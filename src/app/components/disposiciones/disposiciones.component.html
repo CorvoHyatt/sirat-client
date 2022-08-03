@@ -1,0 +1,194 @@
+<div *ngIf="editing" class="col s12" style="text-align: center; margin-top: 10px; background-color: #051c49; color: white;">
+    DISPOSICIÓN
+</div>
+
+
+<div class="col s6 m6" style="padding: 20px; min-height: 100%" *ngIf="this.disposiciones.length>0">
+    <div id="trasl_1" class="col s12 form_ciudad ciudad_traslado ">
+        <div class="col s12 m6">
+
+
+
+            <p *ngFor="let disposicion of disposiciones; let ii = index">
+                <label>
+        
+        <input name="groupDisposicion" (click)="setActual(ii)"  type="radio" id="radio_ciudad1" [checked]="(disposicion.idDisposicion === disposicionActual.idDisposicion)"/>
+        <span *ngIf="disposicion.idLugar==92">Disposición {{disposicion?.nombre}}</span>
+        <span *ngIf="disposicion.idLugar!=92">Disposición a {{disposicion?.nombre}}</span>
+
+        </label>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="col s6 m6" style="padding: 20px;" *ngIf="this.disposiciones.length>0" [formGroup]="disposicionForm">
+    <div id="datos" class="col s12 form_ciudad ciudad_traslado card blue-grey darken-1">
+        <div class="row">
+
+            <div class="col s6" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{disposicionCostoActual.horasMinimo}} hora(s) mínimas
+            </div>
+
+            <div class="col s12">
+                <span><label >Vehiculo</label></span>
+                <select class="browser-default" id="vehiculosDisp" name="vehiculosDisp" (change)="setVehiculoActual($event.target.value)">
+                            <option [selected]="vehiculoActual.idVehiculo === vehiculo.idVehiculo" *ngFor="let vehiculo of vehiculos; let iii = index" [value]="iii">{{vehiculo?.nombre}}</option> 
+               </select>
+            </div>
+
+            <div class="col s6" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{vehiculoActual?.pasajerosMax}} pasajeros max
+            </div>
+
+            <div class="col s6" style="padding-top: 10px;  padding-bottom: 10px;">
+                {{vehiculoActual?.maletasMax}} maleta(s) de 23 kg max
+            </div>
+
+
+            <div class="col s6">
+
+                <label for="fechaDisposicion">Fecha</label>
+
+                <input [ngModelOptions]="{standalone: true}" class="datepicker" type="text" #fechaD id="fechaDisposicion" name="trip-start" [(ngModel)]="disposicionAdquirida.fecha" (change)="actualizarPrecio(fechaD.value)">
+
+            </div>
+
+            <div class="col s6">
+
+                <label for="hora">Hora</label>
+
+                <input [ngModelOptions]="{standalone: true}" type="time" id="hora" name="trip-start" [(ngModel)]="disposicionAdquirida.hora" (change)="actualizarPrecio()">
+
+            </div>
+
+            <div class="col s12">
+                <label for="pickup">Pick up</label>
+                <textarea [ngClass]="{'invalid': validando && disposicionForm.get('pickup').invalid || disposicionForm.get('pickup').touched && disposicionForm.get('pickup').invalid}" formControlName="pickup" id="pickup" class="materialize-textarea" (keyup)="verificarEdicion()"
+                    [(ngModel)]="disposicionAdquirida.pisckUp"></textarea>
+                <span *ngIf="validando && disposicionForm.get('pickup').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+
+            <div class="col s6">
+                <label for="pasajeros">Número de personas</label>
+                <input [ngClass]="{'invalid': validando && disposicionForm.get('numeroPersonas').invalid || disposicionForm.get('numeroPersonas').touched && disposicionForm.get('numeroPersonas').invalid}" formControlName="numeroPersonas" type="number" id="pasajeros"
+                    name="pasajeros" (keyup)="verificarMaxPas()" [(ngModel)]="disposicionAdquirida.pasajeros">
+                <span *ngIf="validando && disposicionForm.get('numeroPersonas').invalid" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+
+            </div>
+
+            <div class="col s6" *ngIf="disposicionCostoActual.horaExtra>0">
+                <label for="hrsExtras">Horas extras ({{disposicionCostoActual.horaExtra}} x hora)</label>
+                <input [ngModelOptions]="{standalone: true}" type="number" id="hrsExtras" name="hrsExtras" (keyup)="actualizarPrecio()" [(ngModel)]="disposicionAdquirida.horasExtras">
+            </div>
+
+            <div class="col s6" *ngIf="disposicionCostoActual.horaExtra==0">
+                <label for="hrsExtras">No es posible agregar horas extras</label>
+            </div>
+
+
+            <div class="col s12">
+                <label for="descripción">Descripción</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="descripción" name="descripción" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="disposicionAdquirida.descripcion">
+                    </textarea>
+            </div>
+
+            <div class="col s12">
+                <label for="notas">Notas del operador</label>
+
+                <textarea [ngModelOptions]="{standalone: true}" id="notas" name="notas" rows="40" cols="50" style="height: 100px;" (keyup)="verificarEdicion()" [(ngModel)]="disposicionAdquirida.notas">
+                    </textarea>
+            </div>
+
+            <div *ngIf="this.vehiculos.length>1 && !editing || editingCarrito">
+                Mejoras:
+                <br>
+                <div *ngFor="let vehiculo of costos">
+                    <p *ngIf="vehiculo.idVehiculo!= this.vehiculoActual.idVehiculo">
+                        <label>
+                        <input [checked]="esMejora(vehiculo.idVehiculo)" id="{{vehiculo.idVehiculo}}_md" type="checkbox" class="filled-in" (change)="setMejoras(vehiculo.idVehiculo)" />
+                        <span style="color: white">{{vehiculo.vehiculo}}</span> &nbsp;<span style="color:rgb(146, 28, 28);" >(<span *ngIf="getDiferencia(vehiculo.idVehiculo)>0" >+</span>  {{getDiferencia(vehiculo.idVehiculo) | currency: divisaBase.divisa }})</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col s12" style="margin-top: 10px; margin-bottom: 10px;">
+                Comisión de 5rives:
+                <b *ngIf="!mostrarComision5rives"> {{this.disposicionActual.comision}}% </b> &nbsp;
+                <input *ngIf="mostrarComision5rives" [(ngModel)]="comision5rivesNueva" type="number" id="5rivesTPAP" name="5rivesTPAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comision5rivesNueva=this.disposicionActual.comision; mostrarComision5rives=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComision5rives()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComision5rives" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComision5rives=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+
+
+            </div>
+
+            <div class="col s12" *ngIf="cotizacion.comisionAgente==2" style="margin-top: 10px; margin-bottom: 10px;">
+                Comisión del agente:
+                <b *ngIf="!mostrarComisionAgente"> {{comisionAgente}}% </b> &nbsp;
+                <input *ngIf="mostrarComisionAgente" [(ngModel)]="comisionAgenteNueva" type="number" id="agentePAP" name="agentePAP" min="0" max="100" style="width: 100px;">
+                <a *ngIf="!mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cambiar la comisión de 5rives" (click)="comisionAgenteNueva=comisionAgente; mostrarComisionAgente=true">
+                    <i class="tiny material-icons modalComision5rives" style="color: yellow;">edit</i>
+                </a>
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Guardar" (click)="cambiarComisionAgente()">
+                    <i class="tiny material-icons" style="color: blue;">save</i>
+                </a>
+                &nbsp;
+                <a *ngIf="mostrarComisionAgente" class="waves-effect waves-light btn-small" title="Cancelar" (click)="mostrarComisionAgente=false">
+                    <i class="tiny material-icons" style="color: red;">clear</i>
+                </a>
+            </div>
+
+            <div class="col s12">
+                <a *ngIf="!editing && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="agregar()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{total | currency: divisaBase.divisa}}</span> &nbsp;&nbsp; AGREGAR</a>
+                <a *ngIf="editing && editado && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="abrirModalDetalle()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{total | currency: divisaBase.divisa}}</span> &nbsp;&nbsp; Actualizar</a>
+                <a *ngIf="editing && !editado && !editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="cerrarModalEditar()">&nbsp;<span class="precio" style="width: 100%;">{{total | currency: divisaBase.divisa}}</span></a>
+                <a *ngIf="editingCarrito" class="btn cta_naranja" id="cta_paso3" style="width: 100%;" (click)="actualizarCarrito()"><label *ngIf="comisionChofer!=0" style="color: red;">(+{{comisionChofer}}%)</label>&nbsp;<span class="precio" style="width: 100%;">{{total | currency: divisaBase.divisa}}</span> &nbsp;&nbsp; Actualizar</a>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div class="col s12" style="display: flex ; justify-content: center; align-items: center;" *ngIf="this.disposiciones.length==0">
+    No hay disposiciones de chófer disponibles
+</div>
+
+
+
+
+
+<!-- Modal detalle -->
+<div id="modalDetalleDisposicion" class="modal">
+    <div class="modal-content">
+        <div class="row center">
+            <h1>¿Por qué realizaste ésta actualización?</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea id="detalle" #detalle class="validate" rows="40" cols="50" style="height: 100px;"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a class="btn right" (click)="actualizar()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>

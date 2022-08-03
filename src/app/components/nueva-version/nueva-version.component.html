@@ -1,0 +1,16 @@
+<div style="margin: 20px; padding: 20px" class="row center deep-orange lighten-5">
+    <p>¡AVISO!</p>
+    <p>
+        Cualquier cambio que realices no será guardado hasta seleccionar el botón "GUARDAR NUEVA VERSIÓN" 
+        que se eincuantra al final de la página, 
+        si recargas la página o sales de ella tus cambios se perderan y tendras que ingresar la información nuevamente.
+    </p>
+</div>
+<div class="row" style="margin: 20px;">
+    <div class="col s4">
+        <app-tarifas></app-tarifas>
+        </div>
+        <div class="col s8">
+        <app-productos-dinamicos [isNewVersion]="true"></app-productos-dinamicos>
+        </div>
+</div>

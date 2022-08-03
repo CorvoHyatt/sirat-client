@@ -1,0 +1,109 @@
+<div>
+    <!-- <div class="row" style="text-align: center; padding-top: 7px; margin: 0px;">
+        <img src="../../../assets/logo.png" alt="" style="width: 150px;">
+    </div> -->
+    <div class="row " id="top">
+        <div class="col s11 " style="padding: 20px;">
+            <div class="col s6">
+                <div class="col s12">
+                    D.T: {{ cotizacion.idAgente }}
+                </div>
+                <div class="col s6">
+                    {{ cotizacion.viajeroNombre }}
+                </div>
+                <div class="col s6">
+                    ver todo
+                </div>
+            </div>
+            <div class="col s6 center">
+                Fecha: {{ cotizacion.fechaInicio | date:'dd/MM/yyyy' }} - {{ cotizacion.fechaFinal | date:'dd/MM/yyyy' }}
+                <p style="font-size: 1.4vh;">(Solo puedes agregar productos dentro de este rango de fechas)</p>
+            </div>
+        </div>
+        <div class="col s1 center" style="margin-top: 20px;">
+            <i style="cursor: pointer;" href="#modalCanasta" (click)="abrirModalCanasta()" class="material-icons">local_grocery_store</i>
+            <small *ngIf="totalProductos>0" class="notification-badge">{{totalProductos}}</small>
+        </div>
+        <div class="row center blue darken-4" style="display: flex; justify-content: center; align-items: center; width: 100%; height: 50px">
+            <div class="col s3">
+                <span class="modal-trigger white-text" style="cursor: pointer;" href="#modalDestino">
+                    Agregar destino
+                    <i href="#modalDestino" class="material-icons modal-trigger">travel_explore</i>
+                </span> <br>
+            </div>
+            <div class="input-field col s6">
+                <select class="browser-default" id="destino" #destino required (change)="cambiarDestino(destino.value)">
+                    <option *ngFor="let destino of destinos; let i = index" [value]="i">{{ destino.ciudad + ', ' + destino.pais }}</option> 
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <ul class="tabs">
+                    <li class="tab col s1" (click)="cambiarTab(1)"><a (click)="irURL(1)" href="#traslados">Traslados</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(2)"><a (click)="irURL(2)" href="#disposiciones">Disposición de chofer</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(3)"><a (click)="irURL(3)" href="#toursPrivadosAPie">Tours privados a pie</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(4)"><a (click)="irURL(4)" href="#toursPrivadosEntransporte">Tours privados en transporte</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(5)"><a (click)="irURL(5)" href="#toursPrivadosEngrupo">Tours de grupo</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(6)"><a (click)="irURL(6)" href="#actividades">Actividades</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(7)"><a (click)="irURL(7)" href="#hotel">Hotel</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(8)"><a (click)="irURL(8)" href="#vuelos">Vuelos</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(9)"><a (click)="irURL(9)" href="#trenes">Trenes</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(10)"><a (click)="irURL(10)" href="#extras">Extras</a></li>
+                    <li class="tab col s2" (click)="cambiarTab(11)"><a (click)="irURL(11)" href="#rentaVehiculos">Renta de vehiculos</a></li>
+                </ul>
+            </div>
+            <div *ngIf="numeroTab === 1" id="traslados" class="col s12 ">
+                <app-traslados (redirect)="redirectTab($event)"></app-traslados>
+            </div>
+            <div *ngIf="numeroTab === 2" id="disposiciones" class="col s12">
+                <app-disposiciones (redirect)="redirectTab($event)"></app-disposiciones>
+            </div>
+            <div *ngIf="numeroTab === 3" id="toursPrivadosAPie" class="col s12 ">
+                <app-tours-privados-apie (redirect)="redirectTab($event)"></app-tours-privados-apie>
+            </div>
+            <div *ngIf="numeroTab === 4" id="toursPrivadosEntransporte" class="col s12 ">
+                <app-tours-privados-entransporte (redirect)="redirectTab($event)"></app-tours-privados-entransporte>
+            </div>
+            <div *ngIf="numeroTab === 5" id="toursPrivadosEngrupo" class="col s12 ">
+                <app-tours-privados-en-grupo (redirect)="redirectTab($event)"></app-tours-privados-en-grupo>
+            </div>
+            <div *ngIf="numeroTab === 6" id="actividades" class="col s12 ">
+                <app-actividades (redirect)="redirectTab($event)"></app-actividades>
+            </div>
+            <div *ngIf="numeroTab === 7" id="hotel" class="col s8 offset-s2" style="margin-top: 50px;">
+                <app-hotel (redirect)="redirectTab($event)"></app-hotel>
+            </div>
+            <div *ngIf="numeroTab === 8" id="vuelos" class="col s8 offset-s2" style="margin-top: 50px;">
+                <app-vuelos (redirect)="redirectTab($event)"></app-vuelos>
+            </div>
+            <div *ngIf="numeroTab === 9" id="trenes" class="col s8 offset-s2" style="margin-top: 50px;">
+                <app-trenes (redirect)="redirectTab($event)"></app-trenes>
+            </div>
+            <div *ngIf="numeroTab === 10" id="extras" class="col s8 offset-s2" style="margin-top: 50px;">
+                <app-extras (redirect)="redirectTab($event)"></app-extras>
+            </div>
+            <div *ngIf="numeroTab === 11" id="rentaVehiculos" class="col s8 offset-s2" style="margin-top: 50px;">
+                <app-renta-vehiculos (redirect)="redirectTab($event)"></app-renta-vehiculos>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Canasta -->
+<div id="modalCanasta" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <div class="modal-content">
+        <h1>Carrito</h1>
+        <app-canasta></app-canasta>
+    </div>
+</div>
+
+<!-- Modal Destino -->
+<div id="modalDestino" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <div class="modal-content">
+        <h1 class="center">Seleccionar destino</h1>
+        <app-destino></app-destino>
+    </div>
+</div>

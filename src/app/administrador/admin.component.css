@@ -1,0 +1,21 @@
+.sidenav {
+    background-color: grey;
+}
+
+.icon-notification {
+    margin: 0px !important;
+}
+
+.badge {
+    margin-left: 0px !important;
+}
+
+i {
+    cursor: pointer;
+}
+
+.modal {
+    top: 5% !important;
+    margin: 20px !important;
+    width: 30% !important;
+}

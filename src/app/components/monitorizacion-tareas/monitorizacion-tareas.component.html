@@ -1,0 +1,251 @@
+<div class="panel center" style="margin: 20px !important;">
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">MONITORIZACIÓN DE TAREAS EXTERNAS</h2>
+    </div>
+
+    <div class="row">
+        <div class="col s6">
+            <span><label >Área</label></span>
+            <select id="idArea" class="browser-default" name="idArea" (change)="getUsuarios()" [(ngModel)]="idArea" required>
+                 <option *ngFor="let area of areas" [value]="area.idArea">{{area.nombre}}</option>   
+            </select>
+        </div>
+        <div class="col s6">
+            <span><label>Usuario</label></span>
+            <select id="idUsuario" class="browser-default" name="idUsuario" [(ngModel)]="idUsuario" (change)="this.getNotificaciones()" required>
+                <option [value]="-1">Todos</option>   
+                <option *ngFor="let usuario of usuarios" [value]="usuario.idUsuario">{{usuario.nombre}}</option> 
+            </select>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    De:
+                </td>
+                <td>
+                    Para:
+                </td>
+                <td>
+                    Asunto
+                </td>
+                <td>
+                    Tipo
+                </td>
+                <td>
+                    Prioridad
+                </td>
+                <td style="text-align: center;">
+                    Estatus
+                </td>
+                <td>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let notificacion of notificaciones">
+                <td>
+                    {{notificacion.nombreUsuarioEmisor}}
+                </td>
+                <td>
+                    {{notificacion.nombreUsuarioReceptor}}
+                </td>
+                <td>
+                    {{notificacion.asunto}}
+                </td>
+                <td>
+                    <p *ngIf="notificacion.tipo==1">Tarea</p>
+                    <p *ngIf="notificacion.tipo==2">Llamada</p>
+                    <p *ngIf="notificacion.tipo==3">Nota</p>
+                </td>
+                <td>
+                    <p *ngIf="notificacion.prioridad==1">Baja</p>
+                    <p *ngIf="notificacion.prioridad==2">Media</p>
+                    <p *ngIf="notificacion.prioridad==3">Alta</p>
+
+                </td>
+                <td style="text-align: center;">
+                    <div class="chip" style="background-color: green;" *ngIf="notificacion.estatus==1">
+                        Finalizado
+                    </div>
+                    <div class="chip" style="background-color: red;" *ngIf="notificacion.estatus==0">
+                        No Finalizado
+                    </div>
+                </td>
+                <td>
+                    <i style="cursor: pointer;" class="small material-icons" (click)="verNotificacionCompleta(notificacion)" title="Ver detalle">remove_red_eye</i>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<!-- Modal para ver una notificacion de tarea -->
+<div id="modalVerTarea" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s4">
+                <b>
+                    Tipo:
+                </b> Tarea
+            </div>
+            <div class="col s4">
+                <b>
+                    Prioridad:
+                </b>
+                <p *ngIf="notificacionActual.prioridad==1">Baja</p>
+                <p *ngIf="notificacionActual.prioridad==2">Media</p>
+                <p *ngIf="notificacionActual.prioridad==3">Alta</p>
+            </div>
+            <div class="col s4">
+                <b>
+                     Estatus:
+                 </b>
+                <div class="chip" style="background-color: green;" *ngIf="notificacionActual.estatus==1">
+                    Finalizado
+                </div>
+                <div class="chip" style="background-color: red;" *ngIf="notificacionActual.estatus==0">
+                    No Finalizado
+                </div>
+            </div>
+            <div class="col s12">
+                <b>De:&nbsp;&nbsp;&nbsp;</b> {{notificacionActual.nombreUsuarioEmisor}} ({{notificacionActual.correoEmisor}})
+            </div>
+            <div class="col s12">
+                <b>Para:</b> {{notificacionActual.nombreUsuarioReceptor}} ({{notificacionActual.correoReceptor}})
+            </div>
+            <div class="col s12">
+                <b>Asunto:</b> {{notificacionActual.asunto}}
+            </div>
+            <div class="col s12">
+                <b>Tarea:</b> <br> {{notificacionActual.data?.tarea}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de creación: &nbsp;&nbsp;</b>{{notificacionActual.createAt | date:'short'}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de caducidad: &nbsp;&nbsp;</b>{{notificacionActual.caducidad| date: 'short' }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-flat">Salir</a>
+    </div>
+</div>
+
+
+
+<!-- Modal para ver una notificacion de tarea -->
+<div id="modalVerLlamadaPendiente" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s4">
+                <b>
+                    Tipo:
+                </b> Llamada
+            </div>
+
+            <div class="col s4">
+                <b>
+                    Prioridad:
+                </b>
+                <p *ngIf="notificacionActual.prioridad==1">Baja</p>
+                <p *ngIf="notificacionActual.prioridad==2">Media</p>
+                <p *ngIf="notificacionActual.prioridad==3">Alta</p>
+            </div>
+            <div class="col s4">
+                <b>
+                     Estatus:
+                 </b>
+                <div class="chip" style="background-color: green;" *ngIf="notificacionActual.estatus==1">
+                    Finalizado
+                </div>
+                <div class="chip" style="background-color: red;" *ngIf="notificacionActual.estatus==0">
+                    No Finalizado
+                </div>
+            </div>
+            <div class="col s12">
+                <b>De:&nbsp;&nbsp;&nbsp;</b> {{notificacionActual.nombreUsuarioEmisor}} ({{notificacionActual.correoEmisor}})
+            </div>
+            <div class="col s12">
+                <b>Para:</b> {{notificacionActual.data?.nombre}} ({{notificacionActual.data?.numero}})
+            </div>
+            <div class="col s12">
+                <b>Asunto:</b> {{notificacionActual.asunto}}
+            </div>
+            <div class="col s12">
+                <b>Motivo:</b> <br> {{notificacionActual.data?.motivo}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de creación: &nbsp;&nbsp;</b>{{notificacionActual.createAt | date:'short'}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de caducidad: &nbsp;&nbsp;</b>{{notificacionActual.caducidad| date: 'short' }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-flat">Salir</a>
+    </div>
+</div>
+
+
+<!-- Modal para ver una notificacion de tarea -->
+<div id="modalVerNota" class="modal">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s4">
+                <b>
+                    Tipo:
+                </b> Nota
+            </div>
+            <div class="col s4">
+                <b>
+                    Prioridad:
+                </b>
+                <label *ngIf="notificacionActual.prioridad==1">Baja</label>
+                <label *ngIf="notificacionActual.prioridad==2">Media</label>
+                <label *ngIf="notificacionActual.prioridad==3">Alta</label>
+            </div>
+            <div class="col s4">
+                <b>
+                     Estatus:
+                 </b>
+                <div class="chip" style="background-color: green;" *ngIf="notificacionActual.estatus==1">
+                    Finalizado
+                </div>
+                <div class="chip" style="background-color: red;" *ngIf="notificacionActual.estatus==0">
+                    No Finalizado
+                </div>
+            </div>
+            <div class="col s12">
+                <b>De:&nbsp;&nbsp;&nbsp;</b> {{notificacionActual.nombreUsuarioEmisor}} ({{notificacionActual.correoEmisor}})
+            </div>
+            <div class="col s12">
+                <b>Para:</b> {{notificacionActual.nombreUsuarioReceptor}} ({{notificacionActual.correoReceptor}})
+            </div>
+            <div class="col s12">
+                <b>Asunto:</b> {{notificacionActual.asunto}}
+            </div>
+            <div class="col s12">
+                <b>Tarea:</b> <br> {{notificacionActual.data?.nota}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de creación: &nbsp;&nbsp;</b>{{notificacionActual.createAt | date:'short'}}
+            </div>
+            <div class="col s12">
+                <b>Fecha de caducidad: &nbsp;&nbsp;</b>{{notificacionActual.caducidad| date: 'short' }}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="modal-close waves-effect waves-green btn-flat">Salir</a>
+    </div>
+</div>

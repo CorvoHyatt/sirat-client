@@ -1,0 +1,1834 @@
+<div class="center" [ngClass]="{'panel': !esAgente}" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abriragregarNuevoTPAP()">Nuevo Tour privado a pie</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE TOURS PRIVADOS A PIE</h2>
+    </div>
+
+    <div class="row">
+        <div class="col s4">
+            <span><label >Continente</label></span>
+            <select id="contSelec" class="browser-default" name="contSelec" [(ngModel)]="continenteSeleccionado" (change)="getPaisesByIdContinente()" required>
+                <option *ngFor="let continente of continentes; let ii = index" [value]="continente.idContinente">{{continente.nombre}}</option>  
+            </select>
+        </div>
+
+        <div class="col s4">
+            <span><label>País</label></span>
+            <select id="paisSelec" class="browser-default" name="paisSelec" [(ngModel)]="paisSeleccionado" (change)="getCiudadesByIdPais()" required>
+                <option *ngFor="let pais of paisesByContinente; let ii = index" [value]="pais.id">{{pais.nombre}}</option>  
+            </select>
+        </div>
+
+        <div class="col s4">
+            <span><label>Ciudad</label></span>
+            <select id="ciudadSelec" class="browser-default" name="ciudadSelec" [(ngModel)]="ciudadSeleccionada" (change)="getTours()" required>
+                <option [value]="-1">Todos</option>  
+                <option *ngFor="let ciudad of ciudadesByPais; let ii = index" [value]="ciudad.idCiudad">{{ciudad?.nombre}}</option>  
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>
+                    CIUDAD
+                </th>
+                <th>
+                    TITULO
+                </th>
+                <th>
+                    RESUMEN
+                </th>
+                <th>
+                    DESCRIPCIÓN
+                </th>
+                <th>
+                    DURACIÓN
+                </th>
+                <th>
+                    Minimun viajeros
+                </th>
+                <th>
+                    Maximun viajeros
+                </th>
+                <th>
+                    ESTATUS
+                </th>
+                <th></th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let tour of tours">
+                    <td>
+                        {{tour.idProducto}}
+                    </td>
+                    <td>
+                        {{tour.ciudad}}
+                    </td>
+                    <td>
+                        {{tour.titulo}}
+                    </td>
+                    <td>
+                        {{tour.resumen}}
+                    </td>
+                    <td>
+                        {{tour.descripcion}}
+                    </td>
+                    <td>
+                        {{tour.duracion}}
+                    </td>
+                    <td>
+                        {{tour.minimunViajeros}}
+                    </td>
+                    <td>
+                        {{tour.maximunViajeros}}
+                    </td>
+                    <td>
+                        <div class="switch">
+                            <label>
+                              Pendiente
+                              <input disabled type="checkbox" [(ngModel)]="tour.estatus">
+                              <span class="lever"></span>
+                              Completado 
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <i class="small material-icons" (click)="verDetalles(tour.idProducto)" title="Ver detalle">remove_red_eye</i>
+                        <i *ngIf="!esAgente || tour.estatus==0" class="small material-icons" (click)="editarTPAP(tour.idProducto)" title="Editar" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                        <i *ngIf="!esAgente" class="small material-icons" (click)="eliminar(tour.idProducto)" title="Eliminar" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar un nuevo tour privado a pie -->
+<div id="agregarTPAP" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Tour privado a pie nuevo</h2>
+        </div>
+
+        <div class="row">
+
+            <div class="input-field col s6 ">
+                <i class="fas fa-search left"></i>
+                <input type="text" id="autocomplete_pais" class="autocomplete" type="search">
+                <label for="autocomplete_pais">País de origen*</label>
+            </div>
+            <div class="input-field col s6 ">
+                <i class="fas fa-search left"></i>
+                <input type="text" id="autocomplete_ciudad" class="autocomplete" type="search">
+                <label for="autocomplete_ciudad">Ciudad en la que se encuentra el tour*</label>
+            </div>
+            <div class="input-field col s12 ">
+                <input type="text" id="titulo" [(ngModel)]="producto.titulo">
+                <label for="titulo">Titulo*</label>
+            </div>
+
+            <div class="input-field col s12 ">
+                <textarea id="resumen" class="materialize-textarea" [(ngModel)]="producto.resumen"></textarea>
+                <label for="resumen">Resumen</label>
+            </div>
+
+            <div class="input-field col s12 ">
+                <textarea id="resumen" class="materialize-textarea" [(ngModel)]="producto.descripcion"></textarea>
+                <label for="resumen">Descripción completa</label>
+            </div>
+
+            <div class="input-field col s2 ">
+                <input type="number" id="minimun" [(ngModel)]="producto.minimunViajeros">
+                <label for="minimun">Minimun viajeros</label>
+            </div>
+
+            <div class="input-field col s2">
+                <input type="number" id="maximun" [(ngModel)]="producto.maximunViajeros">
+                <label for="maximun">Maximun viajeros</label>
+            </div>
+
+            <div class="input-field col s2">
+                <input type="number" id="duracion" [(ngModel)]="producto.duracion">
+                <label for="duracion">Duración (Horas)</label>
+            </div>
+
+            <div class="input-field col s2">
+                <i class="fas fa-search left"></i>
+                <input type="text" id="autocomplete_divisa" class="autocomplete" type="search">
+                <label for="autocomplete_divisa">Divisa del tour*</label>
+            </div>
+
+            <div class="input-field col s2">
+                <input type="number" id="puntuacion" [(ngModel)]="productoInfo.puntuacion">
+                <label for="puntuacion">Puntuación</label>
+            </div>
+
+            <div class="input-field col s12 ">
+                <textarea id="frasesGoogle" class="materialize-textarea" [(ngModel)]="productoInfo.frasesGoogle"></textarea>
+                <label for="frasesGoogle">Frases de Google</label>
+            </div>
+            <div class="input-field col s12 ">
+                <textarea id="incluye" class="materialize-textarea" [(ngModel)]="productoInfo.incluye"></textarea>
+                <label for="incluye">¿Que incluye este tour?</label>
+            </div>
+            <div class="input-field col s12 ">
+                <textarea id="noIncluye" class="materialize-textarea" [(ngModel)]="productoInfo.noIncluye"></textarea>
+                <label for="noIncluye">¿Que no incluye este tour?</label>
+            </div>
+            <div class="input-field col s12 ">
+                <textarea id="cancelacion" class="materialize-textarea" [(ngModel)]="productoInfo.cancelacion"></textarea>
+                <label for="cancelacion">¿Cuáles son las condiciones de cancelación?</label>
+            </div>
+            <div class="input-field col s12 ">
+                <input type="text" id="link" [(ngModel)]="productoInfo.link">
+                <label for="link">Link del tour</label>
+            </div>
+
+            <div class="input-field col s4 ">
+                <input type="number" id="audifonos" [(ngModel)]="productoInfo.audifonos">
+                <label for="audifonos">Tarifa de audífonos(desde 20 pax)</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input type="number" id="guiaAcademico" [(ngModel)]="productoInfo.guiaAcademico">
+                <label for="guiaAcademico">Tarifa del guía académico</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input type="number" id="comision" [(ngModel)]="productoInfo.com">
+                <label for="comision">Comisión de 5rives</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input type="number" id="edadMinima" [(ngModel)]="productoInfo.edadMinima">
+                <label for="edadMinima">Edad mínima</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input type="number" id="edadMaxima" [(ngModel)]="productoInfo.edadMaxima">
+                <label for="edadMaxima">Edad máxima</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input type="number" id="supGratuitidad" [(ngModel)]="productoInfo.superiorGratuidad">
+                <label for="supGratuitidad">Superior gratuidad</label>
+            </div>
+
+            <div class="input-field col s12 ">
+                <textarea id="notas" class="materialize-textarea" [(ngModel)]="productoInfo.notas"></textarea>
+                <label for="notas">Notas</label>
+            </div>
+
+            <div class="input-field col s12 ">
+                <p>
+                    <label>
+                      <input type="checkbox" class="filled-in" [(ngModel)]="productoInfo.reserva2Meses" />
+                      <span><label for="reservar">Se necesita reservar 2 meses antes</label></span>
+                    </label>
+                </p>
+            </div>
+
+
+            <div class="col s12">
+                <label for="tipoTarifa">Tipo de tarifa</label>
+                <select id="tipoTarifa" class="browser-default" name="tipo" (change)="resetTarifaCientifica()" [(ngModel)]="tipoTarifa" style="width: 200px;" required>
+                    <option value="1">Tarifa científica</option>
+                    <option value="2">Tarifa por persona</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s4" *ngIf="tipoTarifa==1">
+                <input type="number" id="tarifaCientifica" [(ngModel)]="productoInfo.tarifaCientifica">
+                <label for="supGratuitidad">Precio 1-20</label>
+            </div>
+
+            <div class="input-field col s8" *ngIf="tipoTarifa==1">
+                <input type="number" id="hrExtGuia" [(ngModel)]="productoInfo.horaExtraGuia" style="width: 200px;">
+                <label for="hrExtGuia">Hora extra guía</label>
+            </div>
+
+            <div class="col s12" style="text-align: center;" *ngIf="tipoTarifa==2">
+                <b>TARIFA POR PERSONAS</b>
+            </div>
+
+            <table *ngIf="tipoTarifa==2">
+                <thead>
+                    <tr>
+                        <th>
+                            No. de personas
+                        </th>
+                        <th>
+                            Tarifa
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="number" onkeyup="if(parseInt(this.value)>11){ this.value =11; return false; }" id="noPersonas" [(ngModel)]="tarifaNueva.numPersonas" max="11">
+                        </td>
+                        <td>
+                            <input type="number" id="tarifa" [(ngModel)]="tarifaNueva.tarifa">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar tarifa" (click)="agregarTarifaPersona()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let tarifa of tarifasPersonas; let ii=index">
+                        <td>
+                            {{tarifa.numPersonas}}
+                        </td>
+                        <td>
+                            {{tarifa.tarifa}}
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar tarifa" (click)="eliminarTarifaPersona(ii)"><i class="material-icons">remove</i></a>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <div class="input-field col s12" *ngIf="tipoTarifa==2">
+                <input type="number" id="hrExtGuia" [(ngModel)]="productoInfo.horaExtraGuia" style="width: 200px;">
+                <label for="hrExtGuia">Hora extra guía</label>
+            </div>
+
+
+            <div class="col s12" style="text-align: center;">
+                <b>ENTRADAS</b>
+            </div>
+            <!-- Tabla de entradas -->
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa Adulto
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" id="nombreEntrada" [(ngModel)]="entradaNueva.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoEntrada" [(ngModel)]="entradaNueva.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoEntrada" [(ngModel)]="entradaNueva.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorEntrada" [(ngModel)]="entradaNueva.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoEntrada" [(ngModel)]="entradaNueva.tarifaAdulto">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar entrada" (click)="agregarEntrada()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let entrada of entradas; let ii=index">
+                        <td>
+                            {{entrada.nombre}}
+                        </td>
+                        <td>
+                            {{entrada.minimoMenor}}
+                        </td>
+                        <td>
+                            {{entrada.maximoMenor}}
+                        </td>
+                        <td>
+                            {{entrada.tarifaMenor}}
+                        </td>
+                        <td>
+                            {{entrada.tarifaAdulto}}
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar entrada" (click)="eliminarEntrada(ii)"><i class="material-icons">remove</i></a>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s12" style="text-align: center;">
+                <b>OPCIONES</b>
+            </div>
+
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa adulto
+                    </th>
+                    <th>
+                        Costo por hora extra
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" id="nombreOpcion" [(ngModel)]="opcionNueva.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoOpcion" [(ngModel)]="opcionNueva.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoOpcion" [(ngModel)]="opcionNueva.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorOpcion" [(ngModel)]="opcionNueva.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoOpcion" [(ngModel)]="opcionNueva.tarifaAdulto">
+                        </td>
+                        <td>
+                            <input type="number" id="hrsExtrasOpcion" [(ngModel)]="opcionNueva.horasExtras">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar opcion" (click)="agregarOpcion()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let opcion of opciones; let ii=index">
+                        <td>
+                            {{opcion.nombre}}
+                        </td>
+                        <td>
+                            {{opcion.minimoMenor}}
+                        </td>
+                        <td>
+                            {{opcion.maximoMenor}}
+                        </td>
+                        <td>
+                            {{opcion.tarifaMenor}}
+                        </td>
+                        <td>
+                            {{opcion.tarifaAdulto}}
+                        </td>
+                        <td>
+                            {{opcion.horasExtras}}
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar opcion" (click)="eliminarOpcion(ii)"><i class="material-icons">remove</i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s6" style="text-align: center;">
+                <b>HORARIOS</b>
+            </div>
+
+            <div class="col s6" style="text-align: center;">
+                <b>DÍAS CERRADOS</b>
+            </div>
+
+
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>Hora</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="time" id="horaHorario" [(ngModel)]="horarioNuevo.hora">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar horario" (click)="agregarHorario()"><i class="material-icons">add</i></a>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let horario of horarios; let ii=index">
+                            <td>
+                                {{horario.hora}}
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar horario" (click)="eliminarHorario(ii)"><i class="material-icons">remove</i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>
+                            Día (dd-mm)
+                        </th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="text" id="diaCerradoNuevo" [(ngModel)]="diaCerradoNuevo.fecha">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar día cerrado" (click)="agregarDiaCerrado()"><i class="material-icons">add</i></a>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let diaCerrado of diasCerrados; let ii=index">
+                            <td>
+                                {{diaCerrado.fecha}}
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar dia cerrado" (click)="eliminarDiaCerrado(ii)"><i class="material-icons">remove</i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center;">
+                <b>Incrementos</b>
+            </div>
+
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Nombre</th>
+                        <th style="width: 10%;">Porcentaje</th>
+                        <th style="width: 10%;">
+                            Tipo
+                        </th>
+                        <th style="width: 40%;">Detalle</th>
+                        <th style="width: 20%;"></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+
+                            <input id="nombre" type="text" class="validate" [(ngModel)]="incremento.nombre">
+
+                        </td>
+                        <td>
+                            <input id="porcentIncr" type="number" class="validate" [(ngModel)]="incremento.porcentaje">
+
+                        </td>
+                        <td>
+                            <select (change)="resetIncrementos()" id="tipo" class="browser-default" name="tipo" [(ngModel)]="incremento.tipo" required>
+                                    <option value="1">Hora</option>
+                                    <option value="2">Fecha</option>  
+                                </select>
+
+                        </td>
+                        <td>
+                            <table>
+                                <thead style="padding: 0px;">
+                                    <th style="width: 50%;padding: 0px !important; ">
+                                        Inicial
+                                        <span *ngIf="incremento.tipo==2">
+                                                (dd-mm)
+                                            </span>
+                                    </th>
+                                    <th style="width: 50%; padding: 0px !important;">
+                                        Final
+                                        <span *ngIf="incremento.tipo==2">
+                                                (dd-mm)
+                                            </span>
+                                    </th>
+                                    <th>
+                                    </th>
+
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input id="inicial" type="time" class="validate" [(ngModel)]="incrementoHora.horaInicial" *ngIf="incremento.tipo==1">
+                                            <div *ngIf="incremento.tipo==2" style="display: inline;">
+                                                <input pattern="[0-9]*" style="width: 80px;" id="inicialD1" type="text" class="validate" min="0" max="31" [(ngModel)]="incrementoFecha.fechaInicial"> &nbsp;
+
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <input id="final" type="time" class="validate" [(ngModel)]="incrementoHora.horaFinal" *ngIf="incremento.tipo==1">
+                                            <div *ngIf="incremento.tipo==2" style="display: inline;">
+                                                <input pattern="[0-9]*" style="width: 80px;" id="inicialD1" type="text" class="validate" min="0" max="31" [(ngModel)]="incrementoFecha.fechaFinal"> &nbsp;
+
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a *ngIf="incremento.tipo==1" class="btn waves-effect waves-light green btn-small" title="Agregar hora" (click)="agregarHoraDetalle()"><i class="material-icons">add</i></a>
+                                            <a *ngIf="incremento.tipo==2" class="btn waves-effect waves-light green btn-small" title="Agregar fecha" (click)="agregarFechaDetalle()"><i class="material-icons">add</i></a>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                    <tr *ngFor="let incf of incrementosFecha; let ii= index">
+                                        <td>
+                                            {{incf.fechaInicial}}
+                                        </td>
+                                        <td>
+                                            {{incf.fechaFinal}}
+                                        </td>
+                                        <td>
+                                            <a class="btn waves-effect waves-light red btn-small" title="Eliminar fecha" (click)="eliminarIncrementoFecha(ii)"><i class="material-icons">clear</i></a>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr *ngFor="let ih of incrementosHoras; let ii=index">
+                                        <td>
+                                            {{ih.horaInicial}}
+                                        </td>
+                                        <td>
+                                            {{ih.horaFinal}}
+                                        </td>
+                                        <td>
+                                            <a class="btn waves-effect waves-light red btn-small" title="Eliminar fecha" (click)="eliminarIncrementoFecha(ii)"><i class="material-icons">clear</i></a>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </td>
+                        <th style="text-align: right;">
+
+                            <a style="width: 200px;" class="waves-effect waves-light btn" title="Agregar incremento" (click)="agregarIncremento()">Agregar incremento</a>
+
+                        </th>
+
+                    </tr>
+                    <tr *ngFor="let incremento of incrementos; let ii=index">
+                        <td>{{incremento[0].nombre}}</td>
+                        <td>{{incremento[0].porcentaje}}</td>
+                        <td *ngIf="incremento[0].tipo==1">
+                            Hora
+                        </td>
+                        <td *ngIf="incremento[0].tipo==2">
+                            Fecha
+                        </td>
+                        <td>
+
+
+                            <table *ngIf="incremento[0].tipo==1">
+                                <tbody>
+                                    <tr *ngFor="let detalle of incremento[1]">
+                                        <td>
+                                            {{detalle.horaInicial}}
+                                        </td>
+                                        <td>
+                                            {{detalle.horaFinal}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <table *ngIf="incremento[0].tipo==2">
+                                <tbody>
+                                    <tr *ngFor="let detalle of incremento[1]">
+                                        <td>
+                                            {{detalle.fechaInicial}}
+                                        </td>
+                                        <td>
+                                            {{detalle.fechaFinal}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                        <th><a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar" (click)="eliminarIncremento(ii)"><i class="material-icons">clear</i></a>
+                        </th>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                Subcategorias*
+            </div>
+            <div class="row">
+                <div class="col s4" *ngFor="let subcategoria of subcategorias">
+                    <p>
+                        <label>
+                          <input (change)="setSubcategoriaNuevo(subcategoria)" type="checkbox" />
+                          <span>{{subcategoria.nombre}}</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            IMAGENES
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes1NTPAP id="imagenes1NTPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1" (removed)="onRemoved($event,0)" (uploadFinished)="onUploadFinished($event,0)" [extensions]="['jpg']" [style]="customStyle"></image-upload>
+                </td>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes2NTPAP id="imagenes2NTPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2" (removed)="onRemoved($event,1)" (uploadFinished)="onUploadFinished($event,1)" [extensions]="['jpg']" [style]="customStyle"></image-upload>
+                </td>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes3NTPAP id="imagenes3NTPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3" (removed)="onRemoved($event,2)" (uploadFinished)="onUploadFinished($event,2)" [extensions]="['jpg']" [style]="customStyle"></image-upload>
+                </td>
+            </tr>
+        </table>
+
+        <div>
+            <span>
+                *Campos obligatorios
+            </span>
+        </div>
+
+
+
+        <div class="modal-footer">
+            <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+            <a class=" waves-effect waves-green btn-flat" (click)="agregarNuevoTPAP()">Aceptar</a>
+        </div>
+    </div>
+
+</div>
+<!-- Modal para ver el tour -->
+<div id="verDetalleTPAP" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Tour privado a pie</h2>
+        </div>
+        <div class="row">
+            <div class="col s4">
+                ID: {{productoActual?.idProducto}}
+            </div>
+
+            <div class="col s4">
+                País: {{productoActual?.pais}}
+            </div>
+            <div class="col s4">
+                Ciudad: {{productoActual?.ciudad}}
+            </div>
+            <div class="col s12">
+                Título: {{productoActual?.titulo}}
+            </div>
+            <div class="col s12">
+                Resumen: {{productoActual?.resumen}}
+            </div>
+            <div class="col s12">
+                Descripción: {{productoActual?.descripcion}}
+            </div>
+
+            <div class="col s4">
+                Duración: {{productoActual?.duracion}} <span *ngIf="productoActual?.duracion==1">hr</span> <span *ngIf="productoActual?.duracion>1">hrs</span>
+            </div>
+
+            <div class="col s4">
+                Minimun viajeros: {{productoActual?.minimunViajeros}}
+            </div>
+
+            <div class="col s6">
+                Divisa: {{productoInfoActual?.divisa}}
+            </div>
+
+            <div class="col s6">
+                Puntuación: {{productoInfoActual?.puntuacion}}
+            </div>
+
+            <div class="col s12">
+                Frases de Google:
+                <br> {{productoInfoActual?.frasesGoogle}}
+            </div>
+
+            <div class="col s12">
+                ¿Que incluye este tour?
+                <br> {{productoInfoActual?.incluye}}
+            </div>
+
+            <div class="col s12">
+                ¿Que no incluye este tour?
+                <br> {{productoInfoActual?.noIncluye}}
+            </div>
+
+            <div class="col s12">
+                ¿Cuáles son las condiciones de cancelación?
+                <br> {{productoInfoActual?.cancelacion}}
+            </div>
+
+            <div class="col s12">
+                Link del tour
+                <br> {{productoInfoActual?.link}}
+            </div>
+
+            <div class="col s4">
+                Tarifa de audifonos (desde 20 pax): {{productoInfoActual?.audifonos | currency:productoInfoActual?.divisa}}
+            </div>
+
+            <div class="col s4">
+                Tarifa del guía académico: {{productoInfoActual?.guiaAcademico | currency:productoInfoActual?.divisa}}
+            </div>
+
+            <div class="col s4">
+                Comisión de 5rives: {{productoInfoActual?.com}}&nbsp;%
+            </div>
+
+            <div class="col s4">
+                Edad mínima: {{productoInfoActual?.edadMinima}}
+            </div>
+
+            <div class="col s4">
+                Edad mínima: {{productoInfoActual?.edadMaxima}}
+            </div>
+
+            <div class="col s12">
+                Notas: <br> {{productoInfoActual?.notas}}
+            </div>
+            <div class="col s12">
+                ¿Se necesita reservar dos meses antes? <b *ngIf="productoInfoActual?.reserva2Meses==1">Sí</b> <b *ngIf="productoInfoActual?.reserva2Meses==0">No</b>
+
+            </div>
+
+            <div class="col s12">
+                Tipo de tarifa: <span *ngIf="productoInfoActual?.tarifaCientifica>0"> Tarifa científica</span> <span *ngIf="productoInfoActual?.tarifaCientifica==0"> Tarifa por persona</span>
+            </div>
+
+            <div class="col s6" *ngIf="productoInfoActual?.tarifaCientifica>0">
+                Precio 1-20: {{ productoInfoActual?.tarifaCientifica |currency: productoInfoActual?.divisa }}
+            </div>
+
+            <div class="col s6" *ngIf="productoInfoActual?.tarifaCientifica>0">
+                Tarifa por hora extra del guía: {{ productoInfoActual?.horaExtraGuia |currency: productoInfoActual?.divisa }}
+            </div>
+            <div class="col s12" *ngIf="productoInfoActual?.tarifaCientifica==0" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                TARIFAS POR PERSONAS
+            </div>
+            <table *ngIf="productoInfoActual?.tarifaCientifica==0">
+                <thead>
+                    <th>
+                        No. de personas
+                    </th>
+                    <th>
+                        Tarifa
+                    </th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let tp of tarifasPersonas">
+                        <td>
+                            {{tp.numPersonas}}
+                        </td>
+                        <td>
+                            {{tp.tarifa | currency: productoInfoActual?.divisa}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                ENTRADAS
+            </div>
+
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa Adulto
+                    </th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let entrada of entradas">
+                        <td>
+                            {{entrada.nombre}}
+                        </td>
+                        <td>
+                            {{entrada.minimoMenor}}
+                        </td>
+                        <td>
+                            {{entrada.maximoMenor}}
+                        </td>
+                        <td>
+                            {{entrada.tarifaMenor | currency: productoInfoActual.divisa}}
+                        </td>
+                        <td>
+                            {{entrada.tarifaAdulto | currency: productoInfoActual.divisa}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                OPCIONES
+            </div>
+
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa adulto
+                    </th>
+                    <th>
+                        Costo por hora extra
+                    </th>
+
+                </thead>
+                <tbody>
+                    <tr *ngFor="let opcion of opciones">
+                        <td>
+                            {{opcion.nombre}}
+                        </td>
+                        <td>
+                            {{opcion.minimoMenor}}
+                        </td>
+                        <td>
+                            {{opcion.maximoMenor}}
+                        </td>
+                        <td>
+                            {{opcion.tarifaMenor | currency: productoInfoActual.divisa}}
+                        </td>
+                        <td>
+                            {{opcion.tarifaAdulto | currency: productoInfoActual.divisa}}
+                        </td>
+                        <td>
+                            {{opcion.horasExtras | currency: productoInfoActual.divisa}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s6" style="background-color: blue; color: white; text-align: center; margin-top: 10px; ">
+                HORARIOS
+            </div>
+            <div class="col s6" style="background-color: blue; color: white; text-align: center; margin-top: 10px; ">
+                DÍAS CERRADOS
+            </div>
+
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>Hora</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let horario of horarios">
+                            <td>
+                                {{horario.hora}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>Día (dd-mm)</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dc of diasCerrados">
+                            <td>
+                                {{dc.fecha}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px; ">
+                INCREMENTOS
+            </div>
+
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Nombre
+                        </th>
+                        <th>
+                            Porcentaje
+                        </th>
+                        <th>
+                            Tipo
+                        </th>
+                        <th>
+                            Detalle
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ifl of incrementosFechasList">
+                        <td>
+                            {{ifl[0].nombre}}
+                        </td>
+                        <td>
+                            {{ifl[0].porcentaje}}%
+                        </td>
+                        <td>
+                            Fecha
+                        </td>
+                        <td>
+
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Fecha inicial</th>
+                                        <th>Fecha final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let incrementoH of ifl[1]">
+                                        <td>
+                                            {{incrementoH.fechaInicial}}
+                                        </td>
+                                        <td>
+                                            {{incrementoH.fechaFinal}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr *ngFor="let ihl of incrementosHorasList">
+                        <td>
+                            {{ihl[0].nombre}}
+                        </td>
+                        <td>
+                            {{ihl[0].porcentaje}}%
+                        </td>
+                        <td>
+                            Hora
+                        </td>
+                        <td>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Hora inicial</th>
+                                        <th>Hora final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let incrementoH of ihl[1]">
+                                        <td>
+                                            {{incrementoH.horaInicial}}
+                                        </td>
+                                        <td>
+                                            {{incrementoH.horaFinal}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                SUBCATEGORIAS
+            </div>
+
+            <div class="col s4" *ngFor="let subcategoria of subcategoriasSeleccionadas">
+                <p>
+                    {{subcategoria.nombre}}
+                </p>
+            </div>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                Imagenes
+            </div>
+
+
+            <table *ngIf="ver">
+                <tr>
+                    <td>
+                        <image-upload dropBoxMessage="" #imagenes1VTPAP id="imagenes1VTPAP" [disabled]="true" [max]="0" buttonCaption="SELECCIONAR IMAGEN 1" (removed)="onRemoved($event,0)" (uploadFinished)="onUploadFinished($event,0)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[0]"
+                            [style]="customStyle"></image-upload>
+                    </td>
+                    <td>
+                        <image-upload dropBoxMessage="" #imagenes1VTPAP id="imagenes2VTPAP" [disabled]="true" [max]="0" buttonCaption="SELECCIONAR IMAGEN 2" (removed)="onRemoved($event,1)" (uploadFinished)="onUploadFinished($event,1)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[1]"
+                            [style]="customStyle"></image-upload>
+                    </td>
+                    <td>
+                        <image-upload dropBoxMessage="" #imagenes1VTPAP id="imagenes3VTPAP" [disabled]="true" [max]="0" buttonCaption="SELECCIONAR IMAGEN 3" (removed)="onRemoved($event,2)" (uploadFinished)="onUploadFinished($event,2)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[2]"
+                            [style]="customStyle"></image-upload>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+    </div>
+</div>
+
+<!-- Modal para editar el tour -->
+<div id="editarTPAP" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Editar Tour privado a pie</h2>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6 ">
+                <span><label for="autocomplete_paisEditar">País de origen</label></span>
+                <input type="text" id="autocomplete_paisEditar" class="autocomplete" type="search" [(ngModel)]="productoActual.pais">
+            </div>
+            <div class="input-field col s6 ">
+                <span><label for="autocomplete_ciudadEditar">Ciudad en la que se encuentra el tour</label></span>
+                <input type="text" id="autocomplete_ciudadEditar" class="autocomplete" type="search" [(ngModel)]="productoActual.ciudad">
+            </div>
+            <div class="input-field col s12 ">
+                <span><label for="titulo">Titulo</label></span>
+                <input type="text" id="titulo" [(ngModel)]="productoActual.titulo">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="resumen">Resumen</label></span>
+                <textarea id="resumen" class="materialize-textarea" [(ngModel)]="productoActual.resumen"></textarea>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="descripcion">Descripción completa</label></span>
+                <textarea id="descripcion" class="materialize-textarea" [(ngModel)]="productoActual.descripcion"></textarea>
+            </div>
+
+            <div class="input-field col s2 ">
+                <span><label for="minimun">Minimun viajeros</label></span>
+                <input type="number" id="minimun" [(ngModel)]="productoActual.minimunViajeros">
+
+            </div>
+
+            <div class="input-field col s2">
+                <span><label for="maximun">Maximun viajeros</label></span>
+                <input type="number" id="maximun" [(ngModel)]="productoActual.maximunViajeros">
+            </div>
+
+            <div class="input-field col s2">
+                <span><label for="duracion">Duración (Horas)</label></span>
+                <input type="number" id="duracion" [(ngModel)]="productoActual.duracion">
+            </div>
+
+            <div class="input-field col s2">
+                <span><label for="autocomplete_divisa">Divisa del tour</label></span>
+                <input type="text" id="autocomplete_divisaEditar" class="autocomplete" type="search" [(ngModel)]="productoInfoActual.divisa">
+
+            </div>
+
+            <div class="input-field col s2">
+                <span><label for="puntuacion">Puntuación</label></span>
+                <input type="number" id="puntuacion" [(ngModel)]="productoInfoActual.puntuacion">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="frasesGoogle">Frases de Google</label></span>
+                <textarea id="frasesGoogle" class="materialize-textarea" [(ngModel)]="productoInfoActual.frasesGoogle"></textarea>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="incluye">¿Que incluye este tour?</label></span>
+                <textarea id="incluye" class="materialize-textarea" [(ngModel)]="productoInfoActual.incluye"></textarea>
+            </div>
+            <div class="input-field col s12 ">
+                <span><label for="noIncluye">¿Que no incluye este tour?</label></span>
+                <textarea id="noIncluye" class="materialize-textarea" [(ngModel)]="productoInfoActual.noIncluye"></textarea>
+            </div>
+            <div class="input-field col s12 ">
+                <span><label for="cancelacion">¿Cuáles son las condiciones de cancelación?</label></span>
+                <textarea id="cancelacion" class="materialize-textarea" [(ngModel)]="productoInfoActual.cancelacion"></textarea>
+            </div>
+            <div class="input-field col s12 ">
+                <span><label for="link">Link del tour</label></span>
+                <input type="text" id="link" [(ngModel)]="productoInfoActual.link">
+            </div>
+
+            <div class="input-field col s4 ">
+                <span><label for="audifonos">Tarifa de audífonos(desde 20 pax)</label></span>
+                <input type="number" id="audifonos" [(ngModel)]="productoInfoActual.audifonos">
+            </div>
+
+            <div class="input-field col s4">
+                <span><label for="guiaAcademico">Tarifa del guía académico</label></span>
+                <input type="number" id="guiaAcademico" [(ngModel)]="productoInfoActual.guiaAcademico">
+            </div>
+
+            <div class="input-field col s4">
+                <span><label for="comision">Comisión de 5rives</label></span>
+                <input type="number" id="comision" [(ngModel)]="productoInfoActual.com">
+            </div>
+
+            <div class="input-field col s4">
+                <span><label for="edadMinima">Edad mínima</label></span>
+                <input type="number" id="edadMinima" [(ngModel)]="productoInfoActual.edadMinima">
+            </div>
+
+            <div class="input-field col s4">
+                <span><label for="edadMaxima">Edad máxima</label></span>
+                <input type="number" id="edadMaxima" [(ngModel)]="productoInfoActual.edadMaxima">
+
+            </div>
+
+            <div class="input-field col s4">
+                <span><label for="supGratuitidad">Superior gratuidad</label></span>
+                <input type="number" id="supGratuitidad" [(ngModel)]="productoInfoActual.superiorGratuidad">
+
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="notas">Notas</label></span>
+                <textarea id="notas" class="materialize-textarea" [(ngModel)]="productoInfoActual.notas"></textarea>
+
+            </div>
+
+            <div class="input-field col s12 ">
+                <p>
+                    <label>
+                  <input type="checkbox" class="filled-in" [(ngModel)]="productoInfoActual.reserva2Meses" />
+                  <span><label for="reservar">Se necesita reservar 2 meses antes</label></span>
+                    </label>
+                </p>
+            </div>
+
+            <div class="col s12">
+                <label for="tipoTarifa">Tipo de tarifa</label>
+                <select id="tipoTarifa" class="browser-default" name="tipo" (change)="resetTarifaCientificaEditar()" [(ngModel)]="tipoTarifa" style="width: 200px;" required>
+                    <option value="1">Tarifa científica</option>
+                    <option value="2">Tarifa por persona</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s4" *ngIf="tipoTarifa==1">
+                <span><label for="supGratuitidad">Precio 1-20</label></span>
+                <input type="number" id="tarifaCientifica" [(ngModel)]="productoInfoActual.tarifaCientifica">
+            </div>
+
+            <div class="input-field col s8" *ngIf="tipoTarifa==1">
+                <span><label for="hrExtGuia">Hora extra guía</label></span>
+                <input type="number" id="hrExtGuia" [(ngModel)]="productoInfoActual.horaExtraGuia" style="width: 200px;">
+            </div>
+
+            <div class="col s12" style="text-align: center;" *ngIf="tipoTarifa==2">
+                <b>TARIFA POR PERSONAS</b>
+            </div>
+
+            <table *ngIf="tipoTarifa==2">
+                <thead>
+                    <tr>
+                        <th>
+                            No. de personas
+                        </th>
+                        <th>
+                            Tarifa
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="number" onkeyup="if(parseInt(this.value)>11){ this.value =11; return false; }" id="noPersonas" [(ngModel)]="tarifaNueva.numPersonas" max="11">
+                        </td>
+                        <td>
+                            <input type="number" id="tarifa" [(ngModel)]="tarifaNueva.tarifa">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar tarifa" (click)="agregarTarifaPersona()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let tarifa of tarifasPersonas; let ii=index">
+                        <td>
+                            <input type="number" id="numPer" [(ngModel)]="tarifa.numPersonas">
+                        </td>
+                        <td>
+                            <input type="number" id="numPer" [(ngModel)]="tarifa.tarifa">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar tarifa" (click)="eliminarTarifaPersona(ii)"><i class="material-icons">remove</i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <div class="input-field col s12" *ngIf="tipoTarifa==2">
+                <span> <label for="hrExtGuia">Hora extra guía</label></span>
+                <input type="number" id="hrExtGuia" [(ngModel)]="productoInfoActual.horaExtraGuia" style="width: 200px;">
+
+            </div>
+
+
+            <div class="col s12" style="text-align: center;">
+                <b>ENTRADAS</b>
+            </div>
+            <!-- Tabla de entradas -->
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa Adulto
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" id="nombreEntrada" [(ngModel)]="entradaNueva.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoEntrada" [(ngModel)]="entradaNueva.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoEntrada" [(ngModel)]="entradaNueva.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorEntrada" [(ngModel)]="entradaNueva.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoEntrada" [(ngModel)]="entradaNueva.tarifaAdulto">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar entrada" (click)="agregarEntrada()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let entrada of entradas; let ii=index">
+                        <td>
+                            <input type="text" id="nombreEntrada" [(ngModel)]="entrada.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoEntrada" [(ngModel)]="entrada.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoEntrada" [(ngModel)]="entrada.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorEntrada" [(ngModel)]="entrada.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoEntrada" [(ngModel)]="entrada.tarifaAdulto">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar entrada" (click)="eliminarEntrada(ii)"><i class="material-icons">remove</i></a>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s12" style="text-align: center;">
+                <b>OPCIONES</b>
+            </div>
+
+            <table>
+                <thead>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Mínimo menor
+                    </th>
+                    <th>
+                        Máximo menor
+                    </th>
+                    <th>
+                        Tarifa menor
+                    </th>
+                    <th>
+                        Tarifa adulto
+                    </th>
+                    <th>
+                        Costo por hora extra
+                    </th>
+                    <th>
+
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" id="nombreOpcion" [(ngModel)]="opcionNueva.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoOpcion" [(ngModel)]="opcionNueva.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoOpcion" [(ngModel)]="opcionNueva.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorOpcion" [(ngModel)]="opcionNueva.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoOpcion" [(ngModel)]="opcionNueva.tarifaAdulto">
+                        </td>
+                        <td>
+                            <input type="number" id="hrsExtrasOpcion" [(ngModel)]="opcionNueva.horasExtras">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar opcion" (click)="agregarOpcion()"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let opcion of opciones; let ii=index">
+                        <td>
+                            <input type="text" id="nombreOpcion" [(ngModel)]="opcion.nombre">
+                        </td>
+                        <td>
+                            <input type="number" id="minimoOpcion" [(ngModel)]="opcion.minimoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="maximoOpcion" [(ngModel)]="opcion.maximoMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tMenorOpcion" [(ngModel)]="opcion.tarifaMenor">
+                        </td>
+                        <td>
+                            <input type="number" id="tAdultoOpcion" [(ngModel)]="opcion.tarifaAdulto">
+                        </td>
+                        <td>
+                            <input type="number" id="hrsExtrasOpcion" [(ngModel)]="opcion.horasExtras">
+                        </td>
+                        <td>
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar opcion" (click)="eliminarOpcion(ii)"><i class="material-icons">remove</i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s6" style="text-align: center;">
+                <b>HORARIOS</b>
+            </div>
+
+            <div class="col s6" style="text-align: center;">
+                <b>DÍAS CERRADOS</b>
+            </div>
+
+
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>Hora</th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="time" id="horaHorario" [(ngModel)]="horarioNuevo.hora">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar horario" (click)="agregarHorario()"><i class="material-icons">add</i></a>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let horario of horarios; let ii=index">
+                            <td>
+                                <input type="time" id="horaHorario" [(ngModel)]="horario.hora">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar horario" (click)="eliminarHorario(ii)"><i class="material-icons">remove</i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col s6">
+                <table>
+                    <thead>
+                        <th>
+                            Día (dd-mm)
+                        </th>
+                        <th></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="text" id="diaCerradoNuevo" [(ngModel)]="diaCerradoNuevo.fecha">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar día cerrado" (click)="agregarDiaCerrado()"><i class="material-icons">add</i></a>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let diaCerrado of diasCerrados; let ii=index">
+                            <td>
+                                <input type="text" id="diaCerradoNuevo" [(ngModel)]="diaCerrado.fecha">
+                            </td>
+                            <td>
+                                <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar dia cerrado" (click)="eliminarDiaCerrado(ii)"><i class="material-icons">remove</i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div style="text-align: center;">
+                <b>Incrementos</b>
+            </div>
+
+
+            <table id="tablaIncrementos">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Nombre</th>
+                        <th style="width: 10%;">Porcentaje</th>
+                        <th style="width: 10%;">
+                            Tipo
+                        </th>
+                        <th style="width: 40%;">Detalle</th>
+                        <th style="width: 20%;"></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>
+
+                            <input id="nombre" type="text" class="validate" [(ngModel)]="incremento.nombre">
+
+                        </td>
+                        <td>
+                            <input id="porcentIncr" type="number" class="validate" [(ngModel)]="incremento.porcentaje">
+
+                        </td>
+                        <td>
+                            <select (change)="resetIncrementos()" id="tipo" class="browser-default" name="tipo" [(ngModel)]="incremento.tipo" required>
+                                    <option value="1">Hora</option>
+                                    <option value="2">Fecha</option>  
+                                </select>
+
+                        </td>
+                        <td>
+                            <table>
+                                <thead style="padding: 0px;">
+                                    <th style="width: 50%;padding: 0px !important; ">
+                                        Inicial
+                                        <span *ngIf="incremento.tipo==2">
+                                                (dd-mm)
+                                            </span>
+                                    </th>
+                                    <th style="width: 50%; padding: 0px !important;">
+                                        Final
+                                        <span *ngIf="incremento.tipo==2">
+                                                (dd-mm)
+                                            </span>
+                                    </th>
+                                    <th>
+                                    </th>
+
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input id="inicial" type="time" class="validate" [(ngModel)]="incrementoHora.horaInicial" *ngIf="incremento.tipo==1">
+                                            <div *ngIf="incremento.tipo==2" style="display: inline;">
+                                                <input pattern="[0-9]*" style="width: 80px;" id="inicialD1" type="text" class="validate" min="0" max="31" [(ngModel)]="incrementoFecha.fechaInicial"> &nbsp;
+
+                                            </div>
+
+                                        </td>
+                                        <td>
+                                            <input id="final" type="time" class="validate" [(ngModel)]="incrementoHora.horaFinal" *ngIf="incremento.tipo==1">
+                                            <div *ngIf="incremento.tipo==2" style="display: inline;">
+                                                <input pattern="[0-9]*" style="width: 80px;" id="inicialD1" type="text" class="validate" min="0" max="31" [(ngModel)]="incrementoFecha.fechaFinal"> &nbsp;
+
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a *ngIf="incremento.tipo==1" class="btn waves-effect waves-light green btn-small" title="Agregar hora" (click)="agregarHoraDetalle()"><i class="material-icons">add</i></a>
+                                            <a *ngIf="incremento.tipo==2" class="btn waves-effect waves-light green btn-small" title="Agregar fecha" (click)="agregarFechaDetalle()"><i class="material-icons">add</i></a>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                    <tr *ngFor="let incf of incrementosFecha; let ii= index">
+                                        <td>
+                                            {{incf.fechaInicial}}
+                                        </td>
+                                        <td>
+                                            {{incf.fechaFinal}}
+                                        </td>
+                                        <td>
+                                            <a class="btn waves-effect waves-light red btn-small" title="Eliminar fecha" (click)="eliminarIncrementoFecha(ii)"><i class="material-icons">clear</i></a>
+
+                                        </td>
+
+                                    </tr>
+
+                                    <tr *ngFor="let ih of incrementosHoras; let ii=index">
+                                        <td>
+                                            {{ih.horaInicial}}
+                                        </td>
+                                        <td>
+                                            {{ih.horaFinal}}
+                                        </td>
+                                        <td>
+                                            <a class="btn waves-effect waves-light red btn-small" title="Eliminar fecha" (click)="eliminarIncrementoFecha(ii)"><i class="material-icons">clear</i></a>
+
+                                        </td>
+
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                        </td>
+                        <th style="text-align: right;">
+
+                            <a style="width: 200px;" class="waves-effect waves-light btn" title="Agregar incremento" (click)="agregarIncrementoEditar()">Agregar incremento</a>
+
+                        </th>
+
+                    </tr>
+
+
+                    <tr *ngFor="let incremento of incrementosHorasList; let ii=index">
+                        <td>
+                            <input id="nombre" type="text" class="validate" [(ngModel)]="incremento[0].nombre">
+                        </td>
+                        <td>
+                            <input type="number" class="validate" [(ngModel)]="incremento[0].porcentaje">
+                        </td>
+                        <td>
+                            <!-- <select id="tipo" class="browser-default" name="tipo" [(ngModel)]="incremento[0].tipo" required>
+                                <option value="1">Hora</option>
+                                <option value="2">Fecha</option>  
+                            </select> -->
+                            Hora
+
+                        </td>
+
+                        <td>
+                            <table>
+                                <thead>
+                                    <th>Hora inicial</th>
+                                    <th>Hora final</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input id="inicial" type="time" class="validate" [(ngModel)]="incrementoHoraEditar.horaInicial">
+                                        </td>
+                                        <td>
+                                            <input id="final" type="time" class="validate" [(ngModel)]="incrementoHoraEditar.horaFinal">
+                                        </td>
+                                        <td>
+                                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar detalle" (click)="agregarDetHoraEditar(ii)"><i class="material-icons">add</i></a>
+                                        </td>
+
+                                    </tr>
+                                    <tr *ngFor="let detalle of incremento[1]; let iiDetalle=index">
+                                        <td>
+                                            <input id="inicial" type="time" class="validate" [(ngModel)]="detalle.horaInicial">
+                                        </td>
+                                        <td>
+                                            <input id="final" type="time" class="validate" [(ngModel)]="detalle.horaFinal">
+                                        </td>
+                                        <td>
+                                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar detalle" (click)="eliminarDetHoraEditar(ii,iiDetalle)"><i class="material-icons">remove</i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <th>
+                            <!-- <a style="margin-right: 5px;" class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Actualizar incremento" (click)="eliminarCosto(ii)"><i class="material-icons">save</i></a> -->
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar incremento" (click)="eliminarIncrementoEditar(ii,1)"><i class="material-icons">clear</i></a>
+                        </th>
+
+                    </tr>
+
+                    <tr *ngFor="let incremento of incrementosFechasList; let ii=index">
+                        <td>
+                            <input id="nombre" type="text" class="validate" [(ngModel)]="incremento[0].nombre">
+                        </td>
+                        <td>
+                            <input id="porcentaje" type="text" class="validate" [(ngModel)]="incremento[0].porcentaje">
+                        </td>
+
+                        <td>
+                            <!-- <select id="tipo" class="browser-default" name="tipo" [(ngModel)]="incremento[0].tipo" required>
+                                <option value="1">Hora</option>
+                                <option value="2">Fecha</option>  
+                            </select> -->
+                            Fecha
+                        </td>
+                        <td>
+                            <table>
+                                <thead>
+                                    <th>Fecha inicial (dd-mm)</th>
+                                    <th>Fecha final (dd-mm)</th>
+                                    <th></th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input id="inicial" type="text" class="validate" [(ngModel)]="incrementoFechaEditar.fechaInicial">
+                                        </td>
+                                        <td>
+                                            <input id="final" type="text" class="validate" [(ngModel)]="incrementoFechaEditar.fechaFinal">
+                                        </td>
+                                        <td>
+                                            <a class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Agregar detalle" (click)="agregarDetFechaEditar(ii)"><i class="material-icons">add</i></a>
+                                        </td>
+
+                                    </tr>
+                                    <tr *ngFor="let detalle of incremento[1]; let iiDetalle=index">
+                                        <td>
+                                            <input id="fechaInicial" type="text" class="validate" [(ngModel)]="detalle.fechaInicial">
+                                        </td>
+                                        <td>
+                                            <input id="fechaInicial" type="text" class="validate" [(ngModel)]="detalle.fechaFinal">
+                                        </td>
+                                        <td>
+                                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar detalle" (click)="eliminarDetFechaEditar(ii,iiDetalle)"><i class="material-icons">remove</i></a>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+
+
+                        </td>
+                        <th>
+                            <!-- <a style="margin-right: 5px;" class="btn-floating btn-large waves-effect waves-light blue btn-small" title="Actualizar incremento" (click)="eliminarCosto(ii)"><i class="material-icons">save</i></a> -->
+                            <a class="btn-floating btn-large waves-effect waves-light red btn-small" title="Eliminar incremento" (click)="eliminarIncrementoEditar(ii,2)"><i class="material-icons">clear</i></a>
+                        </th>
+
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center; margin-top: 10px;">
+                Subcategorias
+            </div>
+            <div class="row">
+                <div class="col s4" *ngFor="let subcategoria of subcategorias">
+                    <p>
+                        <label>
+                          <input [checked]="esSeleccionada(subcategoria.idSubcategoria)" (change)="setSubcategoriaNuevo(subcategoria)" type="checkbox" />
+                          <span>{{subcategoria.nombre}}</span>
+                        </label>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col s12" style="text-align: center; background-color: blue; color: white;">
+            IMAGENES
+        </div>
+        <table *ngIf="ver">
+            <tr>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes1ETPAP id="imagenes1ETPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 1" (removed)="onRemoved($event,0)" (uploadFinished)="onUploadFinished($event,0)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[0]"
+                        [style]="customStyle"></image-upload>
+                </td>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes2ETPAP id="imagenes2ETPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 2" (removed)="onRemoved($event,1)" (uploadFinished)="onUploadFinished($event,1)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[1]"
+                        [style]="customStyle"></image-upload>
+                </td>
+                <td>
+                    <image-upload dropBoxMessage="" #imagenes3ETPAP id="imagenes3ETPAP" [max]="1" buttonCaption="SELECCIONAR IMAGEN 3" (removed)="onRemoved($event,2)" (uploadFinished)="onUploadFinished($event,2)" [extensions]="['jpg']" [uploadedFiles]="this.imagenesPrecargadas[2]"
+                        [style]="customStyle"></image-upload>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div *ngIf="!esAgente">
+            Estatus
+        </div>
+        <div *ngIf="!esAgente" class="switch">
+            <label>
+              Pendiente
+              <input  type="checkbox" [(ngModel)]="productoActual.estatus">
+              <span class="lever"></span>
+              Completado
+            </label>
+        </div>
+
+
+        <div class="modal-footer">
+            <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+            <a class=" waves-effect waves-green btn-flat" (click)="actualizar()">Aceptar</a>
+        </div>
+
+    </div>
+</div>

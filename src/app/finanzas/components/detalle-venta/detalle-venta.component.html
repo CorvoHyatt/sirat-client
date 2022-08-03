@@ -1,0 +1,860 @@
+<div style="padding-bottom: 1%; padding-top: 1%;" *ngIf="cotizacion; else noCotizacion">
+    <div class="row valign-wrapper font-1">
+        <div class="col s4 center font-0">
+            <strong>Venta: {{ cotizacion.idCotizacion }}</strong>
+        </div>
+        <div class="col s3">
+                <strong>Agencia: </strong> {{ cotizacion.agencia }}
+        </div>
+        <div class="col s3">
+            <strong>Viajero: </strong> {{ cotizacion.viajeroNombre }} {{ cotizacion.viajeroApellido }}
+        </div>
+        <div class="col s2">
+            <a class="center pointer" (click)="navegar()">Ir a servicios</a>
+        </div>
+    </div>
+    <div class="row valign-wrapper container-datos">
+        <div class="col s4">
+            <div class="z-depth-1 font-1 card-informacion">
+                <h1 class="center">Datos generales</h1>
+                <hr>
+                <p>
+                    <strong>Fecha de cotización: </strong> {{ cotizacion.createdAt | date: 'MMM d, y' }}
+                </p>
+                <p>
+                    <strong>Fecha Orden Compra: </strong> {{ infoOC.fechaOC | date: 'MMM d, y' }}
+                </p>
+                <p>
+                    <strong>Inicio del viaje: </strong> {{ cotizacion.fechaInicio | date: 'MMM d, y' }}
+                </p>
+                <p>
+                    <strong>Fin del viaje: </strong> {{ cotizacion.fechaFinal | date: 'MMM d, y' }}
+                </p>
+                <p>
+                    <strong>Días antes: </strong> {{ cotizacion.diasAntes }}
+                </p>
+                <div class="row center">
+                    <div class="col">
+                        <strong>+18 años: </strong> {{ cotizacion.numM }}
+                    </div>
+                    <div class="col">
+                        <strong>-18 años: </strong> {{ cotizacion.num18 }}
+                    </div>
+                    <div class="col">
+                        <strong>-12 años: </strong> {{ cotizacion.num12 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="z-depth-1 font-1 card-informacion">
+                <h1 class="center">Datos de pago</h1>
+                <hr>
+                <div class="row center">
+                    <div class="col s6">
+                        <strong>Quorum: </strong> {{ infoOC.porcentajePago }}%
+                    </div>
+                    <div class="col s6">
+                        <strong>Divisa: </strong> {{ cotizacion.nombreDivisa }}
+                    </div>
+                </div>
+
+                <p>
+                    <strong>Tipo de cambio (Variable / Fijo): </strong> {{ cotizacion.tipoCambio }}
+                </p>
+
+                <p>
+                    <strong>Valor de cambio: </strong> {{ infoOC.valorTipoCambio | currency: cotizacion.nombreDivisa }}
+                </p>
+
+                <p>
+                    <strong>Precio facturado: </strong> {{ infoOC.totalOC | currency: cotizacion.nombreDivisa }}
+                </p>
+
+                <p>
+                    <strong>Costo neto cotizado: </strong> {{ cotizacion?.valoresVenta?.totalNetoCotizado | currency: cotizacion.nombreDivisa }}
+                </p>
+            </div>
+        </div>
+        <div class="col s4 center">
+            <div class="z-depth-1 font-1 card-informacion">
+                <h1 class="center">Documentos</h1>
+                <hr>
+                <div class="row">
+                    <div class="col s12">
+                        <a style="width: 100%" class="btn"><i class="material-icons right">insert_drive_file</i>Factura Comisiones</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <a style="width: 100%" class="btn"><i class="material-icons right">insert_drive_file</i>Factura Extras</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <a style="width: 100%" class="btn"><i class="material-icons right">insert_drive_file</i>Factura Reembolsos</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <a style="width: 100%" class="btn"><i class="material-icons right">insert_chart</i>Balance Extras/Reembolsos</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row valign-wrapper container-datos">
+        <div class="col s4">
+            <div class="z-depth-1 font-1 card-informacion-2">
+                <div class="row">
+                    <h1 class="center">Montos extras</h1>
+                    <hr>
+                    <div class="col s12">
+                        <h2 class="align-left">Viajero</h2>
+                        <p>
+                            <strong>Total extras: </strong> {{ cotizacion?.valoresExtras?.totalExtrasViajero | currency: cotizacion.nombreDivisa }}
+                        </p>
+
+                        <p>
+                            <strong>Comisión 5rives: </strong> {{ cotizacion?.valoresExtras?.comision | currency: cotizacion.nombreDivisa }}
+                        </p>
+
+                        <p>
+                            <strong>Comisión agente: </strong> {{ cotizacion?.valoresExtras?.comisionAgente | currency: cotizacion.nombreDivisa }}
+                        </p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col s12">
+                        <h2 class="align-left">Agencia</h2>
+                        <p>
+                            <strong>Total extras: </strong> {{ cotizacion?.valoresExtras?.totalExtrasAgencia | currency: cotizacion.nombreDivisa }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="z-depth-1 font-1 card-informacion-2">
+                <div class="row">
+                    <h1 class="center">Reembolsos</h1>
+                    <hr>
+                    <div class="col s12">
+                        <p>
+                            <strong>Reembolso cliente/agencia: </strong> {{ cotizacion?.valoresReembolsos?.totalAReembolsar | currency: cotizacion.nombreDivisa }}
+                        </p>
+
+                        <p>
+                            <strong>Comisión 5rives: </strong> {{ cotizacion?.valoresReembolsos?.comision | currency: cotizacion.nombreDivisa }}
+                        </p>
+
+                        <p>
+                            <strong>Comisión agente: </strong> {{ cotizacion?.valoresReembolsos?.comisionAgente | currency: cotizacion.nombreDivisa }}
+                        </p>
+
+                        <p class="right">
+                            <strong>Total: </strong> {{ totalAReembolsar() | currency: cotizacion.nombreDivisa }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="z-depth-1 font-1 card-informacion-2">
+                <div class="row">
+                    <h1 class="center">Montos totales</h1>
+                    <hr>
+                    <p>
+                        <strong>Comisión 5rives: </strong> {{ cotizacion?.valoresVenta?.comision | currency: cotizacion.nombreDivisa }}
+                    </p>
+
+                    <p>
+                        <strong>Comisión Agente: </strong> {{ cotizacion?.valoresVenta?.comisionAgente | currency: cotizacion.nombreDivisa }}
+                    </p>
+
+                    <p>
+                        <strong>Precio comprado: </strong> {{ cotizacion?.valoresVenta?.totalMontoComprado  | currency: cotizacion.nombreDivisa }}
+                    </p>
+                    <hr>
+
+                    <p>
+                        <strong>Total comisión a pagar: </strong> {{ cotizacion?.valoresExtras?.comisionAgente + cotizacion?.valoresReembolsos?.comisionAgente + cotizacion?.valoresVenta?.comisionAgente | currency: cotizacion.nombreDivisa }}
+                    </p>
+
+                    <h1 *ngIf="cotizacion.hasOwnProperty('valoresVenta')">
+                        <strong>Ganancia total: </strong> {{ calcularTotal() | currency: cotizacion.nombreDivisa }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA PAGOS -->
+    <div class="row margen-tabla z-depth-1">
+        <div class="col s12">
+            <div class="row valign-wrapper">
+                <div class="col s4">
+                    <h1>Pagos de venta</h1>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido y verificado: </strong> {{ totalPagosVerificados | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido por verificar: </strong> {{ totalPagosPorVerificar | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido por facturar: </strong> {{ totalPagosPorFacturar | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Total: </strong> {{ totalPagosVerificados + totalPagosPorVerificar | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Porcentaje de pago: </strong> {{ porcentajePagado }}%
+                        </div>
+                    </div>
+                </div>
+                <div class="col s4">
+                    <h1>Pagos de extras</h1>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido y verificado: </strong> {{ totalPagosVerificadosE | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido por verificar: </strong> {{ totalPagosPorVerificarE | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Recibido por facturar: </strong> {{ totalPagosPorFacturarE | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Total: </strong> {{ totalPagosVerificadosE + totalPagosPorVerificarE | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Porcentaje de pago: </strong> {{ porcentajePagadoE }}%
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3 center font-0">PAGOS</div>
+                <div class="col s1 font-0 right-align">
+                    <a class="btn-floating btn-small blue darken-4" (click)="abrirModal(1)">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>
+            </div>
+            <table class="highlight centered">
+                <thead>
+                    <tr>
+                        <th>Ref. Pago</th>
+                        <th>Fecha</th>
+                        <th>Verificado</th>
+                        <th>Factura electrónica</th>
+                        <th>Cantidad neta</th>
+                        <th>Cantidad divisa</th>
+                        <th>Cantidad MXN</th>
+                        <th>Forma de pago</th>
+                        <th>% Tasa</th>
+                        <th>Cuenta</th>
+                        <th>Notas</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let pago of pagos; let i = index">
+                        <td>{{ pago.refPago }}</td>
+                        <td>{{ pago.fecha | date: 'MMM d, y' }}</td>
+                        <td>
+                            <span *ngIf="pago.pagoVerificado" class="material-icons green-text text-darken-4">check_circle</span>
+                            <span *ngIf="!pago.pagoVerificado" class="material-icons red-text text-accent-4 pointer" (click)="validarPago(i)">cancel</span>
+                        </td>
+                        <td>
+                            <span *ngIf="pago.facturaE" class="material-icons green-text text-darken-4 pointer" (click)="abrirModalVerArchivos(pago.idPago, 1)">check_circle</span>
+                            <span *ngIf="!pago.facturaE" class="material-icons red-text text-accent-4 pointer" (click)="abrirModalAgregarArchivos(i, 1)">cancel</span>
+                        </td>
+                        <td>{{ pago.cantidadNeta | currency: pago.divisa }}</td>
+                        <td>{{ pago.cantidadDivisa | currency: pago.divisa }}</td>
+                        <td>{{ pago.cantidadMXN | currency: 'MXN' }}</td>
+                        <td>{{ pago.formaPago }}</td>
+                        <td>{{ pago.tasa }}%</td>
+                        <td>{{ pago.cuenta }}</td>
+                        <td>{{ pago.notas }}</td>
+                        <td>{{ pago.pagoExtra ? 'Extra' : 'Venta' }}</td>
+                    </tr>
+                    <tr *ngIf="pagos.length === 0">
+                        <td colspan="13">
+                            <h3>No se encontraron pagos para mostrar.</h3>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- TABLA REEMBOLSOS -->
+    <div class="row margen-tabla z-depth-1">
+        <div class="col s12">
+            <div class="row valign-wrapper">
+                <div class="col s6">
+                    <!-- <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Comisión 5rives: </strong> {{ reembolsoCom5rives | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Comisión Agente: </strong> {{ reembolsoComAgente | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div> -->
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Total reembolsado: </strong> {{ totalReembolsos | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3 font-0">REEMBOLSOS</div>
+                <div class="col s3 font-0 right-align">
+                    <a class="btn-floating btn-small blue darken-4" (click)="abrirModal(2)">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>
+            </div>
+            <table class="highlight centered">
+                <thead>
+                    <tr>
+                        <th>Ref. reembolso</th>
+                        <th>Fecha</th>
+                        <th>Reembolso</th>
+                        <th>Factura electrónica</th>
+                        <th>Cantidad neta</th>
+                        <th>Cantidad divisa</th>
+                        <th>Cantidad MXN</th>
+                        <th>Cuenta emisora</th>
+                        <th>Cuenta receptiva</th>
+                        <th>Concepto</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let reembolso of reembolsos; let i = index">
+                        <td>{{ reembolso.refReembolso }}</td>
+                        <td>{{ reembolso.fecha | date: 'MMM d, y' }}</td>
+                        <td>{{ reembolso.reembolsoS }}</td>
+                        <td>
+                            <span *ngIf="reembolso.facturaE" class="material-icons green-text text-darken-4 pointer" (click)="abrirModalVerArchivos(reembolso.idReembolso, 2)">check_circle</span>
+                            <span *ngIf="!reembolso.facturaE" class="material-icons red-text text-accent-4 pointer" (click)="abrirModalAgregarArchivos(i, 2)">cancel</span>
+                        </td>
+                        <td>{{ reembolso.cantidadNeta | currency: cotizacion.nombreDivisa }}</td>
+                        <td>{{ reembolso.cantidadDivisa | currency: cotizacion.nombreDivisa }}</td>
+                        <td>{{ reembolso.cantidadMXN | currency: cotizacion.nombreDivisa }}</td>
+                        <td>{{ reembolso.cuentaEmisora }}</td>
+                        <td>{{ reembolso.cuentaReceptora }}</td>
+                        <td>{{ reembolso.concepto }}</td>
+                    </tr>
+                    <tr *ngIf="reembolsos.length === 0">
+                        <td colspan="13">
+                            <h3>No se encontraron reembolsos para mostrar.</h3>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- TABLA COMISIONES -->
+    <div class="row margen-tabla z-depth-1">
+        <div class="col s12">
+            <div class="row valign-wrapper">
+                <div class="col s6">
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Total comisión a pagar: </strong> {{ (comAExtrasViajero + reembolsoComAgente + comisionACostoVenta) | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Comisión pagada y verificada: </strong> {{ totalComisionesVerificadas | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Comisión pagada por verificar: </strong> {{ totalComisionesPorVerificar | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Total: </strong> {{ totalComisionesVerificadas + totalComisionesPorVerificar | currency: cotizacion.nombreDivisa }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 font-1">
+                            <strong>Porcentaje pagado: </strong> {{ (comAExtrasViajero + reembolsoComAgente) > 0 ? this.round((totalComisionesVerificadas * 100) / (comAExtrasViajero + reembolsoComAgente)) : 0 }}%
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3 font-0">COMISIONES</div>
+                <div class="col s3 font-0 right-align">
+                    <a class="btn-floating btn-small blue darken-4" (click)="abrirModal(3)">
+                        <i class="material-icons">add</i>
+                    </a>
+                </div>
+            </div>
+            <table class="highlight centered">
+                <thead>
+                    <tr>
+                        <th>Ref. comisión</th>
+                        <th>Fecha</th>
+                        <th>Verificada</th>
+                        <th>Factura electrónica</th>
+                        <th>Cantidad divisa</th>
+                        <th>Cantidad MXN</th>
+                        <th>Banco</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let comisionPagada of comisionesPagadas; let i = index">
+                        <td>{{ comisionPagada.refComision }}</td>
+                        <td>{{ comisionPagada.fecha | date: 'MMM d, y' }}</td>
+                        <td>
+                            <span *ngIf="comisionPagada.verificada" class="material-icons green-text text-darken-4">check_circle</span>
+                            <span *ngIf="!comisionPagada.verificada" class="material-icons red-text text-accent-4 pointer" (click)="validarComisionPagada(i)">cancel</span>
+                        </td>
+                        <td>
+                            <span *ngIf="comisionPagada.facturaE" class="material-icons green-text text-darken-4 pointer" (click)="abrirModalVerArchivos(comisionPagada.idComision, 3)">check_circle</span>
+                            <span *ngIf="!comisionPagada.facturaE" class="material-icons red-text text-accent-4 pointer" (click)="abrirModalAgregarArchivos(i, 3)">cancel</span>
+                        </td>
+                        <td>{{ comisionPagada.cantidadDivisa | currency: comisionPagada.divisa }}</td>
+                        <td>{{ comisionPagada.cantidadMXN | currency: 'MXN' }}</td>
+                        <td>{{ comisionPagada.banco }}</td>
+                        <td>{{ comisionPagada.notas }}</td>
+                    </tr>
+                    <tr *ngIf="comisionesPagadas.length === 0">
+                        <td colspan="8">
+                            <h3>No se encontraron comisiones para mostrar.</h3>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<ng-template #noCotizacion>
+        <div style="height: 90%;" class="row valign-wrapper container">
+            <div class="col s12 center">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+              
+                    <div class="spinner-layer spinner-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+              
+                    <div class="spinner-layer spinner-yellow">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+              
+                    <div class="spinner-layer spinner-green">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <h5 class="center">Cargando información de cotización</h5>
+            </div>
+        </div>
+</ng-template>
+
+
+<div id="modalPagos" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Agregar pago</h1>
+        </div>
+    </div>
+    <div class="modal-content">
+        <form #pagosForm="ngForm">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input required id="cantidadDivisa" type="number" name="cantidadDivisa" #cantidadDivisa="ngModel" [(ngModel)]="pago.cantidadDivisa" (ngModelChange)="calcularCantidadesPago()">
+                    <label for="cantidadDivisa">Cantidad</label>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>Divisa</label></span>
+                    <select [value]="pago.idDivisaBase" class="browser-default" name="idDivisaBase" #idDivisaBase="ngModel" [(ngModel)]="pago.idDivisaBase" (change)="getValorDivisa(+$event.target.value, 1)">
+                        <option value="1">MXN</option>
+                        <option value="2">USD</option>
+                        <option value="3">EUR</option>
+                    </select>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>Forma de pago</label></span>
+                    <select class="browser-default" #formaPago name="formaPago" #formaPago="ngModel" [(ngModel)]="pago.formaPago" (change)="cargarFormaPago(formaPago.value)">
+                        <option selected value="VISA">VISA</option>
+                        <option value="AMERICAN EXPRESS">AMERICAN EXPRESS</option>
+                        <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                        <option value="CHEQUE">CHEQUE</option>
+                        <option value="EFECTIVO">EFECTIVO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="tasa" type="number" name="tasa" #tasa="ngModel" [(ngModel)]="pago.tasa" (ngModelChange)="aplicarNuevaTasaBancaria($event)">
+                    <label for="tasa">% Tasa bancaria</label>
+                </div>
+                <div class="input-field col s4">
+                    <input disabled id="cantidadNeta" type="number" name="cantidadNeta" #cantidadNeta="ngModel" [(ngModel)]="pago.cantidadNeta">
+                    <label for="cantidadNeta">Cantidad neta</label>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="cuenta" type="text" name="cuenta" #cuenta="ngModel" [(ngModel)]="pago.cuenta">
+                    <label for="cuenta">Cuenta</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="notas">Notas</label>
+                    <textarea id="notas" rows="40" cols="50" style="height: 100px;" name="notas" #notas="ngModel" [(ngModel)]="pago.notas"></textarea>
+                </div>
+            </div>
+            <div class="row valign-wrapper">
+                <div class="col s6">
+                    <div class="row">
+                        <div class="col s12">
+                            <label>
+                                <input id="pagoVerificado" type="checkbox" (click)="accionesPagos('pagoVerificado')" />
+                                <span>Pago verificado</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <label>
+                                <input id="facturaPago" type="checkbox" (click)="accionesPagos('factura')" />
+                                <span>Factura electrónica</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s6 center">
+                    <p>¿Es pago de extras?</p>
+                    <label>
+                        <input class="with-gap" name="group2" type="radio" checked (click)="pago.pagoExtra = false"/>
+                        <span>No</span>
+                    </label> &nbsp;
+                    <label>
+                        <input class="with-gap" name="group2" type="radio" (click)="pago.pagoExtra = true"/>
+                        <span>Si</span>
+                    </label>
+                </div>
+            </div>
+            <ul id="collapsibleFactura" class="collapsible popout">
+                <li>
+                    <div class="collapsible-body">
+                        <div style="margin-bottom: 0px !important" class="row valign-wrapper">
+                            <div class="col s6 offset-s3 file-field input-field">
+                                <div style="width: 100%" class="btn">
+                                    <span>Agregar XML / PDF</span>
+                                    <input type="file" (change)="cargarArchivosFactura($event.target.files)">
+                                </div>
+                                <div style="display: none" class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngFor="let archivo of archivosFactura; let i = index">
+                                <div [ngSwitch]="archivo.ext">
+                                    <div class="col s6 center-align">
+                                        <div *ngSwitchCase="'xml'">
+                                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                                            <img class="responsive-img" src="assets/img/xml.png" width="190" height="185">
+                                        </div>
+                                        <div *ngSwitchCase="'pdf'">
+                                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                                            <img class="responsive-img" src="assets/img/pdf.png" width="150" height="150">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn blue darken-4" [disabled]="pagosForm.invalid" (click)="agregarPago()">Agregar pago {{ pago.cantidadMXN | currency: 'MXN' }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="modalComisionPagada" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Agregar comisión pagada</h1>
+        </div>
+    </div>
+    <div class="modal-content">
+        <form #comisionesPagadasForm=ngForm>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input required id="cantidadDivisa" type="number" name="cantidadDivisa" #cantidadDivisa="ngModel" [(ngModel)]="comisionPagada.cantidadDivisa">
+                    <label for="cantidadDivisa">Cantidad</label>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>Divisa</label></span>
+                    <select required [value]="comisionPagada.idDivisaBase" class="browser-default" name="idDivisaBase" #idDivisaBase="ngModel" [(ngModel)]="comisionPagada.idDivisaBase"  (change)="getValorDivisa(+$event.target.value, 1)">
+                        <option value="1">MXN</option>
+                        <option value="2">USD</option>
+                        <option value="3">EUR</option>
+                    </select>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="banco" type="text" name="banco" #banco="ngModel" [(ngModel)]="comisionPagada.banco">
+                    <label for="banco">Banco</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="notas">Notas</label>
+                    <textarea id="notas" rows="40" cols="50" style="height: 100px;" name="notas" #notas="ngModel" [(ngModel)]="comisionPagada.notas"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>
+                        <input id="comisionVerificada" type="checkbox" />
+                        <span>Comisión verificada</span>
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label>
+                        <input id="facturaCP" type="checkbox" (click)="accionesComisionesP('factura')" />
+                        <span>Factura electrónica</span>
+                    </label>
+                </div>
+            </div>
+            <ul id="collapsibleFacturaCP" class="collapsible popout">
+                <li>
+                    <div class="collapsible-body">
+                        <div style="margin-bottom: 0px !important" class="row valign-wrapper">
+                            <div class="col s6 offset-s3 file-field input-field">
+                                <div style="width: 100%" class="btn">
+                                    <span>Agregar XML / PDF</span>
+                                    <input type="file" (change)="cargarArchivosFactura($event.target.files)">
+                                </div>
+                                <div style="display: none" class="file-path-wrapper">
+                                    <input class="file-path validate" type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngFor="let archivo of archivosFactura; let i = index">
+                                <div [ngSwitch]="archivo.ext">
+                                    <div class="col s6 center-align">
+                                        <div *ngSwitchCase="'xml'">
+                                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                                            <img class="responsive-img" src="assets/img/xml.png" width="190" height="185">
+                                        </div>
+                                        <div *ngSwitchCase="'pdf'">
+                                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                                            <img class="responsive-img" src="assets/img/pdf.png" width="150" height="150">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn blue darken-4" [disabled]="comisionesPagadasForm.invalid" (click)="agregarComisionPagada()">Guardar comisión {{ comisionPagada.cantidadMXN | currency: 'MXN'}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="modalArchivosFacturas" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Archivos de factura</h1>
+        </div>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div *ngFor="let archivo of archivosFactura; let i = index">
+                <div [ngSwitch]="archivo.ext">
+                    <div class="col s6 center-align">
+                        <div *ngSwitchCase="'xml'">
+                            <img (click)="abrirArchivoFactura(archivo)" class="responsive-img pointer" src="assets/img/xml.png" width="190" height="185"> <br>
+                            <span>{{ archivo.nombre }}</span>
+                        </div>
+                        <div *ngSwitchCase="'pdf'">
+                            <img (click)="abrirArchivoFactura(archivo)" class="responsive-img pointer" src="assets/img/pdf.png" width="150" height="150"> <br>
+                            <span>{{ archivo.nombre }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalAgregarArchivosFacturas" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div style="margin-bottom: 0px !important" class="row valign-wrapper">
+            <div class="col s6 offset-s3 file-field input-field">
+                <div style="width: 100%" class="btn">
+                    <span>Agregar XML / PDF</span>
+                    <input type="file" (change)="cargarArchivosFactura($event.target.files)">
+                </div>
+                <div style="display: none" class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div *ngFor="let archivo of archivosFactura; let i = index">
+                <div [ngSwitch]="archivo.ext">
+                    <div class="col s6 center-align">
+                        <div *ngSwitchCase="'xml'">
+                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                            <img class="responsive-img" src="assets/img/xml.png" width="190" height="185">
+                        </div>
+                        <div *ngSwitchCase="'pdf'">
+                            <i class="material-icons center pointer" (click)="eliminarArchivos(i)">close</i> <br>
+                            <img class="responsive-img" src="assets/img/pdf.png" width="150" height="150">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="archivosFactura.length > 0" class="row">
+            <div class="col s12">
+                <button type="button" style="width: 100%;" class="btn blue darken-4" (click)="guardarArchivos()">Guardar archivos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalReembolsos" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="row valign-wrapper">
+        <div class="col s12 center font-1">
+            <h1>Reembolso Final</h1>
+        </div>
+    </div>
+    <div class="modal-content modal-reembolso">
+        <form #reembolsosForm="ngForm">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input type="number" name="cantidadDivisa" #cantidadDivisa="ngModel" [(ngModel)]="reembolso.cantidadDivisa" (ngModelChange)="convertirDivisaMXN(+$event)">
+                    <label for="cantidadDivisa">Cantidad a reembolsar</label>
+                </div>
+                <div class="input-field col s4">
+                    <span><label>Divisa</label></span>
+                    <select required [value]="comisionPagada.idDivisaBase" #idDB class="browser-default" name="idDivisaBase" (change)="getValorDivisa(+$event.target.value, 2)">
+                        <option value="1">MXN</option>
+                        <option value="2">USD</option>
+                        <option value="3">EUR</option>
+                    </select>
+                </div>
+                <div class="input-field col s4">
+                    <input disabled type="number" name="cantidadMXN" #cantidadMXN="ngModel" [(ngModel)]="reembolso.cantidadMXN">
+                    <label for="cantidadMXN">Cantidad MXN</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input required id="reembolso" type="text" name="reembolsoS" #reembolsoS="ngModel" [(ngModel)]="reembolso.reembolsoS">
+                    <label for="reembolso">Reembolso</label>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="cuentaEmisora" type="text" name="cuentaEmisora" #cuentaEmisora="ngModel" [(ngModel)]="reembolso.cuentaEmisora">
+                    <label for="cuentaEmisora">Cuenta emisora</label>
+                </div>
+                <div class="input-field col s4">
+                    <input required id="cuentaReceptora" type="text" name="cuentaReceptora" #cuentaReceptora="ngModel" [(ngModel)]="reembolso.cuentaReceptora">
+                    <label for="cuentaReceptora">Cuenta receptora</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <label for="concepto">Concepto</label>
+                    <textarea id="concepto" rows="40" cols="50" style="height: 100px;"  name="concepto" #concepto="ngModel" [(ngModel)]="reembolso.concepto"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button type="button" style="width: 100%;" class="btn blue darken-4" (click)="agregarReembolso()" [disabled]="reembolsosForm.invalid">Agregar reembolso</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

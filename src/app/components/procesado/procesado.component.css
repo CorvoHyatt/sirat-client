@@ -1,0 +1,2232 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+body{
+    font-family: 'Montserrat', sans-serif;
+    background: #ffffff;
+}
+*{
+    box-sizing: initial !important;
+}
+
+textarea 
+{
+    resize: vertical;
+}
+mwlResizable 
+{
+    box-sizing: border-box;
+}
+.rectangle2 
+{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    margin: auto;
+    background-color: green;
+}
+.wrapper2 
+{
+    position: relative;
+    width:  auto;
+    height: auto;
+    border: 2px solid black;
+}
+.resize-handle-top, .resize-handle-bottom 
+{
+    position: absolute;
+    height: 8px;
+    width: 8px;
+    background-color: red;
+    cursor: row-resize;
+}
+.resize-handle-top 
+{
+    top: 0;
+}
+.resize-handle-bottom 
+{
+    bottom: 0;
+}
+.resize-handle-left,.resize-handle-right 
+{
+    position: absolute;
+    height: 100%;
+    height: 8px;
+    background-color: red;    
+    cursor: col-resize;
+    width: 5px;
+}
+.resize-handle-left 
+{
+    left: 0;
+}
+.resize-handle-right 
+{
+    right: 0;
+}
+  
+
+
+.contenedor h1, h1{
+    font-weight: 500;
+    font-size: 20px !important;
+    text-align: center;
+    margin: 10px 0px 0px !important;
+}
+.contenedor h2{
+    font-weight: 700;
+    font-size: 30px;
+    text-align: center;
+}
+.contenedor h3{
+    font-weight: 500;
+    text-align: center;
+}
+.contenedor p{
+    line-height: 18px;
+}
+.container{
+    width: 250px !important;
+    background-color: #f8f8f8;
+    position: fixed;
+    left: 0px;
+    top: 65px;
+    height: 90%;
+    padding: 20px;
+    box-shadow: 2px 0px 4px #ccc;
+    overflow: scroll;
+}
+.contenedor{
+    width: 707px !important;
+    max-height: 1000px !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+.contenedor td, .contenedor th, .contenedor tr{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    position: relative;
+}
+.contenedor .seccion{
+    margin: 0px 0px 30px;
+    min-height: 1000px;
+    max-height: 1000px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px grey;
+}
+
+.contenedor .logo{
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    background: #fff;
+    margin-top: -21px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+}
+.contenedor .logo img{
+    width: 70%;
+    display: block;
+    margin: 0px auto 20px;
+}
+.contenedor .img_portada img{
+    width: auto;
+    height: auto;
+    float: right;
+}
+/*jovenes*/
+
+/*portada*/
+.tfam {
+    font-size: 10px;
+    word-spacing: 0.25em;  
+    letter-spacing: 6px; 
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.tpais {
+    font-size: 78px;
+    letter-spacing: 6px;
+    font-family: 'Spartan', sans-serif;
+    line-height: 0.5;
+    padding: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.tlug {
+    font-size: 11px;
+    letter-spacing: 4px;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+}
+
+
+.logr5 {
+    position: absolute;
+    top: 86%;
+    align-content: center;
+    font-size: 11px;
+    color: #fff;
+    letter-spacing: 4px; 
+    font-family: 'Montserrat', sans-serif;
+    width: calc(100% - 50px);
+}
+
+.imgpor {
+    width: 100%
+}
+
+.banblanimg {
+    position: absolute; 
+    padding: 518px 0px 0px 0px;
+}
+
+.txposi {
+    position: absolute;  
+    top: 8px;
+}
+
+.txage {
+    font-size: 12px; 
+    color: #000; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 2px;
+}
+
+.txfecha {
+    font-size: 12px; 
+    color: #000; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 2px; 
+}
+
+.txagente {
+    font-size: 12px; 
+    color: #000; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 2px; 
+}
+/*fin portada*/
+
+.tamtab {
+    margin: 0px 0px 0px 35px; 
+    width: 90%;
+}
+/*Hoja1*/
+.tth2 {
+    font-size: 20px;
+    letter-spacing: 6px;
+    font-family: 'Spartan', sans-serif;
+    line-height: 0.5;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.td1th2{
+   width: 50%;  
+}
+
+.td2th2 {
+    width: 50%; 
+    background-color: #241937; 
+    padding: 100px;
+}
+
+.pth2 {
+    color: #fff; 
+    font-size: 15px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+
+.tsh2 {
+    background-color: #241937; 
+    color: #fff;
+    font-size: 14px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 1px; 
+    padding: 10px;
+    margin: 20px 20px;
+}
+
+.p_txt1h1 {
+    color: #000; 
+    font-size: 12px;  
+    font-family: 'Montserrat', sans-serif;
+    vertical-align: middle;
+}
+
+.p_t1h1 {
+    text-align: justify; 
+    font-size: 10px !important;  
+    font-family: 'Montserrat', sans-serif !important;  
+    letter-spacing: 1px !important;  
+}
+
+.th1azul {
+    background-color: #241937; 
+    -webkit-print-color-adjust: exact; 
+    padding: 100px 0px 0px 0px !important;  
+}
+
+.bth1m25 { 
+    width: 25%; 
+    border: #241937 1px solid;
+}
+
+.bth1m50 {
+    width: 50%; 
+    border: #241937 1px solid;
+}
+
+.cazth1 {
+    background: #e0e8ea;
+}
+
+.cwhith1 {
+    background: #fff;
+}
+
+.tab25 {
+    width: 25%;
+}
+
+.tab50 {
+    width: 50%;
+}
+/*fin hoja1*/
+
+/*hoja2*/
+
+.lh2bdb {
+    position: absolute;
+    top: 50%;
+    align-content: center;
+    font-size: 30px;
+    color: #fff;
+    letter-spacing: 4px; 
+    font-family: 'Spartan', sans-serif;
+    width: calc(100% - 50px);
+}
+
+/*fin hoja2*/
+
+/*hoja3*/
+.tth3 {
+    font-size: 20px; 
+    font-weight: bold;
+    letter-spacing: 2px; 
+    font-family: 'Spartan', sans-serif;
+}
+
+.th3 {
+    font-size: 16px; 
+    font-family: 'Montserrat', sans-serif;
+    text-align: justify; 
+}
+
+.txh3 {
+    font-size: 14px !important; 
+    font-family: 'Montserrat', sans-serif !important; 
+    text-align: justify !important;
+    color: #241937 !important;
+}
+
+.txh6 {
+    font-size: 14px; 
+    font-family: 'Montserrat', sans-serif; 
+    text-align: justify;
+    color: #241937;
+}
+
+.txh31 {
+    font-size: 14px; 
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.linea {
+    border-bottom-style: dotted; 
+    border-bottom-width: 4px solid #ffa400;
+}
+
+/*fin hoja3*/
+
+/*hoja5*/
+.tback1 {
+    background-color: #e0e8ea; 
+    width: 200px;
+    border: #e0e8ea 1px solid;
+}
+.tback2 {
+    background-color: #e0e8ea; 
+    width: 600px;
+    border: #e0e8ea 1px solid;
+}
+
+.txth5 {
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    line-height: 130%;
+    vertical-align: middle !important;
+
+}
+
+.txth51 {
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    line-height: 130%;
+    text-align: justify;
+}
+/*fin hoja5*/
+
+/*hoja6*/
+.banrh6{
+    position: absolute; 
+    padding: 0px 0px 0px 555px ; 
+    text-align: right;
+}
+
+.txbanrh6{
+    position: absolute;
+    padding: 0px 0px 0px 511px;
+    top: 0px;
+    left: 50px;
+}
+
+.txnoh6{
+    font-size: 12px;
+    color: #fff; 
+    font-family: 'Montserrat', sans-serif;  
+    font-weight: bold; 
+    letter-spacing: 2px; 
+    text-align: center;
+}
+
+.txbanr1h6{
+    font-size: 8px;
+    color: #fff; 
+    font-family: 'Montserrat', sans-serif;  
+    font-weight: bold; 
+    letter-spacing: 2px; 
+    text-align: center;
+}
+/*fin hoja6*/
+
+/*hoja7*/
+
+.th10 {
+    background-color: #241937; 
+    color: #fff; 
+    font-size: 35px;  
+    font-family: 'Spartan', sans-serif;
+    font-weight: bold;
+    transition: box-shadow .25s, -webkit-box-shadow .25s;
+    padding: 30px;
+    margin: 1rem 0 1rem 0;
+    border-radius: 2px;
+} 
+
+.fondot1 {
+    background-color: #e0e8ea;
+}
+
+.tt1h10 {
+    color: #000; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold;
+}
+
+.txt1h10 {
+    color: #000; 
+    font-size: 10px; 
+    letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.fondot2 {
+    background-color: #241937;
+}
+
+.tt2h10 {
+    color: #fff; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold;
+}
+
+.txt2h10 {
+    color: #fff; 
+    font-size: 10px; 
+    letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.bth10{
+    border-bottom-style: double; 
+    border-bottom-width: 4px; 
+    border-bottom: 3px solid #a7a6a5;
+}
+
+.bortbh7{
+    border-collapse: separate; 
+    border-spacing: 2px 2px;
+}
+
+.bor2tnh7{
+    border-bottom-style: double; 
+    border-bottom-width: 4px; 
+    border-bottom: 3px solid #a7a6a5;
+}
+
+/*fin hoja7*/
+
+/*hoja8*/
+
+.bor1imgh8{
+    border-collapse: separate; 
+    border-spacing: 10px 5px;
+}
+
+.iti8tb {
+    background-color: #dad9d6; 
+    color: #000;
+}
+
+.iti8tb2 {
+    background-color: #f5f3f5; 
+    color: #000;
+}
+
+.iti8p {
+    font-weight: bold; 
+    font-family: 'Spartan', sans-serif;
+}
+
+.iti8pr {
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif;
+}
+
+.iti8tx {
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cuah8 {
+    background-color: #f5f5f5; 
+    border-right: #241937 10px solid; 
+    border-bottom: #241937 10px solid; 
+    outline: none;
+    font-size: 1rem; 
+    margin: 0 0 20px 0; 
+    padding: 0; 
+    box-shadow: none; 
+    transition: all 0.3s;
+}
+
+.cuah8tx {
+    font-size: 14px; 
+    font-family: 'Montserrat', sans-serif; 
+    text-align: justify; 
+}
+/*fin hoja8*/
+
+/*hoja10*/
+
+.tt3h10{
+    color: #241937; 
+    font-size: 22px; 
+    font-family: 'Spartan', sans-serif; 
+    font-weight: bold;
+}
+
+.txt3h10{
+    color: #241937; 
+    font-size: 15px; 
+    font-family: 'Montserrat', sans-serif; 
+    letter-spacing: 2px;
+}
+
+.tx2t3h10 {
+    background-color: #241937;
+    font-family: 'Montserrat', sans-serif; 
+    color: #fff; 
+    padding: 8px;
+}
+
+.borimgh10 {
+    border-collapse: separate; 
+    border-spacing: 3px 3px;
+}
+/*fin hoja10*/
+
+/*hoja11*/
+.th11 {
+    color: #fff; 
+    font-size: 108px; 
+    font-family: 'Satisfy', cursive; 
+    transition: box-shadow .25s, -webkit-box-shadow .25s; 
+    padding: 30px; 
+    margin: 1rem 0 1rem 0; 
+    border-radius: 2px;
+}
+
+.bortb1h11{
+    
+    width: 90%; 
+    border-collapse: separate; 
+    border-spacing: 10px 5px;
+}
+
+.steurh11 {
+    background-color: #241937; 
+    color: #fff; 
+    font-size: 15px; 
+    font-weight: bold; 
+    transition: box-shadow .25s, -webkit-box-shadow .25s; 
+    padding: 15px; margin: 1rem -11px 1rem -11px; 
+    border-radius: 2px;
+}
+
+.bortb3h11 {
+    width: 90%;  
+    border-collapse: separate; 
+    border-spacing: 10px 27px; 
+}
+
+.bortb3h11nota {
+    width: 90%;
+    border-collapse: separate;
+    border-spacing: 10px 0px;
+}
+
+.ttb1h11{
+    font-size: 14px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+    width: 50%;
+}
+
+.eurtb1h11{
+    font-size: 16px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+}
+
+.txtb1h11{
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    color: #241937;
+}
+
+.ttb2h11{
+    font-size: 14px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 1px;
+}
+
+.pi1h11{
+    color: #fff; 
+    font-size: 15px; 
+    font-family: 'Montserrat', sans-serif; 
+    padding: 30px; 
+    margin: 1rem 0 1rem 0; 
+    border-radius: 2px; 
+    text-decoration: underline white;
+}
+
+.pi2h11{
+    color: #fff; 
+    font-size: 10px; 
+    font-family: 'Montserrat', sans-serif; 
+    padding: 30px; 
+    margin: -4rem 0 1rem 0; 
+    border-radius: 2px;
+}
+
+
+
+/*fin hoja11*/
+
+/*hoja12*/
+
+.ttb1h12{
+    background-color: #241937;
+    font-size: 16px; 
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: bold;
+}
+
+.txtb1h12{
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif; 
+    color: #241937;
+}
+
+
+.pi1h12 {
+    background-color: #241937; 
+    color: #fff; 
+    font-size: 15px; 
+    font-family: 'Montserrat', sans-serif; 
+    padding: 30px; 
+    margin: 1rem 0 1rem 0; 
+    border-radius: 2px; 
+    text-decoration: underline white;
+}
+
+.pi2h12 {
+    background-color: #241937; 
+    color: #fff; 
+    font-size: 10px; 
+    font-family: 'Montserrat', sans-serif; 
+    padding: 30px; 
+    margin: -4rem 0 1rem 0; 
+    border-radius: 2px;
+}
+
+.bnth12 {
+    border-bottom: 3px solid #000; 
+}
+/*fin hoja12*/
+
+/*hoja13*/
+.th13 {
+    background-color: #dad9d6; 
+    color: #241937; 
+    font-size: 35px;  
+    font-family: 'Spartan', sans-serif;
+    font-weight: bold;
+    transition: box-shadow .25s, -webkit-box-shadow .25s;
+    padding: 30px;
+    margin: 1rem 0 1rem 0;
+    border-radius: 2px;
+}
+
+.tx2t3h13 {
+    background-color: #dad9d6;
+    font-family: 'Montserrat', sans-serif; 
+    color: #241937; 
+    font-size: 15px;
+    padding: 8px;
+}
+
+.banrojh13 {
+    position: absolute; 
+    top: 38px; 
+    left: 50px; 
+    color: #fff; 
+    font-size: 12px; 
+    font-family: 'Spartan', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 2px;
+}
+
+.iti8t {
+    color: #fff; 
+    font-size: 30px; 
+    font-family: 'Spartan', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 10px;
+}
+
+.iti8tx {
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    font-family: 'Montserrat', sans-serif; 
+    text-align: justify;
+}
+
+.iti13tx {
+    color: #fff;
+    font-size: 12px; 
+    letter-spacing: 1px; 
+    font-family: 'Montserrat', sans-serif; 
+    text-align: justify;
+}
+/*fin hoja13*/
+
+/*hoja14*/
+.banh14{
+    position: absolute; 
+    padding: 0px 0px 0px 515px;
+    text-align: right;
+}
+
+.txbanh14 {
+    position: absolute; 
+    padding: 0px 0px 0px 480px; 
+    top: 8px; 
+    left: 50px; 
+    color: #fff; 
+    font-size: 9px; 
+    font-family: 'Spartan', sans-serif; 
+    font-weight: bold; 
+    letter-spacing: 2px; 
+    text-align: center;
+}
+/*fin hoja14*/
+
+/*hoja15*/
+.txbanh15{
+    position: absolute; 
+    top: 30px; 
+    left: 29px; 
+    color: #fff; 
+    font-size: 12px; 
+    font-family: 'Montserrat', sans-serif;  
+    font-weight: bold; 
+    letter-spacing: 2px;
+}
+/*fin hoja15*/
+
+/*hoja16*/
+
+.th16{
+    color: #241937;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold; 
+    font-size: 18px;
+}
+
+.txh16{
+    color: #241937; 
+    font-size: 12px;
+    font-family: 'Montserrat', sans-serif;
+}
+/*fin hoja16*/
+
+.icon{
+    color: #ffa400;
+    border-bottom: 1px solid #ffa400;
+}
+
+.pais3_itin .content_itin, .pais3_itin .imagen_itin::before, .pais3_itin .pais_resumen{
+    background: #ffc459;
+}
+.pais4_itin .content_itin, .pais4_itin .imagen_itin::before, .pais4_itin .pais_resumen{
+    background: #ffad1a;
+}
+
+span.tfam {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.content_tpais {
+    text-align: center;
+    font-size: 80px;
+    line-height: 0.5;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.hoja2 .icon, .hoja4 .icon{
+    color: #ffa400;
+    border-bottom: 0px;
+}
+.hoja2 h3, .hoja4 h3{
+    color: #ffa400;
+}
+.pais_resumen{
+    border: 0px;
+    display: inline-block;
+    vertical-align: top;
+}
+.hoja2.transporte span{
+    color: #ffa400;
+}
+.table_cotizacion th{
+    color: #ffa400;
+}
+.table_cotizacion li::before{
+    background: #ffa400;
+}
+span.pais_span{
+    color: #ffa400;
+}
+.note span{
+    color: #ffa400;
+}
+.transporte .content_cardsh1{
+    background: #ffa400;
+    color: #fff;
+
+}
+
+.transporte .content_cardsh2{
+    background: #fff;
+    color: #000;
+}
+
+.transporte .content_card{
+    background: #fff;
+    color: #000;
+}
+.subtitle_itin h4{
+    color:#ffa400;
+}
+.vip_itin .libres_tr td span{
+    color:#ffa400;
+}
+.vip_itin .horas_traslado p, .vip_itin .horas_traslado i{
+    background: #ffa400;
+}
+.table_cotizacion li i{
+    color: #ffa400;
+}
+.itinerario_table .rotar h3{
+    color: #ffa400;
+}
+.tipo_transporte{
+    color: #ffa400;
+}
+.hoja1 h3 span{
+    color: #ffa400;
+}
+.icon img{
+    width: 40px !important;
+    color: #ffa400;
+}
+.hotel_tarifa th{
+    background-color: #ffa400;
+}
+.table_cotizacion .note.nota_importante{
+    background-color: #ffa400;
+}
+.salida, .llegada{
+    background: #ffa400;
+}
+.hoja1 table, .hoja4 table{
+    height: auto;
+}
+.hoja2 table{
+    background:transparent;
+}
+.experiencias .note{
+    background: rgba(255,164,0,.3);
+}
+.hoja2 table .table_cotizacion, .hoja4 table .table_cotizacion{
+}
+.portada table{
+    background: #fff;
+}
+.pais2_itin .content_itin, .pais2_itin .imagen_itin::before, .pais2_itin .pais_resumen{
+    background: rgba(255,164,0,.2);
+}
+.hotel_tarifa tr:nth-child(odd) td{
+    background: rgba(255,164,0,.2);
+}
+.subtitle_itin{
+    margin: -1px 0px 0px;
+    background: rgba(255,164,0,1);
+    border-bottom: 1px solid rgba(255,164,0,1);
+}
+.hoja3 .itinerario_table tr:nth-child(even) td{
+    background: #e0e8ea;
+}
+.titulo_portada{
+    background-color: #ffa400;
+    border: 1px solid rgba(255,255,255,.5);
+    border-radius: 0px;
+    position: absolute;
+    bottom: 0px;
+}
+.vip_detalle .subtitle_itin {
+    padding: 0px;
+    background-color: rgba(255,164,0,.3);
+    border: 0px;
+}
+.vip_detalle .subtitle_itin h4{
+    padding: 0px;
+    background-color: transparent;
+    color: #444 !important;
+}
+.vip_detalle .subtitle_itin span{
+    background-color:rgba(255,164,0,.3);
+    padding: 10px;
+    margin-right: 10px;
+    font-weight: 500;
+    color: #686868 !important;
+}
+.vip_detalle .subtitle_itin span.pais_title{
+    background-color: #ffa400;
+    padding-right: 20px;
+    margin-right: -10px;
+    font-weight: 600;
+    color: #fff !important;
+}
+.vip_detalle .vip_itin td span{
+    margin: 10px 0px -5px;
+    font-size: 14px;
+    padding: 0px;
+    color: #ffa400;
+}
+.vip_detalle .vip_itin td p{
+    margin: 10px 0px;
+    font-size: 13px;
+    padding: 0px 15px;
+}
+.vip_detalle .vip_itin td i{
+    margin: 0px 0px;
+    font-size: 13px;
+    color: #999;
+}
+.vip_detalle.hoja3 .itinerario_table tr:nth-child(even) td{
+    background: transparent;
+}
+.vip_detalle .salida{
+    width: 100px;
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: #fff;
+}
+.vip_detalle .llegada{
+    left: calc(50% - 60px);
+    bottom: 10px;
+    width: 100px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    color: #fff;
+}
+.vip_detalle .tipo_transporte{
+    top: calc(50% - 40px);
+}
+.vip_detalle .tipo_transporte i{
+    font-size: 25px !important;
+    color: #ffa400 !important;
+}
+.vip_detalle .tipo_transporte span{
+    display: block;
+    margin: 0px auto !important;
+    border: 1px solid #ddd;
+    width: 100px;
+    padding: 3px !important;
+    background: #fff;
+}
+.resumen_dia{
+    box-shadow: 0px 2px 4px #ddd;
+    background: #f8f8f8;
+    padding: 5px;
+    margin: 10px 0px;
+}
+.resumen_dia h3{
+    margin: 5px;
+    font-size: 16px;
+    color: #686868;
+}
+.resumen_img{
+    height: auto !important;
+}
+.resumen_img img{
+    width: 100%;
+    display: block;
+}
+.resumen_img td{
+    width: 50%;
+    height: auto !important;
+}
+.tabla_tarifas.tabla_servicios{
+    background-color: rgba(255,164,0,.2);
+}
+.jovenes .hoja2 table{
+    height: auto;
+}
+/*familia*/
+.familia .icon{
+    color: #007c95;
+    border-bottom: 1px solid #007c95;
+}
+
+.familia .pais3_itin .content_itin, .familia .pais3_itin .imagen_itin::before, .familia .pais3_itin .pais_resumen{
+    background: #007c95;
+}
+.familia .pais4_itin .content_itin, .familia .pais4_itin .imagen_itin::before,.familia .pais4_itin .pais_resumen{
+    background: #007c95;
+}
+.familia .hoja2 .icon, .familia .hoja4 .icon{
+    color: #007c95;
+    border-bottom: 0px;
+}
+.familia .hoja2 h3, .familia .hoja4 h3{
+    color: #007c95;
+}
+.familia .pais_resumen{
+    border: 0px;
+    display: inline-block;
+    vertical-align: top;
+}
+.familia .hoja2.transporte span{
+    color: #007c95;
+}
+.familia .table_cotizacion th{
+    color: #007c95;
+}
+.familia .table_cotizacion li::before{
+    background: #007c95;
+}
+.familia span.pais_span{
+    color: #007c95;
+}
+.familia .note span{
+    color: #007c95;
+}
+.familia .transporte .content_card{
+    background: #007c95;
+    color: #fff;
+}
+.familia .subtitle_itin h4{
+    color:#007c95;
+}
+.familia .vip_itin .libres_tr td span{
+    color:#007c95;
+}
+.familia .vip_itin .horas_traslado p, .familia .vip_itin .horas_traslado i{
+    background: #007c95;
+}
+.familia .table_cotizacion li i{
+    color: #007c95;
+}
+.familia .itinerario_table .rotar h3{
+    color: #007c95;
+}
+.familia .tipo_transporte{
+    color: #007c95;
+}
+.familia .hoja1 h3 span{
+    color: #007c95;
+}
+.familia .icon img{
+    width: 40px !important;
+    color: #007c95;
+}
+.familia .hotel_tarifa th{
+    background-color: #007c95;
+}
+.familia .table_cotizacion .note.nota_importante{
+    background-color: #007c95;
+}
+.familia .salida, .familia .llegada{
+    background: #007c95;
+    color: #fff;
+}
+.familia .hoja2 table, .familia .hoja4 table, .familia .hoja1 table{
+    background: rgba(0,124,149,.1);
+    height: auto;
+}
+.familia .experiencias .note{
+    background: rgba(0,124,149,.3);
+}
+.familia .hoja2 table .table_cotizacion, .familia .hoja4 table .table_cotizacion{
+    background: rgba(0,124,149,0);
+}
+.familia .portada table{
+    background: rgba(0,124,149, .3);
+}
+.familia .pais2_itin .content_itin, .familia .pais2_itin .imagen_itin::before, .familia .pais2_itin .pais_resumen{
+    background: rgba(0,124,149,.2);
+}
+.familia .hotel_tarifa tr:nth-child(odd) td{
+    background: rgba(0,124,149,.2);
+}
+.familia .subtitle_itin{
+    margin: -1px 0px 0px;
+    background: rgba(0,124,149,1);
+    border-bottom: 1px solid rgba(0,124,149,1);
+}
+.familia .hoja3 .itinerario_table tr:nth-child(even) td{
+    background: rgba(0,124,149,.2);
+}
+.familia .titulo_portada{
+    background-color: #007c95;
+    border: 0px;
+}
+.familia .vip_detalle .subtitle_itin {
+    background-color: rgba(0,124,149,.2);
+}
+.familia .vip_detalle .subtitle_itin span{
+    background-color:rgba(0,124,149,.2);
+    font-weight: 600;
+}
+.familia .vip_detalle .subtitle_itin span.pais_title{
+    background-color: #007c95;
+}
+.familia .vip_detalle tr:nth-child(even) td{
+    background-color: transparent !important;
+}
+.familia .vip_detalle .vip_itin td span{
+    color: #007c95;
+}
+.familia .vip_detalle .tipo_transporte i{
+    color: #007c95 !important;
+}
+.familia .tabla_tarifas.tabla_servicios{
+    background-color: rgba(0,124,149,.2);
+    
+}
+/*parejas*/
+.parejas .icon{
+    color: #ffb192;
+    border-bottom: 1px solid #ffb192;
+}
+.parejas .pais3_itin .content_itin, .parejas .pais3_itin .imagen_itin::before, .parejas .pais3_itin .pais_resumen{
+    background: #ffb192;
+}
+.parejas .pais4_itin .content_itin, .parejas .pais4_itin .imagen_itin::before, .parejas .pais4_itin .pais_resumen{
+    background: #ffb192;
+}
+.parejas .hoja2 .icon, .parejas .hoja4 .icon{
+    color: #ffb192;
+    border-bottom: 0px;
+}
+.parejas .hoja2 h3, .parejas .hoja4 h3{
+    color: #ffb192;
+}
+.parejas .pais_resumen{
+    border: 0px;
+    display: inline-block;
+    vertical-align: top;
+}
+.parejas .hoja2.transporte span{
+    color: #ffb192;
+}
+.parejas .table_cotizacion th{
+    color: #ffb192;
+}
+.parejas .table_cotizacion li::before{
+    background: #ffb192;
+}
+.parejas span.pais_span{
+    color: #ffb192;
+}
+.parejas .note span{
+    color: #ffb192;
+}
+.parejas .transporte .content_card{
+    background: #ffb192;
+    color: #fff;
+}
+.parejas .subtitle_itin h4{
+    color:#ffb192;
+}
+.parejas .vip_itin .libres_tr td span{
+    color:#ffb192;
+}
+.parejas .vip_itin .horas_traslado p, .parejas .vip_itin .horas_traslado i{
+    background: #ffb192;
+}
+.parejas .table_cotizacion li i{
+    color: #ffb192;
+}
+.parejas .itinerario_table .rotar h3{
+    color: #ffb192;
+}
+.parejas .tipo_transporte{
+    color: #ffb192;
+}
+.parejas .hoja1 h3 span{
+    color: #ffb192;
+}
+.parejas .icon img{
+    width: 40px !important;
+    color: #ffb192;
+}
+.parejas .hotel_tarifa th{
+    background-color: #ffb192;
+}
+.parejas .table_cotizacion .note.nota_importante{
+    background-color: #ffb192;
+}
+.parejas .salida, .parejas .llegada{
+    background: #ffb192;
+}
+.parejas .hoja2 table{
+    background: rgba(255,177,146,.1);
+    height: auto;
+}
+.parejas .hoja4 table, .parejas .hoja1 table{
+    background: rgba(255,177,146,.1);
+    height: auto;
+}
+.parejas .experiencias .note{
+    background: rgba(255,177,146,.3);
+}
+.parejas .hoja2 table .table_cotizacion, .parejas .hoja4 table .table_cotizacion{
+    background: rgba(255,164,0,0);
+}
+.parejas .portada table{
+    background: rgba(255,177,146, .3);
+}
+.parejas .pais2_itin .content_itin, .parejas .pais2_itin .imagen_itin::before, .parejas .pais2_itin .pais_resumen{
+    background: rgba(255,177,146,.2);
+}
+.parejas .hotel_tarifa tr:nth-child(odd) td{
+    background: rgba(255,177,146,.2);
+}
+.parejas .subtitle_itin{
+    margin: -1px 0px 0px;
+    background: rgba(255,177,146,1);
+    border-bottom: 1px solid rgba(255,177,146,1);
+}
+.parejas .hoja3 .itinerario_table tr:nth-child(even) td{
+    background: rgba(255,177,146,.3);
+}
+.parejas .titulo_portada{
+    background-color: #ffb192;
+    border: 0px;
+}
+.parejas .vip_detalle .subtitle_itin {
+    background-color: rgba(255,177,146,.2);
+}
+.parejas .vip_detalle .subtitle_itin span{
+    background-color:rgba(255,177,146,.2);
+    font-weight: 600;
+}
+.parejas .vip_detalle .subtitle_itin span.pais_title{
+    background-color: #ffb192;
+}
+.parejas .vip_detalle tr:nth-child(even) td{
+    background-color: transparent !important;
+}
+.parejas .vip_detalle .vip_itin td span{
+    color: #ffb192;
+}
+.parejas .vip_detalle .tipo_transporte i{
+    color: #ffb192 !important;
+}
+.parejas .tabla_tarifas.tabla_servicios{
+    background-color: rgba(255,177,146,.2);
+}
+/*fin*/
+.content_itin span{
+    color: #fff;
+}
+.itinerario_table.dias_libres tr, .itinerario_table.dias_libres td{
+    border: 0px !important;
+    padding: 0px 5px;
+}
+.itinerario_table.dias_libres img{
+    width: 100% !important;
+    display: block;
+    margin-bottom: 0px !important;
+}
+.itinerario_table.dias_libres .content_card{
+    bottom: 18px;
+    width: calc(90% - 22px);
+}
+.itinerario_table .rotar h3{
+    width: 150px;
+    right: 0px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    left: -80px;
+}
+.itinerario_table tr:nth-child(odd) td{
+    background: rgba(0,0,0,0);
+}
+.itinerario_table ul li{
+    text-align: left;
+    margin: 5px 0px 5px;
+}
+.itinerario_table ul li.dia_libre{
+    width: 100%;
+}
+.itinerario_table ul li.dia_libre .content_itin{
+    padding: 0px 12px;
+    border-radius: 0px;
+    background: transparent;
+}
+.itinerario_table ul{
+    padding-left: 20px;
+}
+.hoja2.transporte p{
+    color: #686868;
+    font-size: 12px;
+}
+.hoja2.transporte .note{
+    margin: 30px 0px !important;
+}
+.hoja2.transporte .note p{
+    font-size: 14px;
+    text-align: left;
+}
+.hoja2.transporte span{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 25px 0px;
+    display: block;
+}
+.hoja2 .subtitle h4{
+    width: calc(100% - 20px);
+}
+.hoja2.transporte .subtitle h4, .hoja2.transporte .subtitle{
+    margin: 0px 0px;
+}
+
+.hoja2.transporte .subtitle h4{
+    padding: 10px 0px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    background: rgba(255,255,255,.3);
+    width: 100%;
+}
+.hoja2.transporte .itinerario_table td{
+    height: 50px;
+}
+.hoja2 ul{
+    margin: 0px 0px;
+}
+.hoja2 table, .hoja4 table{
+    height: auto;
+}
+.content_cardsh1{
+    background: #fff;
+    color: #000;
+
+}.content_card{
+    background: rgba(0,0,0,.4);
+    color: #fff;
+}
+.subtitle_itin span, .subtitle_itin h4{
+    color: #fff !important;
+}
+.hoja2 .block_text, .hoja4 .block_text{
+    border: 1px dashed #ccc;
+}
+.hoja2.experiencias table, .hoja4.experiencias table{
+    background: transparent;
+}
+.experiencias .subtitle h4{
+    width: 100%;
+}
+.experiencias td{
+    line-height: 14px;
+}
+.hoja4.experiencias table.table_paquetes tr{
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+}
+.pagos .table_paquetes{
+    background-color: transparent !important;
+    font-size: 12px;
+}
+table{
+    background: #fff;
+}
+.block_text{
+    color: #444;
+    border: 1px dashed #999;
+}
+.fechas{
+    color: #444;
+}
+.pais1_itin .content_itin, .pais1_itin .imagen_itin::before, .pais1_itin .pais_resumen{
+    background: rgba(255,255,255,.8);
+}
+.content_itin span.fecha_itin{
+    color: #444;
+}
+.content_itin .text_itin{
+    color: #686868;
+}
+.tabla_tarifas{
+    box-shadow: 0px 2px 4px #aaa;
+    padding: 5px 15px;
+    margin: 10px auto 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    width: 80%;
+}
+.tabla_tarifas .subtitle h4{
+    box-shadow: none;
+    padding: 0px;
+    color: #686868;
+    background-color: transparent;
+}
+.tabla_tarifas .table_cotizacion li p{
+    color: #777;
+}
+.tabla_tarifas .table_cotizacion li i{
+    color: #aaa;
+}
+.tabla_tarifas .hotel_tarifa{
+    border: 1px solid #000;
+}
+.tabla_tarifas.tabla_servicios .table_cotizacion li p{
+    color: #444;
+}
+.tabla_tarifas.tabla_servicios .table_cotizacion li i{
+    color: #888;
+}
+table{
+    width: 100%;
+    position: relative;
+    height: 1000px;
+    border-collapse: collapse;
+}
+td{
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    vertical-align: top;
+}
+.bloque_img_doble td{
+    width: 49%;
+    height: 230px;
+    overflow: hidden;
+}
+.grid1 .block_text{
+    height: 300px;
+}
+.grid2 .block_text{
+    height: 200px;
+}
+.grid1 ul{
+    text-align: left;
+}
+.grid1 ul li{
+    width: 49%;
+    text-align: left;
+    vertical-align: top;
+    display: inline-block;
+}
+.grid1 ul li span{
+    font-size: 14px;
+    margin: 0px;
+}
+.itinerario_table{
+    height: auto;
+    background-color: transparent !important;
+}
+.itinerario_table td{
+    height: 100px;
+    padding: 0px 10px;
+}
+.block_text{
+    margin: 10px;
+    padding: 10px;
+    width: calc(100% - 80px);
+    vertical-align: top;
+    display: inline-block;
+}
+.portada .block_text{
+    width: calc(100% - 40px);
+}
+.editar_datos.portada .block_text{
+    width: calc(100% - 60px);
+}
+.block_text h2{
+    font-size: 36px;
+    text-transform: uppercase;
+    margin: 15px 0px;
+}
+.fechas{
+    display: block;
+    margin: 10px 0px 0px;
+    font-style: italic;
+    font-weight: 500;
+    text-align: center;
+    font-size: 14px;
+}
+.titulo_portada .fechas{
+    font-weight: 500;
+    font-style: normal;
+    margin: 3px 0px 3px;
+    font-size: 14px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+.icon{
+    font-size: 30px;
+    text-align: center;
+    margin: 0px;
+    background: transparent;
+    padding: 0px 0px;
+}
+.icon h3{
+    display: inline-block;
+    margin: 0px;
+    font-size: 18px;
+    line-height: 30px;
+}
+.icon i{
+    font-size: 20px;
+    margin: 0px 0px 0px 10px;
+}
+.icon span{
+    color: #686868;
+    font-size: #666;
+    display: block;
+    font-size: 14px;
+    padding-bottom:10px;
+    border-bottom: 1px solid #fff;
+    margin-bottom: 10px;
+}
+.hoja2 .icon, .hoja5 .icon{
+    margin-top: -10px;
+    line-height: 30px;
+    border: 0px;
+}
+.hoja3 .icon, .hoja4 .icon {
+    margin-top: -10px;
+    padding: 0px;
+    line-height: 30px;
+}
+.hoja3 .icon h3{
+    font-size: 16px;
+}
+.hoja3 .icon i{
+    font-size: 18px;
+}
+.hoja1 span{
+    text-align: center;
+}
+.hoja1 h3{
+    text-transform: uppercase;
+}
+.hoja1 img, .hoja2 img, .hoja3 img, .hoja4 img, .hoja5 img{
+    width: 100%;
+    display: block;
+margin-left: auto;
+margin-right: auto;
+}
+.hoja1 p{
+    margin: 5px 0px;
+}
+.hoja1 h3{
+    margin: 10px 0px;
+}
+.col_traslados, .traslados{
+    height: 100%;
+}
+.traslados{
+    position: relative;
+    width: 120px;
+    padding: 0px;
+    margin: 0px;
+}
+.col_traslados{
+    position: absolute;
+}
+.col_traslados td{
+    padding: 0px;
+    margin: 0px;
+}
+.hoja3 table.itinerario_table img, .hoja5 table.itinerario_table img{
+    width: 100%;
+    margin: 0px;
+}
+.hoja3 table.itinerario_table img{
+    margin-top: 0px;
+}
+.imagen_itin img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    box-shadow: 0px 4px 5px #444;
+    position: relative;
+    z-index: 1;
+}
+.imagen_itin{
+    position: relative;
+    margin-right: 0px;
+    width: 50px;
+    display: none;
+}
+.imagen_itin::before{
+    width: 30px;
+    height: 50px;
+    position: absolute;
+    content: "";
+    top: 0px;
+    left: 25px;
+}
+.content_itin, .resumen_right .imagen_itin{
+    display: inline-block;
+    vertical-align: middle;
+}
+.content_itin span{
+    margin: 0px;
+    text-transform: initial;
+}
+.content_itin .text_itin{
+    font-weight: 300;
+}
+.content_itin ul{
+    margin: 0px;
+}
+.content_itin ul li{
+    margin-bottom: 10px;
+}
+.content_itin{
+    color: #686868;
+    background: #fff;
+    padding: 15px 12px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-left: 0px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    width: 95%;
+    border-radius: 5px;
+}
+.subtitle_itin span.pais_title{
+    color: #686868;
+    width: auto;
+}
+.td_gig{
+    width: 80% !important;
+}
+.rotar{
+    -webkit-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+}
+.rotar h3{
+    position: relative;
+    left: -35px;
+}
+ul{
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+}
+ul li{
+    list-style: none;
+    padding: 0px;
+    margin: 0px 0px 10px;
+}
+.subtitle{
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #444;
+}
+.subtitle h4{
+    margin: 10px 0px;
+}
+.table_cotizacion .no_incluye li p{
+    font-size: 13px;
+}
+.hoja4 .table_cotizacion.notas{
+    width: 100%;
+}
+.hotel_tarifa{
+    width: 100%;
+    margin: 0 auto 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.hotel_tarifa th{
+    color: #fff;
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    width: 50%;
+}
+.hotel_tarifa tr:nth-child(even) td{
+    background: rgba(255,255,255,1);
+    font-weight: 600;
+    font-size: 14px;
+}
+.hotel_tarifa td{
+    color: #686868;
+    padding: 8px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.content_itin span.fecha_itin{
+    font-weight: 600;
+    margin-right: 10px;
+}
+.content_itin span{
+    font-weight: 300;
+    font-size: 13px;
+    display: inline-block;
+    vertical-align: top;
+}
+.pais_resumen{
+    height: 100%;
+    width: 80px;
+    min-height: 120px;
+}
+.lista_traslado{
+    font-size: 14px;
+    text-align: left;
+    color: #fff;
+}
+.lista_traslado span{
+    font-weight: 600;
+}
+.lista_traslado p{
+    margin: 5px 0px;
+}
+.lista_traslado li{
+    border-bottom: 1px solid rgba(255,255,255,.5);
+    padding: 5px 0px;
+}
+.icon_card{
+    color: #fff;
+    font-size: 24px;
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 40px 0px;
+}
+.icon_card::before{
+    position: absolute;
+    content: "";
+    border-left: 1px dashed #fff;
+    height:100%;
+    top: 0px;
+    left: 50%;
+}
+.lugar_dia{
+    height: 100%;
+    position: relative;
+}
+.lugar_dia h3{
+    font-weight: 700;
+    font-size: 34px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    text-align: left;
+}
+.subtitle{
+    margin: 10px 0px 0px;
+}
+.subtitle h4{
+    font-weight: 600;
+    font-size: 14px;
+    text-align: center;
+    color: #444;
+    background: rgba(255,255,255,.5);
+    padding: 10px 0px;
+    width: 100%;
+    margin: 0 auto 10px;
+    box-shadow: 0px 2px 4px #aaa;
+    border-radius: 5px;
+}
+.subtitle h4 span{
+    display: block;
+    margin: 0 auto;
+    font-size: 20px;
+    font-weight: 700;
+}
+.subtitle_itin h4{
+    font-weight: 700;
+    font-size: 16px;
+    text-align: left;
+    display: inline-block;
+    padding: 10px;
+    margin: 0px;
+    width: calc(49% - 20px);
+    color: #fff;
+}
+.subtitle_itin span{
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    text-align: right;
+    display: inline-block;
+    padding: 10px 10px 10px 0px;
+    margin: 0px;
+    width: calc(49% - 20px);
+}
+.subtitle_itin span.pais_title{
+    color: #fff;
+}
+
+.hoja5 .subtitle h4{
+    width: calc(100% - 20px);
+    padding: 10px;
+}
+.hoja4 .table_cotizacion{
+    width: 100%;
+    margin: 0 auto;
+}
+.table_cotizacion th{
+    width: 50%;
+    text-align: center;
+    background: transparent;
+    border-bottom: 0px;
+    font-size: 14px;
+    padding: 5px 0px 0px;
+}
+.table_cotizacion .note.nota_importante{
+    color: #fff !important;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px #666;
+}
+.table_cotizacion .note.nota_importante span{
+    color: #fff !important;
+}
+.table_cotizacion .note.nota_importante p{
+    color: #fff !important;
+    font-size: 14px;
+}
+.table_cotizacion .note{
+    margin: 0px !important;
+}
+.table_cotizacion .note p{
+    color: #686868;
+    font-size: 12px;
+    text-align: center;
+    margin: 5px 0px;
+    line-height: 14px;
+}
+.table_cotizacion td{
+    padding: 10px 0px 0px;
+}
+.table_cotizacion li{
+    padding-left: 0px;
+    position: relative;
+    color:#686868;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0px;
+}
+.table_cotizacion li i{
+    margin-right: 10px;
+    display: inline-block;
+    width: 20px;
+    font-size: 14px;
+}
+.table_cotizacion li p{
+    display: inline-block;
+    width: calc(100% - 30px);
+    vertical-align: top;
+    margin: 0px;
+}
+.table_cotizacion{
+    margin: 0px 0px;
+}
+/*.table_cotizacion li::before{
+    position: absolute;
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #ffb192;
+    border-radius: 50%;
+    left: 0px;
+    top: 5px;
+}*/
+.table_cotizacion span{
+    color: #686868;
+    font-size: 14px;
+    font-weight: 700;
+    display: block;
+}
+.table_cotizacion p{
+    color: #686868;
+    font-size: 12px;
+    font-weight: 400;
+    display: block;
+}
+.note{
+    background: rgba(255,255,255,.7);
+    margin: 10px 0px !important;
+    padding: 10px
+}
+.note span{
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    display: block;
+}
+.note p{
+    color: #686868;
+    font-size: 14px;
+    text-align: center;
+}
+.table_paquetes{
+    color: #686868;
+    font-size: 14px;
+}
+.table_paquetes tr{
+    border-bottom: 1px solid #fff;;
+}
+.table_paquetes td{
+    padding: 15px;
+}
+.table_paquetes span{
+    font-weight: 700;
+    display: block;
+}
+.table_op td{
+    padding: 10px !important;
+}
+.table_op .note{
+    margin: 0px !important;
+    padding: 5px !important;
+}
+.table_op .note p{
+    margin: 5px 0px 0px;
+}
+span.pais_span{
+    padding: 0px 30px;
+    font-weight: 700;
+    display: block;
+}
+.content_cardsh1{
+    position: absolute;
+    bottom: 150px;
+    text-align: center;
+    font-size: 10px;
+    font-family: 'Montserrat', sans-serif;
+    padding: 15px;
+    word-spacing: 1.25em; 
+    width: calc(103% - 50px);
+}
+
+.content_card{
+    position: absolute;
+    bottom: 0px; 
+    padding: 15px;
+    width: calc(100% - 30px);
+}
+
+.tx_card{
+    font-weight: bold;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    word-spacing: 0.25em; 
+    line-height: 100%;
+}
+
+.tx_cardspan{
+    font-size: 10px;
+    font-family: 'Montserrat', sans-serif;
+    word-spacing: 0.25em; 
+    line-height: 100%;
+}
+
+.head_card{
+    position: absolute;
+    padding: 0px 0px 0px 580px;
+    width: calc(120px - 26px);
+    text-align: right;
+}
+.imgnoinc {
+    height: 130px;
+}
+.visitas .subtitle h4{
+    font-size: 14px;
+    margin: 5px 0px;
+    width: 100%;
+}
+.visitas p, .visitas span, .visitas li, .visitas .table_cotizacion th{
+    font-size: 12px;
+}
+.visitas p{
+    margin: 7px 0px;
+}
+.visitas .table_cotizacion{
+    margin: 0px;
+    width: 100%;
+}
+.visitas .table_cotizacion th{
+    height: 30px !important;
+}
+.visitas .table_cotizacion td{
+    padding: 10px 0px;
+}
+.transporte img{
+    width: 280px;
+    margin-bottom: 5px;
+    vertical-align: bottom;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+.transporte .content_cardsh1{
+    width: calc(280px - 30px);
+    bottom: 5px;
+}
+
+.transporte .content_card{
+    width: calc(280px - 30px);
+    bottom: 5px;
+}
+.vip_itin .horas_traslado span{
+    font-size: 16px;
+    font-weight: 700;
+    display: block;
+    margin: 0px auto;
+    text-align: center;
+}
+.vip_itin .horas_traslado strong{
+    display: block;
+    font-size: 14px;
+}
+.vip_itin .horas_traslado p{
+    text-align: center;
+    margin: 0px;
+    font-size: 13px;
+    position: relative;
+    z-index: 1;
+}
+.vip_itin .horas_traslado i{
+    position: relative;
+    z-index: 1;
+}
+.traslados::before{
+    position: absolute;
+    content: "";
+    width: 1px;
+    border-left: 1px dashed #686868;
+    height: calc(100% - 50px);
+    top: 20px;
+    left: 50%;
+    z-index: 1;
+}
+.salida{
+    width: 100px;
+    text-align: center;
+    padding: 10px;
+    margin: 0px -22px 0px 0px;
+    font-weight: 600;
+    border-radius: 3px;
+    position: relative;
+    z-index: 1;
+    font-size: 12px;
+    color: #fff;
+}
+.llegada{
+    width: 100px;
+    text-align: center;
+    padding: 10px;
+    margin: 0px;
+    font-weight: 600;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 31px;
+    z-index: 1;
+    font-size: 12px;
+    color: #fff;
+}
+.tipo_transporte{
+    position: absolute;
+    top: calc(50% - 40px);
+    text-align: center;
+    padding: 0px;
+    font-size: 30px;
+    left: 0px;
+    width: 100%;
+    z-index: 2;
+}
+.tipo_transporte span{
+    color: #444;
+}
+.traslados_vip{
+    height: auto;
+}
+.traslados_vip td:nth-of-type(1){
+    width: 70%;
+    padding: 0px 10px;
+}
+.traslados_vip td{
+    padding: 0px 10px;
+}
+.vip_itin .traslados_vip tr{
+    border-bottom: 0px;
+}
+.vip_itin{
+    margin: 10px 0px;
+}
+.vip_itin tr{
+}
+.vip_itin td{
+    padding: 0px 0px;
+    height: auto;
+}
+
+.vip_itinsh td{
+    padding: 0px 0px;
+    height: auto;
+}
+
+.vip_itin td span, .vip_itin td p{
+    padding-left: 10px;
+}
+.vip_itin td:nth-of-type(2){
+   
+}
+.vip_itin td span{
+    
+}
+.vip_itin td span, .vip_itin td p{
+    margin: 0px;
+}
+.libres_tr{
+    background: rgba(255,255,255,.7);
+    text-align: center;
+}
+.libres_tr p{
+    color: #686868;
+}
+.vip_itin td.img_itin_vip{
+    padding: 0px;
+}
+.img_itin_vip img{
+    width: 100% !important;
+    margin: 0px !important;
+}
+.nota_detalle{
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 15px 15px !important;
+    color: #444;
+}
+.jovenes .nota_detalle{
+    background: rgba(255,164,0,.2);
+    color: #686868 !important;
+    border: 1px solid rgba(255,164,0,.3);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px #ddd;
+}
+.familia .nota_detalle{
+    background: rgba(0,124,149,.1);
+    color: #686868 !important;
+    border: 1px solid rgba(0,124,149,.3);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px #ddd;
+}
+.parejas .nota_detalle{
+    background: rgba(255,177,146,.1);
+    color: #686868 !important;
+    border: 1px solid rgba(255,177,146,.3);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px #ddd;
+}

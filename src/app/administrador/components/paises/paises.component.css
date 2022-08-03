@@ -1,0 +1,26 @@
+/* FORM */
+.container-date textarea{
+    height: 180px;
+    overflow: auto;
+}
+
+i{
+    cursor: pointer;
+}
+
+/* TABLE */
+.container-table{
+    margin: 20px;
+    margin-top: 50px;
+}
+
+.options{
+    margin-bottom: 0px !important;
+}
+
+table textarea{
+    overflow: auto;
+    height: 230px !important;
+    width: 100%;
+    background-color: transparent;
+}

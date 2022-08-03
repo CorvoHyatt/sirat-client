@@ -1,0 +1,192 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+
+i.icon-green {
+  color: green;
+
+}
+i.icon-black {
+  color: black;
+
+}
+i.icon-red {
+  color: red;
+}
+body {
+  font-size: 16px;
+  font-family: Verdana, sans-serif;
+}
+
+table {
+  
+  margin: 10px auto;
+  border-collapse: collapse;
+
+}
+
+th, td {
+  box-sizing: border-box;
+  border: 1px solid #e9eae8;
+  padding: 8px 20px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f8f8f8;
+}
+
+.score {
+  text-align: right;
+}
+
+th {
+  font-size:10px;
+}
+
+.intro {
+  background-color: black;
+  cursor: pointer;
+  font-size:10px;
+
+}
+
+.myTable tr:nth-child(2)
+{
+    background-color:black;
+    color: white;
+
+}
+
+.myTable  tr:nth-child(2)>:nth-child(1),
+.myTable  tr:nth-child(2)>:nth-child(2),
+.myTable  tr:nth-child(2)>:nth-child(3),
+.myTable  tr:nth-child(2)>:nth-child(4),
+.myTable  tr:nth-child(2)>:nth-child(19)
+{
+  cursor: pointer;
+}
+.myTable  tr:nth-child(2)>:nth-child(1)::after,
+.myTable  tr:nth-child(2)>:nth-child(2)::after,
+.myTable  tr:nth-child(2)>:nth-child(3)::after,
+.myTable  tr:nth-child(2)>:nth-child(4)::after,
+.myTable  tr:nth-child(2)>:nth-child(19)::after
+{
+  content: "\f0dc";
+  font-family: FontAwesome;
+  
+  content: "\f0dc";
+  font-family: FontAwesome;
+  font-size: 12px;
+  color: #ccc;
+  float: right;
+  cursor: pointer;
+  
+}
+.myTable  tr:nth-child(2)>:nth-child(1).asc::after,
+.myTable  tr:nth-child(2)>:nth-child(2).asc::after,
+.myTable  tr:nth-child(2)>:nth-child(3).asc::after,
+.myTable  tr:nth-child(2)>:nth-child(4).asc::after,
+.myTable  tr:nth-child(2)>:nth-child(19).asc::after
+{
+  content: "\f0de";
+  font-family: FontAwesome;
+  font-size: 12px;
+  color: #ccc;
+  float: right;
+  cursor: pointer;
+}
+
+.myTable  tr:nth-child(2)>:nth-child(1).desc::after,
+.myTable  tr:nth-child(2)>:nth-child(2).desc::after,
+.myTable  tr:nth-child(2)>:nth-child(3).desc::after,
+.myTable  tr:nth-child(2)>:nth-child(4).desc::after,
+.myTable  tr:nth-child(2)>:nth-child(19).desc::after
+{
+  content: "\f0dd";
+  font-family: FontAwesome;
+  font-size: 12px;
+  color: #ccc;
+  float: right;
+  cursor: pointer;
+}
+
+
+th.desc::after {
+  content: "\f0dd";
+  font-family: FontAwesome;
+  color: #000;
+}
+
+
+
+.multiselect {
+  width: 60px;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+}
+
+#checkboxes label {
+  display: block;
+}
+
+#checkboxes label:hover {
+  background-color: #1e90ff;
+}
+
+#checkboxesAgencias {
+  display: none;
+  border: 1px #dadada solid;
+}
+
+#checkboxesAgencias label {
+  display: block;
+}
+
+#checkboxesAgencias label:hover {
+  background-color: #1e90ff;
+}
+
+#checkboxesTipo {
+  display: none;
+  border: 1px #dadada solid;
+}
+
+#checkboxesTipo label {
+  display: block;
+}
+
+#checkboxesTipo label:hover {
+  background-color: #1e90ff;
+}
+
+
+select {
+  font-family: 'FontAwesome', 'Second Font name'
+}

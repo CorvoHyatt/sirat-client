@@ -1,0 +1,98 @@
+<div *ngIf="show">
+    <app-productos-estaticos></app-productos-estaticos>
+</div>
+<div *ngIf="!show; else empty" [ngClass]="{'row main-container': true, 'panel top': applyPanel}" id="contenedor">
+    <div class="col s8 products-container">
+        <app-productos-estaticos (typeToSend)="getTypeToSend($event)"></app-productos-estaticos>
+    </div>
+    <div class="col s4">
+        <app-tarifas></app-tarifas>
+    </div>
+    <div class="col s12">
+        <hr style="margin: 0px; margin-bottom: 15px;">
+        <div *ngIf="!applyPanel" class="row actions">
+            <div class="col s4 center">
+                <a class="btn red darken-4" (click)="cancelarCotizacion(cotizacion.idCotizacion)">Cancelar Cotización</a>
+            </div>
+            <div class="col s4 center">
+                <a class="btn orange darken-3" (click)="cotizacionPendiente()">Agregar a pendiente</a>
+            </div>
+            <div class="col s4 center">
+                <a class="btn" (click)="generarCotizacion(cotizacion.idCotizacion)">Generar Cotización</a>
+            </div>
+        </div>
+        <div *ngIf="applyPanel" class="row actions">
+            <div class="col s12 center">
+                <a class="btn">Generar orden de compra</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #empty>
+    <div class="row center">
+        <div class="col s12">
+            <h2>Tu carrito está vacío</h2>
+        </div>
+    </div>
+</ng-template>
+
+<!-- MODAL EDITAR PRODUCTOS EN CARRITO -->
+<div id="modalEditCarrito" class="modal modalEditCarrito">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons right pointer" style="margin: 8px;" (click)="closeModalEditCarrito()">close</i>
+    </div>
+    <div class="modal-content" style="padding-top: 0px">
+        <div [ngSwitch]="typeToSend">
+            <div *ngSwitchCase="1" class="row">
+                <h1 class="center">Traslado</h1>
+                <app-traslados (refresh)="refresh()" [editing]="true" [editingCarrito]="true" [tipoTraslado]="1"></app-traslados>
+            </div>
+            <div *ngSwitchCase="2" class="row">
+                <h1 class="center">Disposición de chofer</h1>
+                <app-disposiciones (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-disposiciones>
+            </div>
+            <div *ngSwitchCase="3" class="row">
+                <h1 class="center">Tour privado a pie</h1>
+                <app-tours-privados-apie (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-tours-privados-apie>
+            </div>
+            <div *ngSwitchCase="4" class="row">
+                <h1 class="center">Tour privado en transporte</h1>
+                <app-tours-privados-entransporte (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-tours-privados-entransporte>
+            </div>
+            <div *ngSwitchCase="5" class="row">
+                <h1 class="center">Tour privado en grupo</h1>
+                <app-tours-privados-en-grupo (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-tours-privados-en-grupo>
+            </div>
+            <div *ngSwitchCase="6" class="row">
+                <h1 class="center">Actividad</h1>
+                <app-actividades (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-actividades>
+            </div>
+            <div *ngSwitchCase="7" class="row">
+                <h1 class="center">Hotel</h1>
+                <app-hotel (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-hotel>
+            </div>
+            <div *ngSwitchCase="8" class="row">
+                <h1 class="center">Vuelo</h1>
+                <app-vuelos (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-vuelos>
+            </div>
+            <div *ngSwitchCase="9" class="row">
+                <h1 class="center">Tren</h1>
+                <app-trenes (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-trenes>
+            </div>
+            <div *ngSwitchCase="10" class="row">
+                <h1 class="center">Extra</h1>
+                <app-extras (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-extras>
+            </div>
+            <!--
+            <div *ngSwitchCase="11" class="row">
+                <h1 class="center">Traslado Otro</h1>
+                <app-traslados [editing]="true" [tipoTraslado]="2"></app-traslados>
+            </div> -->
+            <div *ngSwitchCase="12" class="row">
+                <h1 class="center">Vehículo en renta</h1>
+                <app-renta-vehiculos (refresh)="refresh()" [editing]="true" [editingCarrito]="true"></app-renta-vehiculos>
+            </div>
+        </div>
+    </div>
+</div>

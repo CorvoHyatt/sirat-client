@@ -1,0 +1,83 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abrirNuevaAgencia()">Nueva agencia</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE AGENCIAS</h2>
+    </div>
+
+    <div class="row">
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>
+                    NOMBRE
+                </th>
+
+                <th></th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let agencia of agencias">
+                    <td>
+                        {{agencia?.idAgencia}}
+                    </td>
+                    <td>
+                        {{agencia?.nombre}}
+                    </td>
+
+                    <td style="width: 200px;">
+                        <i class="small material-icons" (click)="editar(agencia)" title="Editar" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                        <i class="small material-icons" (click)="eliminar(agencia.idAgencia)" title="Eliminar" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<!-- Modal para agregar una agencia -->
+<div id="nuevaAgencia" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Agencia</h2>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="agencia.nombre">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="guardarAgencia()">Aceptar</a>
+    </div>
+</div>
+
+
+<!-- Modal para agregar una agencia -->
+<div id="editarAgencia" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Agencia</h2>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="agencia.nombre">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="actualizar()">Aceptar</a>
+    </div>
+</div>

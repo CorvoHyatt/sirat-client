@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Spartan:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+
+body{
+    font-family: 'Montserrat', sans-serif;
+    background: #ffffff;
+}
+*{
+    box-sizing: initial !important;
+}
+.contenedor h1, h1{
+    font-weight: 500;
+    font-size: 20px !important;
+    text-align: center;
+    margin: 10px 0px 0px !important;
+}
+.contenedor h2{
+    font-weight: 700;
+    font-size: 30px;
+    text-align: center;
+}
+.contenedor h3{
+    font-weight: 500;
+    text-align: center;
+}
+.contenedor p{
+    line-height: 18px;
+}
+.container{
+    width: 250px !important;
+    background-color: #f8f8f8;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 2px 0px 4px #ccc;
+    overflow: scroll;
+}
+.contenedor{
+    width: 707px;
+    max-height: 1000px;
+    display: block;
+    margin: 0 auto;
+}
+.contenedor td, .contenedor th, .contenedor tr{
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    position: relative;
+}
+.contenedor .seccion{
+    margin: 0px 0px 30px;
+    min-height: 1000px;
+    max-height: 1000px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px grey;
+}
+
+.contenedor .logo{
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+    background: #fff;
+    margin-top: -21px;
+    box-shadow: 0px 2px 4px rgba(0,0,0,.2);
+}
+.contenedor .logo img{
+    width: 70%;
+    display: block;
+    margin: 0px auto 20px;
+}
+.contenedor .img_portada img{
+    width: auto;
+    height: auto;
+    float: right;
+}
+.jovenes .hoja2 table{
+    height: auto;
+}
+.jovenes .nota_detalle{
+    background: rgba(255,164,0,.2);
+    color: #686868 !important;
+    border: 1px solid rgba(255,164,0,.3);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px #ddd;
+}
+
+.timeline {
+    position: relative;
+}
+.timeline .timeline-event {
+    position: relative;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.timeline .timeline-event:nth-child(odd) .timeline-content {
+    margin-left: 0;
+}
+.timeline .timeline-event .timeline-content {
+    position: relative;
+    width: calc(50% - 50px);
+}
+
+.timeline .timeline-badge {
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: #d2d2d2;
+    top: calc(50% - 8px);
+    right: calc(50% - 8px);
+    border-radius: 50%;
+    text-align: center;
+    cursor: default;
+}
+
+.timeline .timeline-event::before {
+    display: block;
+    content: "";
+    width: 2px;
+    height: calc(50% - 30px);
+    position: absolute;
+    background: #d2d2d2;
+    left: calc(50% - 1px);
+    top: 0;
+}
+
+.timeline .timeline-event::after {
+    display: block;
+    content: "";
+    width: 2px;
+    height: calc(50% - 30px);
+    position: absolute;
+    background: #d2d2d2;
+    left: calc(50% - 1px);
+    top: calc(50% + 30px);
+}
+
+.card-title.gradient {
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    padding-bottom: 64px;
+    display: block;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    background: linear-gradient(to bottom, rgba(125, 185, 232, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.8) 100%);
+}
+
+.card-title {
+    line-height: 1em;
+}
+
+.timeline .timeline-event:nth-child(even) .timeline-content {
+    margin-left: calc(50% + 50px);
+}

@@ -1,0 +1,53 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row center">
+        <a class="btn" (click)="abrirModal()">Nueva área</a>
+    </div>
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE ÁREAS</h2>
+    </div>
+    <div class="row center">
+        <table class="centered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>NOMBRE</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let area of areas; let i = index">
+                    <td>{{area?.idArea}}</td>
+                    <td>{{area?.nombre}}</td>
+                    <td>
+                        <i class="small material-icons" style="cursor: pointer;" (click)="editar(area)" title="Editar">edit</i>
+                        <i class="small material-icons" style="cursor: pointer;" (click)="eliminar(area, i)" title="Eliminar">clear</i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal área -->
+<div id="modalArea" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Área</h2>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 ">
+                <span><label for="nombreNuevo">Nombre del área</label></span>
+                <input type="text" id="nombreNuevo" [(ngModel)]="area.nombre">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close btn-flat">Cancelar</a>
+        <a *ngIf="!esActualizacion" class="btn-flat" (click)="agregarArea()">Guardar</a>
+        <a *ngIf="esActualizacion" class="btn-flat" (click)="actualizarArea()">Actualizar</a>
+    </div>
+</div>

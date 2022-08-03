@@ -1,0 +1,397 @@
+<div class="center" style="margin: 20px !important;">
+    <div class="row valign-wrapper">
+        <div class="input-field col s4 center">
+            <select id="filterCotizaciones" #select (change)="filterCotizaciones(select.value)">
+              <option value="4" selected>POR VALIDAR</option>
+              <option value="0">VALIDADAS</option>
+              <option value="7">CERRADAS</option>
+            </select>
+            <label>Filtrar ventas</label>
+        </div>
+        <div class="input-field col s4 center">
+            <i class="material-icons prefix">search</i>
+            <!-- <input autocomplete="off" id="icon_prefix" type="text" name="search" [(ngModel)]="search" (ngModelChange)="buscarCotizacion($event)"> -->
+            <input autocomplete="off" id="icon_prefix" type="text">
+            <label for="icon_prefix">Realice su búsqueda</label>
+        </div>
+        <div class="col s2 center">
+            <button class="btn blue darken-4">
+                <i class="material-icons left">bar_chart</i>
+                Estadísticas
+            </button>
+        </div>
+        <!-- <div class="col s2 center">
+            <button (click)="cargarPendientes()" class="btn orange accent-4">
+                <i class="material-icons left">event_note</i>
+                Ver Pendientes
+            </button>
+        </div> -->
+    </div>
+
+    <!-- TABLA 1: VENTAS POR VERIFICAR -->
+    <div *ngIf="cotizacionesPorVerificar.length !== 0 && filtroActivo === 1; else noPorVerificar" class="row">
+        <table class="highlight centered">
+            <thead>
+                <tr>
+                    <th>Número de venta</th>
+                    <th>Viajero</th>
+                    <th>Inicio de viaje</th>
+                    <th>Fin de viaje</th>
+                    <th>Monto de viaje</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let cotizacion of cotizacionesPorVerificar; let i = index">
+                    <td><strong>{{ cotizacion.idCotizacion }}</strong></td>
+                    <td>{{ cotizacion.viajeroNombre }} {{ cotizacion.viajeroApellido }}</td>
+                    <td>{{ cotizacion.fechaInicio | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.fechaFinal | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.totalOC | currency: cotizacion.nombreDivisa }}</td>
+                    <td>
+                        <span style="width: 147px" class="material-icons dropdown-trigger" [attr.data-target]="'accionesVentas' + i">more_vert</span>
+                        <ul [id]="'accionesVentas' + i" class='dropdown-content center'>
+                            <li>
+                                <a (click)="validarVenta(cotizacion, i)"><span class="material-icons">done</span>Validar</a>
+                            </li>
+                            <li>
+                                <a (click)="posponerPago(cotizacion, i)"><span class="material-icons">schedule</span>Posponer</a>
+                            </li>
+                            <li>
+                                <a (click)="cancelarReactivarVenta(cotizacion, i)"><span class="material-icons">published_with_changes</span>Cancelar</a>
+                            </li>
+                            <li>
+                                <a (click)="modalNotas(cotizacion)" ><span class="material-icons">rate_review</span>Notas</a>
+                            </li>
+                            <li>
+                                <a ><span class="material-icons">folder_open</span>Cerrar</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TABLA 2: VENTAS VERIFICADAS -->
+    <div *ngIf="cotizacionesVerificadas.length !== 0 && filtroActivo === 2; else noVerificadas" class="row">
+        <table class="highlight centered">
+            <thead>
+                <tr>
+                    <th>Número de venta</th>
+                    <th>Viajero</th>
+                    <th>Inicio de viaje</th>
+                    <th>Fin de viaje</th>
+                    <th>Monto de viaje</th>
+                    <th>Recibido y verificado</th>
+                    <th>Comisión a pagar</th>
+                    <th>Balance comisión</th>
+                    <th>Balance extras/reembolsos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let cotizacion of cotizacionesVerificadas; let i = index">
+                    <td><strong>{{ cotizacion.idCotizacion }}</strong></td>
+                    <td>{{ cotizacion.viajeroNombre }} {{ cotizacion.viajeroApellido }}</td>
+                    <td>{{ cotizacion.fechaInicio | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.fechaFinal | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.totalOC | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ cotizacion.totalVerificado | currency: cotizacion.nombreDivisa }} ({{cotizacion.porcentajeVerificado}}%)</td>
+                    <td>{{ cotizacion.valoresVenta.comisionAgente + cotizacion.valoresReembolsos.comisionAgente + cotizacion.valoresExtras.comisionAgente | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ balancePorComision(cotizacion) | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ balancePorPago(cotizacion) | currency: cotizacion.nombreDivisa }}</td>
+                    <td>
+                        <span class="material-icons dropdown-trigger" [attr.data-target]="'accionesVentas' + i">more_vert</span>
+                        <ul [id]="'accionesVentas' + i" class='dropdown-content custom-dropdown-ventas center'>
+                            <li>
+                                <a (click)="verDetallesVenta(cotizacion.idCotizacion)"><span class="material-icons">open_in_new</span>Detalles</a>
+                            </li>
+                            <li>
+                                <a (click)="verProductos(cotizacion.idCotizacion, cotizacion.version)"><span class="material-icons">format_list_numbered</span>Servicios</a>
+                            </li>
+                            <li>
+                                <a (click)="cerrarVenta(cotizacion, i)" ><span class="material-icons">task</span>Cerrar</a>
+                            </li>
+                            <li>
+                                <a><span class="material-icons">rate_review</span>Notas</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TABLA 3: VENTAS CERRADAS -->
+    <div *ngIf="cotizacionesCerradas.length !== 0 && filtroActivo === 3; else noCerradas" class="row">
+        <table class="highlight centered">
+            <thead>
+                <tr>
+                    <th>Número de venta</th>
+                    <th>Viajero</th>
+                    <th>Inicio de viaje</th>
+                    <th>Fin de viaje</th>
+                    <th>Monto de viaje</th>
+                    <th>Recibido y verificado</th>
+                    <th>Comisión a pagar</th>
+                    <th>Balance comisión</th>
+                    <th>Balance extras/reembolsos</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let cotizacion of cotizacionesCerradas; let i = index">
+                    <td><strong>{{ cotizacion.idCotizacion }}</strong></td>
+                    <td>{{ cotizacion.viajeroNombre }} {{ cotizacion.viajeroApellido }}</td>
+                    <td>{{ cotizacion.fechaInicio | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.fechaFinal | date: 'MMM d, y'  }}</td>
+                    <td>{{ cotizacion.totalOC | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ cotizacion.totalVerificado | currency: cotizacion.nombreDivisa }} ({{cotizacion.porcentajeVerificado}}%)</td>
+                    <td>{{ cotizacion.valoresVenta.comisionAgente + cotizacion.valoresReembolsos.comisionAgente + cotizacion.valoresExtras.comisionAgente | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ balancePorComision(cotizacion) | currency: cotizacion.nombreDivisa }}</td>
+                    <td>{{ balancePorPago(cotizacion) | currency: cotizacion.nombreDivisa }}</td>
+                    <td>
+                        <i style="cursor: pointer" class="material-icons" (click)="verDetallesVenta(cotizacion.idCotizacion)">open_in_new</i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #noPorVerificar>
+        <div *ngIf="filtroActivo === 1">
+            <h2>No se encontraron ventas para mostrar.</h2>
+        </div>
+    </ng-template>
+
+    <ng-template #noVerificadas>
+        <div *ngIf="filtroActivo === 2">
+            <h2>No se encontraron ventas para mostrar.</h2>
+        </div>
+    </ng-template>
+
+    <ng-template #noCerradas>
+        <div *ngIf="filtroActivo === 3">
+            <h2>No se encontraron ventas para mostrar.</h2>
+        </div>
+    </ng-template>
+
+</div>
+
+
+<!--Modal para agregar comentarios -->
+<div id="modalNotas" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12 right-align">
+                <a (click)="cargarCollapsible()" class="btn-floating btn-small blue darken-4">
+                    <i class="material-icons">add</i>
+                </a>
+            </div>
+        </div>
+        <ul id="collapsibleNuevaNota" class="collapsible popout">
+            <li>
+                <div class="collapsible-body">
+                    <div class="row">
+                        <div class="col s12">
+                            <h1 class="center">Nueva nota</h1>
+                        </div>
+                    </div>
+                    <form #notaForm="ngForm">
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <label for="asunto">Asunto</label>
+                                <input required id="asunto" type="text" name="asunto" #asunto="ngModel" [(ngModel)]="notaC.asunto">
+                            </div>
+                            <div class="col s3">
+                                <label>Prioridad</label>
+                                <select required class="browser-default" name="prioridad" name="prioridad" #prioridad="ngModel" [(ngModel)]="notaC.prioridad">
+                                    <option value="1" selected>Baja</option>
+                                    <option value="2">Media</option>
+                                    <option value="3">Alta</option>
+                                </select>
+                            </div>
+                            <div class="input-field col s3">
+                                <label for="caducidad">Tiempo de expiración</label>
+                                <input required required id="caducidad" type="number" name="caducidad" #caducidad="ngModel" [(ngModel)]="notaC.caducidad">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <textarea required rows="40" cols="50" style="height: 100px;" name="nota" #nota="ngModel" [(ngModel)]="notaC.nota"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s11 offset-s1">
+                                <button class="btn right" [disabled]="notaForm.invalid" (click)="insertNota()">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </li>
+          </ul>
+          <div class="row center">
+              <div class="col s12">
+                  <h1>Listado de notas</h1>
+              </div>
+          </div>
+        <div class="row">
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Usuario</th>
+                        <th>Asunto</th>
+                        <th>Nota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let nota of notas">
+                        <td>{{ nota.idNota }}</td>
+                        <td>{{ nota.createdAt | date: 'MMM d, y, h:mm a' }}</td>
+                        <td>{{ nota.usuario }}</td>
+                        <td class="red-text"><strong>{{ nota.asunto }}</strong></td>
+                        <td>{{ nota.nota }}</td>
+                    </tr>
+                    <tr *ngIf="notas.length === 0">
+                        <td colspan="5">
+                            <h3>No hay notas para mostrar.</h3>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!--Modal para agregar comentarios -->
+<div id="modalPendientes" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content">
+        <div class="row">
+            <div class="col s12 center">
+                <h1>Actividades del día</h1>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="red-text">Prioridad alta({{cotizacionesPrioridadAlta.length}})</h3>
+            <div class="col s12">
+                <table class="centered">
+                    <thead>
+                        <tr>
+                            <th>Número de venta</th>
+                            <th>Fin de viaje</th>
+                            <th>Notas</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cotizacion of cotizacionesPrioridadAlta">
+                            <td>{{ cotizacion.ref }}</td>
+                            <td>{{ cotizacion.fechaFinal | date: 'MMM d, y' }}</td>
+                            <td class="left-align">
+                                <div style="width: 400px; margin: 0 auto;">
+                                    <p class="left-align" *ngFor="let nota of cotizacion.notas">
+                                        &#9658;{{ nota.msg }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
+                                <i [routerLink]="['/finanzas/detalle-venta', cotizacion.idCotizacion]" style="cursor: pointer" class="material-icons">open_in_new</i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="cotizacionesPrioridadAlta.length === 0">
+                            <td colspan="4">
+                                <h3>Sin pendientes.</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="orange-text">Prioridad media ({{cotizacionesPrioridadMedia.length}})</h3>
+            <div class="col s12">
+                <table class="centered">
+                    <thead>
+                        <tr>
+                            <th>Número de venta</th>
+                            <th>Fin de viaje</th>
+                            <th>Notas</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cotizacion of cotizacionesPrioridadMedia">
+                            <td>{{ cotizacion.ref }}</td>
+                            <td>{{ cotizacion.fechaFinal | date: 'MMM d, y' }}</td>
+                            <td>
+                                <div style="width: 400px; margin: 0 auto;">
+                                    <p *ngFor="let nota of cotizacion.notas">
+                                        &#9658;{{ nota.msg }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
+                                <i [routerLink]="['/finanzas/detalle-venta', cotizacion.idCotizacion]" style="cursor: pointer" class="material-icons">open_in_new</i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="cotizacionesPrioridadMedia.length === 0">
+                            <td colspan="4">
+                                <h3>Sin pendientes.</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <h3 class="green-text">Prioridad baja ({{cotizacionesPrioridadBaja.length}})</h3>
+            <div class="col s12">
+                <table class="centered">
+                    <thead>
+                        <tr>
+                            <th>Número de venta</th>
+                            <th>Fin de viaje</th>
+                            <th>Notas</th>
+                            <th>Detalles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cotizacion of cotizacionesPrioridadBaja">
+                            <td>{{ cotizacion.ref }}</td>
+                            <td>{{ cotizacion.fechaFinal | date: 'MMM d, y' }}</td>
+                            <td>
+                                <div style="width: 400px; margin: 0 auto;">
+                                    <p *ngFor="let nota of cotizacion.notas">
+                                        &#9658;{{ nota.msg }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
+                                <i [routerLink]="['/finanzas/detalle-venta', cotizacion.idCotizacion]" style="cursor: pointer" class="material-icons">open_in_new</i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="cotizacionesPrioridadBaja.length === 0">
+                            <td colspan="4">
+                                <h3>Sin pendientes.</h3>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

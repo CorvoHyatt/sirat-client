@@ -1,0 +1,131 @@
+
+<div class="container seccion_formulario">  
+    <br><br><br>
+    <div class="row">
+        <form>            
+            <label for="asunto">Agentes</label>
+            <select (change)="cambioAgente($event.target.value)" class="browser-default">
+                <option *ngFor="let agente of lista_agentes; let ii = index" [value]="agente.idUsuario" >{{agente.nombre}}</option>                
+              </select>
+              <label for="asunto">Cotizaciones</label>
+              <select (change)="cambioAgenteCotizacion($event.target.value)" class="browser-default">
+                  <option *ngFor="let cotizacion of lista_cotizaciones; let ii = index" [value]="cotizacion.idCotizacion" >{{cotizacion.titulo}}</option>                
+                </select>
+          </form>
+    </div>
+</div>
+ 
+
+<div class="contenedor jovenes" >
+    <div>
+        <ul class="timeline">
+            <li *ngFor="let line of timeline; let i=index" [class.timeline-inverted]="i % 2 == 1">
+
+                <div class="timeline-badge {{darColor(line.tipo)}}">
+                    <a class="tooltipped" data-toggle="tooltip" data-position="top" [attr.data-tooltip]="line.fecha"><i class="material-icons white-text">{{darIcono(line.tipo)}}</i></a>
+                </div>
+                <div class="timeline-panel mb-4">
+                  <div class="card-panel hoverable border-radius-6 m-0 card-animation-1">
+
+                        <div class="card-content black-text">
+                            <span class="card-title"> {{darFecha(line.fecha)}}</span>
+                            <p>{{line.notas}}</p>
+                        </div>
+                        <div class="card-action">
+                            <i href="#modalNotas" class="material-icons modal-trigger">notifications</i>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="clearfix" style="float: none;"></li>
+        </ul>
+			
+			
+    </div>
+  </div>
+
+  <div id="modalNotas" class="modal open" style="background: #e1f5fe;">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div class="modal-content open">
+        <div class="row">
+          <div class="col s12">
+            <div class="card">
+              <div class="card-image">
+                <img src="../../../assets/img/titulo-modal.jpg">
+                <span class="card-title" style="font-size: 40px; font-weight: bold;">Title</span>
+              </div>
+            <div class="card-content">
+              <div class="row">
+                <div class="col s12">
+                    <div class="col s4" style="width: 180px;">
+                  <div class="input-field">
+                    <select name="nombre">
+                        <option value="" disabled selected>----Seleccionar----</option>
+                        <option value="Solicitud de nueva versión">Feranda Lopez</option>
+                        <option value="Solicitud de rechazo">Feranda Lopez</option>
+                        <option value="Solicitud de aprobación">Feranda Lopez</option>
+                        <option value="solicitud de reactivación">Feranda Lopez</option>
+                    </select>
+                    <label>Nombre</label>
+                  </div>
+                    </div>
+                    <div class="col s4" style="width: 180px;">
+                  <div class="input-field col s12">
+                    <input placeholder="Placeholder" type="text" class="validate">
+                    <label for="asunto" class="active">Asunto</label>
+                  </div>
+                    </div>
+                    <div class="col s4" style="width: 180px;">
+                  <div class="input-field col s12">
+                    <label for="tipo">Tipo</label>
+                    <input type="number" class="validate">
+                  </div>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <div class="col s4" style="width: 180px;">
+                      <div class="input-field">
+                        <select name="prioridad">
+                            <option value="1">Baja</option>
+                            <option value="1">Media</option>
+                            <option value="1">Alta</option>
+                        </select>
+                        <label>Prioridad</label>
+                      </div>
+                    </div>
+                    <div class="col s4" style="width: 180px;">
+                      <div class="input-field">
+                        <select name="estatus">
+                            <option value="1">Pendiente</option>
+                            <option value="1">Finalizada</option>
+                        </select>
+                        <label>Estatus</label>
+                      </div>
+                    </div>
+                    <div class="col s4" style="width: 200px;">
+                      <div class="input-field col">
+                        <label for="caducidad">Caducidad</label>
+                        <input type="number" class="validate">
+                      </div>
+                    </div>
+                </div>
+                <div class="col s12">
+                    <textarea class="validate" rows="40" cols="50" style="width: 600px; height: 80px;" name="comentarios"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="card-action">
+              <div class="row">
+                <div class="col s10 offset-s1">
+                  <a class="btn right light-blue darken-4">Enviar</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+    </div>
+</div>

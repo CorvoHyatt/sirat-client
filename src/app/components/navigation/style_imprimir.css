@@ -1,0 +1,9 @@
+
+@media print 
+{
+    .z-depth-1
+    {
+        display: none !important;
+    }
+}
+

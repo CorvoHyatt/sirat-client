@@ -1,0 +1,38 @@
+.main-container {
+    height: 100%;
+    margin-bottom: 0px;
+}
+
+.top {
+    margin-top: 50px;
+}
+
+.products-container {
+    height: 650px !important;
+    overflow-y: scroll !important;
+}
+
+.row-style {
+    padding: 15px !important;
+    margin: 10px !important;
+}
+
+.actions {
+    margin-bottom: 0px;;
+}
+
+.actions a {
+    font-size: 1.1vh !important;
+}
+
+.modalEditCarrito {
+    width: 80% !important;
+}
+
+.datepicker {
+    z-index: 999999 !important;
+}
+
+.timepicker {
+    z-index: 999999 !important;
+}

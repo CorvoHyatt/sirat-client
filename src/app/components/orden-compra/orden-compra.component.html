@@ -1,0 +1,256 @@
+<div class="container seccion_formulario">  
+  <br><br><br>
+  <div class="row">
+    <form>
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Itinerario</div>
+          <div class="collapsible-body">
+            <span *ngFor="let mapita of vista.mapProductos; let jj = index" > 
+              <label>
+                <input type="checkbox"  [checked]="false" (change)="cambioInvisible(jj,1)" />
+                <span><p  >{{mapita.descripcion}}</p></span>
+              </label>
+            </span>
+          </div>
+        </li>
+      </ul>  
+      
+      <ul class="collapsible">
+        <li>
+          <div class="collapsible-header"><i class="material-icons">add</i>Enviar correo</div>
+          <div class="collapsible-body">
+              <label for="nombre">Correo agente</label>
+              <input readonly name="correoAgente" type="text" [(ngModel)]="vista.correoAgente"  class="validate">
+              <label >Otros correos</label>
+              <span><textarea  (input)="cambioOtrosCorreos($event.target.value)" placeholder="correos separados por ,">{{vista.otrosCorreos}} </textarea></span>
+              <label >Nota</label>
+              <span><textarea (input)="cambioNotas($event.target.value)">{{vista.notas}}</textarea></span>
+              <input type="file" id="filePDF" (change)="cargandoPDF($event.target.files,$event)" >
+              <br>    
+              <br>
+              <a (click)="enviarCorreo()" class="modal-close btn cta-blue">{{"Enviar"}}</a>
+
+          </div>
+        </li>
+      </ul>  
+      
+
+    </form>
+  </div>
+</div>
+
+
+
+
+
+<div class="contenedor jovenes" >
+
+
+  
+  <div *ngFor="let mapota of mapProductosPorHojaOrdenArreglo; let ii = index" class="seccion hoja1">
+    <div  style="background-image: url('../../../assets/img/fondo-ordcom1.jpg') !important; -webkit-print-color-adjust: exact; width: 95%; height: 1100px; margin: 0px 0px 0px 8px; padding: 10px; vertical-align: top; display: inline-block;"><br>
+      <div  *ngIf="ii==0" class="col s12">
+        <div class="card-panel" style="background-color: #241937;">
+          <table class="tamtab">
+            <tr>
+              <td>
+                <span class="pth2ordcom">ORDEN</span><br>
+                <span class="pth2ordcom">DE COMPRA</span><br>
+                <span class="pth3ordcom">5 R I V E S</span>
+              </td>
+              <td  style="width: 50%; " >
+                <span class="pth4ordcom"><b>DS# {{vista.idCotizacion}}-{{vista.agencia.toUpperCase()[0]}}{{vista.agencia.toUpperCase()[1]}}-{{vista.apellidoCliente.toUpperCase()}}{{hoy|date:'MMyy'}}-{{versionCotizacion}} </b></span><br>
+                <span class="pth5ordcom">FECHA: {{hoy| date:'dd/ MM/ yyyy'}}</span><br>
+                <span class="pth5ordcom">TC: {{total | currency: 'MXN'}}</span><br>
+                <span class="pth5ordcom">CLIENTE: {{vista.nombreCliente.toUpperCase()}}</span><br>
+                <span class="pth5ordcom">AGENCIA: {{vista.agencia.toUpperCase()}}</span><br>
+                <span class="pth5ordcom">AGENTE: {{vista.agente.toUpperCase()}}</span><br>
+                <span class="pth5ordcom">ASESOR: {{nombreAsesor.toUpperCase()}}</span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+        <br>
+      <table class="striped tamtab">
+        <thead class="tsh2ordcom">
+          <tr style="border-bottom: 5px solid #21d8de !important; -webkit-print-color-adjust: exact;">
+            <th class="bth1m20ordcom" style="padding: 8px;">FECHA</th>
+            <th class="bth1m15ordcom" style="padding: 8px;">SERVICIO</th>
+            <th class="center bth1m5ordcom" style="padding: 8px;">#</th>
+            <th class="bth1m40ordcom" style="padding: 8px;">DESCRIPCIÓN</th>
+            <th class="center bth1m15ordcom" style="padding: 8px;">TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mapita of mapota; let jj = index"  style="border-bottom: 3px solid #241937 !important; -webkit-print-color-adjust: exact;">
+            <td class="cazth1ordcom" style="padding: 10px;">
+              <p class="p_txt1h1ordcom">{{darFecha(mapita.fecha)}}</p>
+            </td>
+            <td class="cazth1ordcom" style="padding: 10px;">
+              <p class="p_txt1h1ordcom">{{darTipo(mapita.tipo,mapita.categoria)}} </p>
+            </td>
+            <td class="center cazth1ordcom" style="padding: 10px;">
+              <p class="center p_txt1h1ordcom">1</p>
+            </td>   
+            <td class="cazth1ordcom" style="padding: 10px;">
+              <p class="p_txt1h1ordcom">{{mapita.descripcion}}</p>
+            </td>
+            <td class="cazth1ordcom" style="padding: 10px;">
+              <p class="right p_txt1h1ordcom">{{precioAnticipo(mapita.precioTotal,mapita.tipo,mapita.categoria)| currency: 'MXN'}}</p>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="border-bottom: 5px solid #21d8de !important; -webkit-print-color-adjust: exact;">
+            <th class="bth1m20ordcom" style="padding: 8px;"></th>
+            <th class="bth1m15ordcom" style="padding: 8px;"></th>
+            <th class="bth1m5ordcom" style="padding: 8px;"></th>
+            <th class="right bth1m40ordcom" style="padding: 8px;"></th>
+            <th class="bth1m15ordcom" style="padding: 8px;"></th>
+          </tr>
+          
+          <tr *ngIf="ii==mapProductosPorHojaOrdenArreglo.length-1">
+            <th class="bth1m20ordcom" style="padding: 8px;"></th>
+            <th class="bth1m15ordcom" style="padding: 8px;"></th>
+            <th class="bth1m5ordcom" style="padding: 8px;"></th>
+            <th class="right bth1m40ordcom" style="padding: 8px;">TOTAL</th>
+            <th class="bth1m15ordcom" style="padding: 8px;">{{total | currency: 'MXN'}}</th>
+          </tr>           
+          
+        </tfoot>
+      </table>                  
+      <br>
+      
+      <div class="col s12"><br><br><br><br><br><br>
+
+        
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--fin hoja1-->
+    <!--hoja2-->
+    <div  class="seccion hoja1" style="background-color: #fff !important; -webkit-print-color-adjust: exact;">
+          <div  style="background-image: url('../../../assets/img/fondo-ordcom2.jpg') !important; -webkit-print-color-adjust: exact; width: 95%; height: 100%; margin: 0px 0px 0px 8px; padding: 10px; vertical-align: top; display: inline-block;"><br>
+          <div class="col s12">
+            <p class="txfooterordcom">Mandando el pago de la Orden de Compra con referencia <b>{{vista.idCotizacion}}-{{vista.agencia.toUpperCase()[0]}}{{vista.agencia.toUpperCase()[1]}}-{{vista.apellidoCliente.toUpperCase()}}{{hoy|date:'MMyy'}}-{{versionCotizacion}}</b>, se establece que los servicios del presente documento son aprobados como han sido presentados y que el pasajero esta de acuerdo con las condiciones generales de venta adjuntas. Por cualquier duda, favor de contactarnos.</p>
+          </div>
+          <div class="col s12 tamtab">
+            <h3 class="tth2ordcom center">TRASNFERENCIA BANCARIA</h3>
+            <div class="center cajamarino"><p class="txcajamarino center"><b>CUENTA EN MXN</b></p>
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="txcajamarino" style="padding: 8px;"><span class="right">TITULAR</span></td>
+                    <td class="txcajamarino" style="padding: 8px;">ODEON VOYAGES GROUP SA DE CV</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajamarino" style="padding: 8px;"><span class="right">BANCO</span></td>
+                    <td class="txcajamarino" style="padding: 8px;">SANTANDER</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajamarino" style="padding: 8px;"><span class="right">CLABE</span></td>
+                    <td class="txcajamarino" style="padding: 8px;">014180655051463025</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajamarino" style="padding: 8px;"><span class="right">CUENTA</span></td>
+                    <td class="txcajamarino" style="padding: 8px;">65-50514630-2</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajamarino" style="padding: 8px;"><span class="right">SWIFT</span></td>
+                    <td class="txcajamarino" style="padding: 8px;">BMSXMXMMXXX</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br>
+            <div class="center cajaclaro"><p class="txcajaclaro center"><b>CUENTA EN USD</b></p>
+              <table>
+                <tbody>
+                  <tr>
+                    <td class="txcajaclaro" style="padding: 8px;"><span class="right">TITULAR</span></td>
+                    <td class="txcajaclaro" style="padding: 8px;">ODEON VOYAGES GROUP SA DE CV</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajaclaro" style="padding: 8px;"><span class="right">BANCO</span></td>
+                    <td class="txcajaclaro" style="padding: 8px;">SANTANDER</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajaclaro" style="padding: 8px;"><span class="right">CLABE</span></td>
+                    <td class="txcajaclaro" style="padding: 8px;">014180825007059873</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajaclaro" style="padding: 8px;"><span class="right">CUENTA</span></td>
+                    <td class="txcajaclaro" style="padding: 8px;">82-50070598-7</td>
+                  </tr>
+                  <tr>
+                    <td class="txcajaclaro" style="padding: 8px;"><span class="right">SWIFT</span></td>
+                    <td class="txcajaclaro" style="padding: 8px;">BMSXMXMMXXX</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <br>
+            <h3 class="tth2ordcom center">TARJETA DE CRÉDITO</h3>
+            <img src="../../../assets/img/logo-ban.jpg" alt="" class="responsive-img center" style="width: 300px; ">
+            <div class="cajitaazul"><p class="txcajaclaro center"><b>+3.2% </b></p>
+            </div>
+            <div class="cajitaazul2"><p class="txcajaclaro center"><b>+4.2%</b></p>
+            </div>
+          </div>
+          <div class="col s12" style="margin: 215px 0px 0px 0px;">
+            <br><br><br>
+          </div>  
+          </div> 
+        </div>
+    <!--fin hoja2-->
+</div>
+
+

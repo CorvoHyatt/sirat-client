@@ -1,0 +1,1598 @@
+<div style="margin: 20px; padding: 20px" class="row center deep-orange lighten-5">
+    <p>¡AVISO!</p>
+    <p>
+        Cualquier cambio que realices no será guardado hasta seleccionar el botón "GENERAR ITINERARIO" que se eincuantra al final de la página, si recargas la página o sales de ella tus cambios se perderan y tendras que ingresar la información nuevamente.
+    </p>
+
+</div>
+<div style="margin: 50px" class="row center valign-wrapper">
+    <div class="col s6">
+        <div class="row">
+            <div class="col s12">
+                <h1 style="font-size: 3.5vh;">PASAJERO PRINCIPAL</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s3" style="font-size: 1.5vh;">
+                <strong>Nombre: </strong>{{ cotizacion.viajeroNombre }}
+            </div>
+            <div class="col s3" style="font-size: 1.5vh;">
+                <strong>Apellido: </strong>{{ cotizacion.viajeroApellido }}
+            </div>
+            <div class="col s6" style="font-size: 1.5vh;">
+                <strong>Número telefónico (Con WhatsApp): </strong>{{ cotizacion.viajeroTel }}
+            </div>
+        </div>
+    </div>
+    <div class="col s6">
+        <a class="btn-small modal-trigger" href="#modalInfoPasaportes">
+            <i class="material-icons right">attach_file</i>Completar información de pasajeros
+        </a>
+    </div>
+</div>
+<div style="margin-left: 70px; margin-right: 70px;" *ngFor="let destino of destinos; let i = index">
+    <div class="row light-blue darken-2 header-country valign-wrapper">
+        <div class="col s12 center-align">
+            {{ destino.ciudad }}, {{ destino.pais }}
+        </div>
+    </div>
+    <div class="row">
+        <div *ngIf="destino.productos.length > 0; else empty">
+            <div *ngFor="let product of destino.productos; let ii = index" class="col s12">
+                <div [ngSwitch]="product.tipo">
+                    <div *ngSwitchCase="1" class="row row-style z-depth-1">
+                        <!-- TRASLADO -->
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Traslado</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Traslado
+                                        </strong>
+                                        <h3>{{ product.titulo }}</h3>
+                                    </h1>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Hora:</strong>
+                                    <h3>{{ product.horario }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <p>{{ product.precio | currency: cotizacion.divisa }}</p>
+                                </div>
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoExtraTraslados(i, ii,1)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraTraslados(i, ii,1)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a style="cursor: pointer;" (click)="completarProducto('traslado', i, ii,1)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- DISPOSICIÓN -->
+                    <div *ngSwitchCase="2" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Disposición</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Disposición
+                                        </strong>
+                                        <h3>{{ product.titulo }}</h3>
+                                    </h1>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Hora:</strong>
+                                    <h3>{{ product.horario }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoExtraDisposicion(i, ii,1)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraDisposiciones(i, ii,1)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="completar" (click)="completarProducto('disposicion', i, ii)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div *ngSwitchCase="3" class="row row-style z-depth-1">
+                        <!-- TRASLADO OTRO-->
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong>Traslado Otro</strong>
+                                    </h1>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Hora:</strong>
+                                    <h3>{{ product.horario }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <p>{{ product.precio | currency: cotizacion.divisa }}</p>
+                                </div>
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoExtraTraslados(i, ii,2)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraTraslados(i, ii,2)"><i class="material-icons">autorenew</i></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s4 center">
+                                    <strong>Desde:</strong>
+                                    <h3>{{ product.desde }}</h3>
+                                </div>
+                                <div class="col s4 center">
+                                    <strong>Hacia:</strong>
+                                    <h3>{{ product.hacia }}</h3>
+                                </div>
+                                <div class="col s4 center">
+                                    <strong>Vehículo:</strong>
+                                    <h3>{{ product.vehiculo }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="remove" (click)="completarProducto('trasladoOtro', i, ii,2)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- TOUR A PIE -->
+                    <div *ngSwitchCase="71" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Tour a pie</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Tour a pie
+                                        </strong>
+                                    </h1>
+                                    <h3>{{ product.titulo }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoProducto(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraProducto(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="remove" (click)="completarProducto('producto', i, ii,0,1)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- TOUR EN TRANSPORTE -->
+                    <div *ngSwitchCase="72" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Tour en transporte</strong>
+                                        <strong *ngIf="product.completado">
+                                             <span class="material-icons green-text text-darken-1">check_circle</span> Tour en transporte
+                                        </strong>
+                                    </h1>
+                                    <h3>{{ product.titulo }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoProducto(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraProducto(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="remove" (click)="completarProducto('producto', i, ii,0,2)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- TOUR EN GRUPO -->
+                    <div *ngSwitchCase="73" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Tour en grupo</strong>
+                                        <strong *ngIf="product.completado">
+                                             <span class="material-icons green-text text-darken-1">check_circle</span> Tour en grupo
+                                        </strong>
+                                    </h1>
+                                    <h3>{{ product.titulo }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoProducto(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraProducto(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="remove" (click)="completarProducto('producto', i, ii,0,3)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- ACTIVIDAD -->
+                    <div *ngSwitchCase="74" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Actividad</strong>
+                                        <strong *ngIf="product.completado">
+                                             <span class="material-icons green-text text-darken-1">check_circle</span> Actividad
+                                        </strong>
+                                    </h1>
+                                    <h3>{{ product.titulo }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date: 'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoProducto(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraProducto(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a class="remove" (click)="completarProducto('producto', i, ii,0,4)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- HOTEL -->
+                    <div *ngSwitchCase="4" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Hotel</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Hotel
+                                        </strong>
+                                    </h1>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Nombre:</strong>
+                                    <h3>{{ product.nombre }}</h3>
+                                </div>
+                                <div class="col s4 center">
+                                    <strong>Dirección:</strong>
+                                    <h3>{{ product.direccion }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Teléfono:</strong>
+                                    <h3>{{ product.telefono }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoHotel(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraHotel(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2 center">
+                                    <strong>Check In:</strong>
+                                    <h3>{{ product.checkIn | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Check Out:</strong>
+                                    <h3>{{ product.checkOut | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Categoría:</strong>
+                                    <h3>{{ product.categoria }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Personas:</strong>
+                                    <h3>{{ product.noPersonas }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3 style="margin-bottom: 0px;">{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <div class="col s7 center">
+                                <strong>Descripción:</strong>
+                                <h3>{{ product.descripcion }}</h3>
+                            </div>
+                            <div class="col s5 center">
+                                <strong>Notas:</strong>
+                                <h3>{{ product.notas }}</h3>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a style="cursor: pointer;" (click)="completarProducto('hotel', i, ii)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- VUELOS -->
+                    <div *ngSwitchCase="5" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s1">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Vuelos</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Vuelos
+                                        </strong>
+                                    </h1>
+                                </div>
+                                <div class="col s1 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Origen:</strong>
+                                    <h3>{{ product.origenN }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Destino:</strong>
+                                    <h3>{{ product.destinoN }}</h3>
+                                </div>
+                                <div class="col s1 center">
+                                    <strong>Hora Salida:</strong>
+                                    <h3>{{ product.horaSalida }}</h3>
+                                </div>
+                                <div class="col s1 center">
+                                    <strong>Hora Llegada:</strong>
+                                    <h3>{{ product.horaLlegada }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoVuelos(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoVuelos(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s3 center">
+                                    <strong>Viajeros:</strong>
+                                    <h3>{{ product.noViajeros }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Maleta (Kg):</strong>
+                                    <h3>{{ product.maletaPeso === 0 ? 'N/A' : product.maletaPeso }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Clase:</strong>
+                                    <h3>{{ product.clase }}</h3>
+                                </div>
+                                <div class="col s3 center">
+                                    <strong>Notas:</strong>
+                                    <h3>{{ product.notas }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="product.escala" class="col s12">
+                            <div class="row">
+                                <h1 class="center">Escala</h1>
+                                <div class="col s4 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fechaEscala | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s4 center">
+                                    <strong>Lugar:</strong>
+                                    <h3>{{ product.lugarEscala }}</h3>
+                                </div>
+                                <div class="col s4 center">
+                                    <strong>Duración:</strong>
+                                    <h3>{{ product.tiempoEscala }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s12 center">
+                                    <strong>Descripción:</strong>
+                                    <h3>{{ product.descripcion }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a style="cursor: pointer;" (click)="completarProducto('vuelo', i, ii)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- TRENES -->
+                    <div *ngSwitchCase="6" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s1">
+                                    <h1>
+                                        <strong *ngIf="!product.completado">Tren</strong>
+                                        <strong *ngIf="product.completado">
+                                            <span class="material-icons green-text text-darken-1">check_circle</span> Tren
+                                        </strong>
+                                    </h1>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Horario:</strong>
+                                    <h3>{{ product.horario }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Origen:</strong>
+                                    <h3>{{ product.origenN }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Destino:</strong>
+                                    <h3>{{ product.destinoN }}</h3>
+                                </div>
+                                <div class="col s1 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoTrenes(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoTrenes(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col s6">
+                            <a style="cursor: pointer;" (click)="completarProducto('tren', i, ii)">Completar</a>
+                        </div>
+                        <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                            <h3 style="margin: 0px;">
+                                <strong>Producto opcional</strong>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- EXTRAS -->
+                    <div *ngSwitchCase="8" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <strong *ngIf="!product.completado">{{product.extras}} (Producto extra)</strong>
+                                    <strong *ngIf="product.completado">
+                                        <span class="material-icons green-text text-darken-1">check_circle</span> {{product.extras}} (Producto extra)
+                                    </strong>
+
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha:</strong>
+                                    <h3>{{ product.fecha | date:'mediumDate' }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoExtra(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtra(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                            <div style="margin: 0px;" class="row">
+                                <div class="col s6">
+                                    <a class="remove left" (click)="completarProducto('extra', i, ii)">Completar</a>
+                                </div>
+                                <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                                    <h3 style="margin: 0px;">
+                                        <strong>Producto opcional</strong>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- RENTA DE VEHICULO -->
+                    <div *ngSwitchCase="12" class="row row-style z-depth-1">
+                        <div class="col s12">
+                            <div class="row">
+                                <div class="col s2">
+                                    <!-- <h1>{{ product.extras }}<br><span style="font-size: 1.3vh">(Producto Extra)</span></h1> -->
+                                    <strong *ngIf="!product.completado">Renta de vehículo</strong>
+                                    <strong *ngIf="product.completado">
+                                        <span class="material-icons green-text text-darken-1">check_circle</span> Renta de vehículo
+                                    </strong>
+                                </div>
+                                <div class="col s2 center">
+                                    <strong>Fecha del pick up:</strong>
+                                    <h3>{{ product.fechaPickUp | date:'mediumDate' }}</h3>
+                                </div>
+
+                                <div class="col s1 center">
+                                    <strong>Hora del pick up:</strong>
+                                    <h3>{{ product.horaPickUp }}</h3>
+                                </div>
+
+                                <div class="col s2 center">
+                                    <strong>Fecha del drop off:</strong>
+                                    <h3>{{ product.fechaDropOff | date:'mediumDate' }}</h3>
+                                </div>
+
+                                <div class="col s1 center">
+                                    <strong>Hora del drop off:</strong>
+                                    <h3>{{ product.horaDropOff }}</h3>
+                                </div>
+
+                                <div class="col s1 center">
+                                    <strong>Ciudad:</strong>
+                                    <h3>{{ product.ciudad }}</h3>
+                                </div>
+                                <div class="col s1 center">
+                                    <strong>Tarifa:</strong>
+                                    <h3>{{ product.precio | currency: cotizacion.divisa }}</h3>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light red" title="Enviar" (click)="saveInfoRenta(i, ii)"><i class="material-icons">arrow_upward</i></a>
+                                </div>
+
+                                <div class="col s2 center" style="display: flexbox; justify-content: center; align-items: center; align-content: center;">
+                                    <a *ngIf="this.destinos[i].productos[ii].infoExtra && !this.destinos[i].productos[ii].completado" class="btn-floating btn-large waves-effect waves-light green" title="Enviar" (click)="updateInfoExtraRenta(i, ii)"><i class="material-icons">autorenew</i></a>
+                                </div>
+
+                            </div>
+                            <div style="margin: 0px;" class="row">
+                                <div class="col s6">
+                                    <a class="remove left" (click)="completarProducto('rentaVehiculo', i, ii)">Completar</a>
+                                </div>
+                                <div *ngIf="product.opcional === 1" class="col s6 right-align red-text text-accent-1">
+                                    <h3 style="margin: 0px;">
+                                        <strong>Producto opcional</strong>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="padding: 3%" class="row center-align">
+    <div class="col s12">
+        <button type="button" style="width: 30%;" class="btn amber darken-2" (click)="onSubmit()">Generar itinerario</button>
+    </div>
+</div>
+
+<ng-template #empty>
+    <div class="col s11 center">
+        <h2>
+            Destino vacío
+        </h2>
+    </div>
+</ng-template>
+
+
+<!-- Modal Información Pasajeros -->
+<div id="modalInfoPasaportes" class="modal modalInfoPasaportes">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <div class="modal-content">
+        <h1 class="center">Información de pasajero principal</h1>
+        <div style="border: solid 1px #ccc; margin-bottom: 10px;">
+            <div class="row">
+                <div class="col s3">
+                    <strong>{{ 1 }}.</strong> Nombre:
+                    <div class="input-field inline">
+                        <input name="nombre" #nombre="ngModel" [(ngModel)]="infoPrincipal.nombre" type="text" class="validate">
+                    </div>
+                </div>
+
+                <div class="col s3">
+                    Apellidos:
+                    <div class="input-field inline">
+                        <input name="apellidos" #apellidos="ngModel" [(ngModel)]="infoPrincipal.apellidos" type="text" class="validate">
+                    </div>
+                </div>
+
+
+                <div class="col s3">
+                    Edad:
+                    <div class="input-field inline">
+                        <input name="edad" #edad="ngModel" [(ngModel)]="infoPrincipal.edad" type="number" class="validate">
+                    </div>
+                </div>
+
+                <div class="col s3">
+                    Teléfono:
+                    <div class="input-field inline">
+                        <input name="viajeroTel" #viajeroTel="ngModel" [(ngModel)]="cotizacion.viajeroTel" type="text" class="validate">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row center valign-wrapper">
+                <div class="col s6 file-field input-field">
+                    <a class="btn-small center-align">
+                        <i class="material-icons right">recent_actors</i>Adjuntar pasaporte
+                        <input type="file" accept=".jpg" (change)="cargarPasaporte($event.target.files)">
+                    </a>
+                    <div class="file-path-wrapper hide">
+                        <input class="file-path validate" type="text" placeholder="">
+                    </div>
+                </div>
+
+                <div *ngIf="infoPrincipal.pasaporte.length >0 && !infoPrincipal.img" class="col s6 valign-wrapper">
+                    <img class="imgPrecargada" src="{{API_URI_IMAGES}}/pasaportes/{{infoPrincipal.pasaporte}}">
+                </div>
+
+                <div *ngIf="infoPrincipal.img" class="col s6 valign-wrapper">
+                    <span [innerHTML]="infoPrincipal.img.data"></span>
+                    <!-- <p class="center-align">{{ infoPrincipal.img.name }}</p> -->
+                </div>
+                <div *ngIf="!infoPrincipal.img && infoPrincipal.pasaporte.length ==0" class="col s6 valign-wrapper center-align">
+                    <h3 class="center-align">Su archivo se mostrar en esta parte</h3>
+                </div>
+            </div>
+        </div>
+        <h1 *ngIf="infoPasajerosArray.length>0" class="center">Información de otros pasajeros</h1>
+        <div *ngFor="let infoPasajero of infoPasajerosArray; let i = index" style="border: solid 1px #ccc; margin-bottom: 10px;">
+            <div class="row center">
+                <div class="col s4">
+                    <strong>{{ i + 2 }}.</strong> Nombre:
+                    <div class="input-field inline">
+                        <input type="text" class="validate" name="nombre" #nombre="ngModel" [(ngModel)]="infoPasajero.nombre">
+                    </div>
+                </div>
+
+                <div class="col s4">
+                    Apellidos:
+                    <div class="input-field inline">
+                        <input type="text" class="validate" name="apellidos" #apellidos="ngModel" [(ngModel)]="infoPasajero.apellidos">
+                    </div>
+                </div>
+
+                <div class="col s4">
+                    Edad:
+                    <div class="input-field inline">
+                        <input type="number" class="validate" name="edad" #edad="ngModel" [(ngModel)]="infoPasajero.edad">
+                    </div>
+                </div>
+            </div>
+            <div class="row center valign-wrapper">
+                <div class="col s6 file-field input-field">
+                    <a class="btn-small center-align">
+                        <i class="material-icons right">recent_actors</i>Adjuntar pasaporte
+                        <input type="file" accept=".jpg" (change)="cargarPasaporte($event.target.files, i)">
+                    </a>
+                    <div class="file-path-wrapper hide">
+                        <input class="file-path validate" type="text" placeholder="">
+                    </div>
+                </div>
+
+                <div *ngIf="infoPasajero.pasaporte.length >0 && !infoPasajero.img" class="col s6 valign-wrapper">
+                    <img class="imgPrecargada" src="{{API_URI_IMAGES}}/pasaportes/{{infoPasajero.pasaporte}}">
+                </div>
+
+                <div *ngIf="infoPasajero.img" class="col s6 valign-wrapper">
+                    <span [innerHTML]="infoPasajero.img.data"></span>
+                </div>
+                <div *ngIf="!infoPasajero.img  && infoPrincipal.pasaporte.length ==0" class="col s6 valign-wrapper center-align">
+                    <h3 class="center-align">Su archivo se mostrar en esta parte</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn-flat" (click)="validarInformacionPasajeros()">Continuar</a>
+    </div>
+</div>
+
+<!-- Modal completar vuelo -->
+<div id="modalCompletarVuelo" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #vueloCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información del vuelo de {{infoExtra.origen}} a {{infoExtra.destino}}</h1>
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+                    <div class="col s12">
+                        <label for="fechaTren">Fecha programada</label>
+                        <input required #fechaTren #fechaTren="ngModel" type="text" class="datepicker" id="fechaTren" name="fechaTren" [(ngModel)]="infoExtra.fecha" (change)="setFecha(fechaTren.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="horaDisp">Hora llegada</label>
+                        <input required #horaLlegadaVuelo #horaLlegadaVuelo="ngModel" type="text" id="horaLlegadaVuelo" name="horaLlegadaVuelo" [(ngModel)]="infoExtra.horaLlegada" class="timepicker datepickerCompletar" (change)="setHoraLlegada(horaLlegadaVuelo.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horaSalidaVuelo">Hora salida</label>
+                        <input required #horaSalidaVuelo #horaSalidaVuelo="ngModel" type="text" id="horaSalidaVuelo" name="horaSalidaVuelo" [(ngModel)]="infoExtra.horaSalida" class="timepicker datepickerCompletar" (change)="setHoraSalida(horaSalidaVuelo.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <p>
+                            <label>
+                              <input type="checkbox" class="filled-in" [(ngModel)]="infoExtra.conCargo" name="cargoTren" />
+                              <span>Extras durante el viaje con cargo al cliente</span>
+                            </label>
+                        </p>
+
+                    </div>
+
+                    <div class="row" *ngIf="infoExtra.conCargo">
+                        <div class="input-field inline col s12">
+                            <label for="titular">Titular</label>
+                            <input type="text" class="validate" name="titular" #apellidos="ngModel" [(ngModel)]="infoExtra.titular">
+                        </div>
+
+                        <div class="input-field inline col s8">
+                            <label for="numeroTarjeta">Número de tarjeta</label>
+                            <input type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.numeroTarjeta">
+                        </div>
+
+                        <div class="input-field inline col s1" style="padding-right: 0px;">
+                            <label for="numeroTarjeta">MM</label>
+                            <input style="width: 40px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.mm"> &nbsp; &nbsp;/
+                        </div>
+
+
+                        <div class="input-field inline col s1" style="margin-left: 0px;">
+                            <label for="numeroTarjeta">AA</label>
+                            <input style="width: 40px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.yy">
+                        </div>
+
+                        <div class="input-field inline col s2">
+                            <label for="numeroTarjeta">CVV</label>
+                            <input style="width: 50px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.cvv">
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6">
+                    <label>
+                        <input name="urgente"  [(ngModel)]="infoExtra.urgente" type="checkbox"  >
+                        <span style="color: red; font-size: 18px; ">Urgente</span>
+                    </label>
+                </div>
+            </div>
+        </div>           
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'vuelo')">Completar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal completar tren -->
+<div id="modalCompletarTren" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trenCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información de viaje en tren de {{infoExtra.origen}} a {{infoExtra.destino}}</h1>
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+                    <div class="col s6">
+                        <label for="fechaTren">Fecha programada</label>
+                        <input required #fechaTren #fechaTren="ngModel" type="text" class="datepicker" id="fechaTren" name="fechaTren" [(ngModel)]="infoExtra.fecha" (change)="setFecha(fechaTren.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="horaDisp">Hora</label>
+                        <input required #horaDisp #horaDisp="ngModel" type="text" id="horaDisp" name="horaDisp" [(ngModel)]="infoExtra.hora" class="timepicker datepickerCompletar" (change)="setHora(horaDisp.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <p>
+                            <label>
+                              <input type="checkbox" class="filled-in" [(ngModel)]="infoExtra.conCargo" name="cargoTren" />
+                              <span>Extras durante el viaje con cargo al cliente</span>
+                            </label>
+                        </p>
+
+                    </div>
+
+                    <div class="row" *ngIf="infoExtra.conCargo">
+                        <div class="input-field inline col s12">
+                            <label for="titular">Titular</label>
+                            <input type="text" class="validate" name="titular" #apellidos="ngModel" [(ngModel)]="infoExtra.titular">
+                        </div>
+
+                        <div class="input-field inline col s8">
+                            <label for="numeroTarjeta">Número de tarjeta</label>
+                            <input type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.numeroTarjeta">
+                        </div>
+
+                        <div class="input-field inline col s1" style="padding-right: 0px;">
+                            <label for="numeroTarjeta">MM</label>
+                            <input style="width: 40px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.mm"> &nbsp; &nbsp;/
+                        </div>
+
+
+                        <div class="input-field inline col s1" style="margin-left: 0px;">
+                            <label for="numeroTarjeta">AA</label>
+                            <input style="width: 40px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.yy">
+                        </div>
+
+                        <div class="input-field inline col s2">
+                            <label for="numeroTarjeta">CVV</label>
+                            <input style="width: 50px; " type="number" class="validate" name="numeroTarjeta" #numeroTarjeta="ngModel" [(ngModel)]="infoExtra.cvv">
+                        </div>
+
+
+                    </div>
+
+                    <!-- <div class="col s12">
+                        <ngx-stripe-card id="cargoTrenP" [options]="cardOptions" [elementsOptions]="elementsOptions"></ngx-stripe-card>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6">
+                    <label>
+                        <input name="urgente"  [(ngModel)]="infoExtra.urgente" type="checkbox"  >
+                        <span style="color: red; font-size: 18px; ">Urgente</span>
+                    </label>
+                </div>
+            </div>
+        </div>        
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'tren')">Completar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal completar hotel -->
+<div id="modalCompletarHotel" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #hotelCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información para la reservación en {{infoExtra.nombre}}</h1>
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Check in</label>
+                        <input required #fechaCompletar #fechaCompletar="ngModel" type="text" class="datepicker" id="fechaCompletar" name="checkin" [(ngModel)]="infoExtra.checkIn" (change)="setFecha(fechaCompletar.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Check out</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="checkout" [(ngModel)]="infoExtra.checkOut" (change)="setFecha(fechaDesdeTCI.value)">
+                    </div>
+
+
+                    <div class="col s12">
+                        <label for="numeroHabitacion">Número de habitación</label>
+                        <input required id="numeroHabitacion" type="text" name="numeroHabitacion" #numeroHabitacion="ngModel" [(ngModel)]="infoExtra.numeroHabitacion">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6">
+                    <label>
+                        <input name="urgente"  [(ngModel)]="infoExtra.urgente" type="checkbox"  >
+                        <span style="color: red; font-size: 18px; ">Urgente</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'hotel')">Completar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal completar traslado -->
+<div id="modalCompletarTraslado" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trasladoCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información del traslado en {{vehiculoSeccionado.nombre}}</h1>
+                </div>
+            </div>
+
+            <div *ngIf="contein(infoExtra?.desde, 1)">
+
+                Información es desde:
+                <label>
+                    <input name="groupDesde"  type="radio" [checked] = "this.infoExtra.tipoDesde == 2" (change)="setTipo(true,2)" />
+                    <span>Hotel</span>
+                  </label>
+                <label>
+                    <input name="groupDesde"  type="radio" [checked] = "this.infoExtra.tipoDesde == 4" (change)="setTipo(true,4)" />
+                    <span>Estación de tren</span>
+                  </label>
+                <label>
+                    <input name="groupDesde"  type="radio" [checked] = "this.infoExtra.tipoDesde == 5" (change)="setTipo(true,5)" />
+                    <span>Muelle de cruceros</span>
+                  </label>
+
+            </div>
+
+            <div class="row" style="border: .5px solid #78909c;">
+
+                <div *ngIf="this.tipoDesde == 1">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información desde el vuelo
+                        <hr>
+                    </div>
+
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha en que llega el vuelo</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="fechaDesde" [(ngModel)]="infoExtra.fechaDesde" (change)="setFechaDesde(fechaDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora de llegada del vuelo</label>
+                        <input required #horarioDesdeTCI #horarioDesdeTCI="ngModel" type="text" id="horarioDesdeTCI" name="horarioDesdeTCI" [(ngModel)]="infoExtra.horarioDesde" class="timepicker" (change)="setHorarioDesde(horarioDesdeTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la aerolínea</label>
+                        <input #nombreAerolinea="ngModel" required id="nombreAerolinea" type="text" name="nombreAerolinea" [(ngModel)]="infoExtra.nombreDesde">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número de vuelo</label>
+                        <input #numeroVuelo="ngModel" required id="numeroVuelo" type="text" name="numeroVuelo" [(ngModel)]="infoExtra.numeroServicioDesde">
+                    </div>
+                </div>
+
+                <div *ngIf="this.tipoDesde == 2">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información desde el hotel
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="fechaDesde" [(ngModel)]="infoExtra.fechaDesde" (change)="setFechaDesde(fechaDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora en que debe estar el chófer en el hotel</label>
+                        <input required #horarioDesdeTCI #horarioDesdeTCI="ngModel" type="text" id="horarioDesdeTCI" name="horarioDesdeTCI" [(ngModel)]="infoExtra.horarioDesde" class="timepicker" (change)="setHorarioDesde(horarioDesdeTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre del hotel</label>
+                        <input #nombreDesdeT="ngModel" required id="nombreDesdeT" type="text" name="nombreDesdeT" [(ngModel)]="infoExtra.nombreDesde">
+                    </div>
+                    <div class="col s6">
+                        <label for="direccionDesdeT">Dirección del hotel</label>
+                        <input #direccionDesdeT="ngModel" required id="direccionDesdeT" type="text" name="direccionDesdeT" [(ngModel)]="infoExtra.direccionDesde">
+                    </div>
+                </div>
+
+
+                <div *ngIf="this.tipoDesde == 3">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información desde el origen
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="fechaDesde" [(ngModel)]="infoExtra.fechaDesde" (change)="setFechaDesde(fechaDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Horario</label>
+                        <input required #horarioDesdeTCI #horarioDesdeTCI="ngModel" type="text" id="horarioDesdeTCI" name="horarioDesdeTCI" [(ngModel)]="infoExtra.horarioDesde" class="timepicker" (change)="setHorarioDesde(horarioDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="direccionDesdeT">Dirección</label>
+                        <input #direccionDesdeT="ngModel" required id="direccionDesdeT" type="text" name="direccionDesdeT" [(ngModel)]="infoExtra.direccionDesde">
+                    </div>
+                </div>
+
+                <div *ngIf="this.tipoDesde == 4">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información desde la estación de tren
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha en que llega el tren</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="fechaDesde" [(ngModel)]="infoExtra.fechaDesde" (change)="setFechaDesde(fechaDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora en que llega el tren</label>
+                        <input required #horarioDesdeTCI #horarioDesdeTCI="ngModel" type="text" id="horarioDesdeTCI" name="horarioDesdeTCI" [(ngModel)]="infoExtra.horarioDesde" class="timepicker" (change)="setHorarioDesde(horarioDesdeTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la estación del tren</label>
+                        <input #nombreAerolinea="ngModel" required id="nombreAerolinea" type="text" name="nombreAerolinea" [(ngModel)]="infoExtra.nombreDesde">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número de tren</label>
+                        <input #numeroVuelo="ngModel" required id="numeroVuelo" type="text" name="numeroVuelo" [(ngModel)]="infoExtra.numeroServicioDesde">
+                    </div>
+                </div>
+
+
+                <div *ngIf="this.tipoDesde == 5">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información desde el muelle de cruceros
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha en la que llega el crucero</label>
+                        <input required #fechaDesdeTCI #fechaDesdeTCI="ngModel" type="text" class="datepicker" id="fechaDesdeTCI" name="fechaDesde" [(ngModel)]="infoExtra.fechaDesde" (change)="setFechaDesde(fechaDesdeTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora en la que llega el crucero</label>
+                        <input required #horarioDesdeTCI #horarioDesdeTCI="ngModel" type="text" id="horarioDesdeTCI" name="horarioDesdeTCI" [(ngModel)]="infoExtra.horarioDesde" class="timepicker" (change)="setHorarioDesde(horarioDesdeTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la linea de crucero</label>
+                        <input #nombreAerolinea="ngModel" required id="nombreAerolinea" type="text" name="nombreAerolinea" [(ngModel)]="infoExtra.nombreDesde">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número del crucero</label>
+                        <input #numeroVuelo="ngModel" required id="numeroVuelo" type="text" name="numeroVuelo" [(ngModel)]="infoExtra.numeroServicioDesde">
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <div *ngIf="contein(infoExtra?.hacia, 2)">
+
+                Información es hacia:
+                <label>
+                    <input name="groupHacia"  type="radio"  [checked] = "this.infoExtra.tipoHacia == 2" (change)="setTipo(false,2)" />
+                    <span>Hotel</span>
+                  </label>
+                <label>
+                    <input name="groupHacia"  type="radio" [checked] = "this.infoExtra.tipoHacia == 4" (change)="setTipo(false,4)" />
+                    <span>Estación de tren</span>
+                  </label>
+                <label>
+                    <input name="groupHacia"  type="radio" [checked] = "this.infoExtra.tipoHacia == 5" (change)="setTipo(false,5)" />
+                    <span>Muelle de cruceros</span>
+                  </label>
+
+            </div>
+
+
+            <div class="row" style="border: .5px solid #78909c;">
+
+
+                <div *ngIf="this.tipoHacia == 1">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información hacia el vuelo
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha</label>
+                        <input #fechaHaciaTCI #fechaHaciaTCI="ngModel" required type="text" class="datepicker" id="fechaHaciaTCI" name="fechaHaciaTCI" [(ngModel)]="infoExtra.fechaHacia" (change)="setFechaHacia(fechaHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioHaciaTCI">Hora en la que sale el vuelo</label>
+                        <input #horarioHaciaTCI #horarioHaciaTCI="ngModel" required class="timepicker" type="text" id="horarioHaciaTCI" name="horarioHaciaTCI" [(ngModel)]="infoExtra.horarioHacia" (change)="setHorarioHacia(horarioHaciaTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la aerolínea</label>
+                        <input #nombreAerolineaHacia="ngModel" required id="nombreAerolineaHacia" type="text" name="nombreAerolineaHacia" [(ngModel)]="infoExtra.nombreHacia">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número de vuelo</label>
+                        <input #numeroVueloHacia="ngModel" required id="numeroVueloHacia" type="text" name="numeroVueloHacia" [(ngModel)]="infoExtra.numeroServicioHacia">
+                    </div>
+                </div>
+
+
+
+                <div *ngIf="this.tipoHacia == 2">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información hacia el hotel
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaHaciaTCI">Fecha</label>
+                        <input required #fechaHaciaTCI #fechaHaciaTCI="ngModel" type="text" class="datepicker" id="fechaHaciaTCI" name="fechaHaciaTCI" [(ngModel)]="infoExtra.fechaHacia" (change)="setFechaHacia(fechaHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <!-- <label for="horarioHaciaTCI">Horario</label>
+                        <input required #horarioHaciaTCI #horarioHaciaTCI="ngModel" type="text" id="horarioHaciaTCI" name="horarioHaciaTCI" [(ngModel)]="infoExtra.horarioHacia" class="timepicker" (change)="setHorarioHacia(horarioHaciaTCI.value)"> -->
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre del hotel</label>
+                        <input #nombreHaciaT="ngModel" required id="nombreHaciaT" type="text" name="nombreHaciaT" [(ngModel)]="infoExtra.nombreHacia">
+                    </div>
+                    <div class="col s12">
+                        <label for="direccionHaciaT">Dirección del hotel</label>
+                        <input #direccionHaciaT="ngModel" required id="direccionHaciaT" type="text" name="direccionHaciaT" [(ngModel)]="infoExtra.direccionHacia">
+                    </div>
+                </div>
+
+
+                <div *ngIf="this.tipoHacia == 3">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información hacia el destino
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaHaciaT">Fecha</label>
+                        <input required #fechaHaciaTCI #fechaHaciaTCI="ngModel" type="text" class="datepicker" id="fechaHaciaTCI" name="fechaHaciaTCI" [(ngModel)]="infoExtra.fechaHacia" (change)="setFechaHacia(fechaHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioHaciaTCI">Horario</label>
+                        <input required #horarioHaciaTCI #horarioHaciaTCI="ngModel" type="text" id="horarioHaciaTCI" name="horarioHaciaTCI" [(ngModel)]="infoExtra.horarioHacia" class="timepicker" (change)="setHorarioHacia(horarioHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="direccionHacia">Dirección</label>
+                        <input #direccionHacia="ngModel" required id="direccionHacia" type="text" name="direccionHacia" [(ngModel)]="infoExtra.direccionHacia">
+                    </div>
+                </div>
+
+
+                <div *ngIf="this.tipoHacia == 4">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información hacia la estación del tren
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha</label>
+                        <input #fechaHaciaTCI #fechaHaciaTCI="ngModel" required type="text" class="datepicker" id="fechaHaciaTCI" name="fechaHaciaTCI" [(ngModel)]="infoExtra.fechaHacia" (change)="setFechaHacia(fechaHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioHaciaTCI">Hora en la que sale el tren</label>
+                        <input #horarioHaciaTCI #horarioHaciaTCI="ngModel" required class="timepicker" type="text" id="horarioHaciaTCI" name="horarioHaciaTCI" [(ngModel)]="infoExtra.horarioHacia" (change)="setHorarioHacia(horarioHaciaTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la estación de tren</label>
+                        <input #nombreAerolineaHacia="ngModel" required id="nombreAerolineaHacia" type="text" name="nombreAerolineaHacia" [(ngModel)]="infoExtra.nombreHacia">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número de tren</label>
+                        <input #numeroVueloHacia="ngModel" required id="numeroVueloHacia" type="text" name="numeroVueloHacia" [(ngModel)]="infoExtra.numeroServicioHacia">
+                    </div>
+                </div>
+
+
+                <div *ngIf="this.tipoHacia == 5">
+                    <div class="col s12" style="margin-top: 5px;">
+                        Información hacia el muelle de cruceros
+                        <hr>
+                    </div>
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha</label>
+                        <input #fechaHaciaTCI #fechaHaciaTCI="ngModel" required type="text" class="datepicker" id="fechaHaciaTCI" name="fechaHaciaTCI" [(ngModel)]="infoExtra.fechaHacia" (change)="setFechaHacia(fechaHaciaTCI.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioHaciaTCI">Hora en la que sale el crucero</label>
+                        <input #horarioHaciaTCI #horarioHaciaTCI="ngModel" required class="timepicker" type="text" id="horarioHaciaTCI" name="horarioHaciaTCI" [(ngModel)]="infoExtra.horarioHacia" (change)="setHorarioHacia(horarioHaciaTCI.value)">
+                    </div>
+                    <div class="col s6">
+                        <label for="nombreAerolinea">Nombre de la linea de crucero</label>
+                        <input #nombreAerolineaHacia="ngModel" required id="nombreAerolineaHacia" type="text" name="nombreAerolineaHacia" [(ngModel)]="infoExtra.nombreHacia">
+                    </div>
+                    <div class="col s6">
+                        <label for="numeroVuelo">Número del crucero</label>
+                        <input #numeroVueloHacia="ngModel" required id="numeroVueloHacia" type="text" name="numeroVueloHacia" [(ngModel)]="infoExtra.numeroServicioHacia">
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6">
+                    <label>
+                        <input name="urgente"  [(ngModel)]="infoExtra.urgente" type="checkbox"  >
+                        <span style="color: red; font-size: 18px; ">Urgente</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'traslado')">Completar</button>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- Modal completar disposicion -->
+<div id="modalCompletarDisposicion" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trenCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información de la disposición en {{vehiculoSeccionado.nombre}}</h1>
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha programada de la disposición</label>
+                        <input required #fechaCompletar #fechaCompletar="ngModel" type="text" class="datepicker" id="fechaCompletar" name="fechaCompletar" [(ngModel)]="infoExtra.fecha" (change)="setFecha(fechaCompletar.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora programada de la disposición</label>
+                        <input required #horaDisp #horaDisp="ngModel" type="text" id="horaDisp" name="horaDisp" [(ngModel)]="infoExtra.hora" class="timepicker datepickerCompletar" (change)="setHora(horaDisp.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="pickup">Pick up</label>
+                        <textarea name="pickup" rows="20" cols="50" [(ngModel)]="infoExtra.pickUp"></textarea>
+                    </div>
+
+                    <div class="col s12">
+                        <label for="dropoff">Drop off(opcional) </label>
+                        <textarea name="dropoff" rows="20" cols="50" [(ngModel)]="infoExtra.dropOff"></textarea>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'disposicion')">Completar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal completar productos -->
+<div id="modalCompletarProducto" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trenCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 *ngIf="infoExtra.categoria != 4" class="center">Completar información para el tour {{infoExtra.titulo}}</h1>
+                    <h1 *ngIf="infoExtra.categoria == 4" class="center">Completar información para la actividad {{infoExtra.titulo}}</h1>
+
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+
+                    <div class="col s6">
+                        <label for="fechaDesdeTCI">Fecha programada</label>
+                        <input required #fechaCompletar #fechaCompletar="ngModel" type="text" class="datepicker" id="fechaCompletar" name="fechaCompletar" [(ngModel)]="infoExtra.fecha" (change)="setFecha(fechaCompletar.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horarioDesdeTCI">Hora programada</label>
+                        <input required #horaDisp #horaDisp="ngModel" type="text" id="horaDisp" name="horaDisp" [(ngModel)]="infoExtra.hora" class="timepicker datepickerCompletar" (change)="setHora(horaDisp.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="puntoEncuentro" *ngIf="infoExtra.categoria!=2">Punto de encuentro</label>
+                        <label for="puntoEncuentro" *ngIf="infoExtra.categoria==2">Lugar de recogida</label>
+                        <textarea name="puntoEncuentro" rows="20" cols="50" [(ngModel)]="infoExtra.puntoEncuentro"></textarea>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'producto')">Completar</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Modal completar renta de vehiculos -->
+<div id="modalCompletarRentaVehiculo" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trenCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 *ngIf="infoExtra.categoria != 4" class="center">Completar información para la renta de de vehiculo {{infoExtra?.nombre}}</h1>
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+
+                    <div class="col s6">
+                        <label for="fechaPickUpRenta">Fecha del pick up</label>
+                        <input required #fechaPickUpRenta #fechaPickUpRenta="ngModel" type="text" class="datepicker" id="fechaPickUpRenta" name="fechaPickUpRenta" [(ngModel)]="infoExtra.fechaPickUp" (change)="setFechaPickUp(fechaPickUpRenta.value)">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horaPickUp">Hora del pick up</label>
+                        <input required #horaPickUp #horaPickUp="ngModel" type="text" id="horaPickUp" name="horaPickUp" [(ngModel)]="infoExtra.horaPickUp" class="timepicker datepickerCompletar" (change)="infoExtra.horaPickUp =horaPickUp.value">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="fechaDropOffRenta">Fecha del drop off</label>
+                        <input required #fechaDropOffRenta #fechaDropOffRenta="ngModel" type="text" class="datepicker" id="fechaDropOffRenta" name="fechaDropOffRenta" [(ngModel)]="infoExtra.fechaDropOff" (change)="infoExtra.fechaDropOff = fechaDropOffRenta.value">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="horaDropOff">Hora del drop off</label>
+                        <input required #horaDropOff #horaDropOff="ngModel" type="text" id="horaDropOff" name="horaDropOff" [(ngModel)]="infoExtra.horaDropOff" class="timepicker datepickerCompletar" (change)="infoExtra.horaDropOff =horaDropOff.value">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="nombreVehiculo">Nombre del vehiculo</label>
+                        <input #nombreVehiculo="ngModel" required id="nombreVehiculo" type="text" name="nombreVehiculo" [(ngModel)]="infoExtra.nombre">
+                    </div>
+
+                    <div class="col s6">
+                        <label for="tipoTransmision">Tipo de vehiculo</label>
+                        <select class="browser-default" name="tipoTransmision" #tipoTransmision="ngModel" [(ngModel)]="infoExtra.tipoTransmision" required>
+                        <option value="Automático">Automático</option>
+                        <option value="Estándar">Estándar</option>
+                    </select>
+                    </div>
+
+                    <div class="col s12">
+                        <label for="linkVehiculo">Link donde se encontró el vehiculo</label>
+                        <input #linkVehiculo="ngModel" required id="linkVehiculo" type="text" name="linkVehiculo" [(ngModel)]="infoExtra.link">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="arrendadora">Arrendadora del vehiculo</label>
+                        <input #arrendadora="ngModel" required id="arrendadora" type="text" name="arrendadora" [(ngModel)]="infoExtra.arrendadora">
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'rentaVehiculo')">Completar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal completar extras -->
+<div id="modalCompletarExtra" class="modal">
+    <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    <form #trenCompletarInfoForm="ngForm">
+        <div class="modal-content">
+            <div class="row" style="margin-bottom: 0px !important;">
+                <div class="col s12">
+                    <h1 class="center">Completar información para el extra {{infoExtra.extras}}</h1>
+
+                </div>
+            </div>
+            <div style="border: .5px solid #78909c; padding: 10px;">
+                <div class="row">
+
+                    <div class="col s12">
+                        <label for="fechaExtra">Fecha programada</label>
+                        <input required #fechaExtra #fechaExtra="ngModel" type="text" class="datepicker" id="fechaExtra" name="fechaCompletar" [(ngModel)]="infoExtra.fecha" (change)="setFecha(fechaExtra.value)">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="nombre">Título del extra</label>
+                        <input #nombre="ngModel" required id="nombre" type="text" name="nombre" [(ngModel)]="infoExtra.extras">
+                    </div>
+                    <div class="col s12">
+                        <label for="nombre">Descripción del extra</label>
+                        <input #nombre="ngModel" required id="descripcion" type="text" name="descripcion" [(ngModel)]="infoExtra.descripcion">
+                    </div>
+
+                    <div class="col s12">
+                        <label for="puntoEncuentro">Notas</label>
+                        <textarea name="notas" rows="20" cols="50" [(ngModel)]="infoExtra.notas"></textarea>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-content">
+            <div class="row" style="border: .5px solid #78909c;">
+                <div class="col s6">
+                    <label>
+                        <input name="urgente"  [(ngModel)]="infoExtra.urgente" type="checkbox"  >
+                        <span style="color: red; font-size: 18px; ">Urgente</span>
+                    </label>
+                </div>
+            </div>
+        </div>            
+        <div class=" col s12 modal-footer">
+            <button type="button" style="width: 100%;" class="btn amber darken-2" (click)="onComplete(infoExtra, 'extra')">Completar</button>
+        </div>
+    </form>
+</div>

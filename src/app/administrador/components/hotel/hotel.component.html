@@ -1,0 +1,272 @@
+<div class="panel center">
+    <!-- FORM -->
+    <div class="row center">
+        <h2 style="padding: 20px;" class="col s10 offset-s1 teal lighten-2">INSERTAR TARIFA DE HOTEL</h2>
+    </div>
+    <div class="row">
+        <form class="col s10 offset-s1" #hotelForm="ngForm" (ngSubmit)="onSubmit(hotelForm)">
+            <div class="row">
+                <div class="input-field col s6">
+                    <input type="search" id="autocomplete" class="autocomplete">
+                    <label for="autocomplete-input">Ciudad</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s3">
+                    <h2 class="center">Turista</h2>
+                </div>
+                <div class="col s3">
+                    <h2 class="center">TuristaSup</h2>
+                </div>
+                <div class="col s3">
+                    <h2 class="center">Premium</h2>
+                </div>
+                <div class="col s3">
+                    <h2 class="center">Lujo</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="tarifaTurista" type="number" class="validate" name="tarifaTurista" [(ngModel)]="subtotalTurista['tarifaTurista']" (ngModelChange)="calculateTarifaTurista('tarifa', $event)">
+                            <label for="tarifaTurista">Tarifa por noche</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="desayunoTurista" type="number" class="validate" name="desayunoTurista" [(ngModel)]="subtotalTurista['desayunoTurista']" (ngModelChange)="calculateTarifaTurista('desayuno', $event)">
+                            <label for="desayunoTurista">Desayuno</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="cityTaxTurista" type="number" class="validate" name="cityTaxTurista" [(ngModel)]="subtotalTurista['cityTaxTurista']" (ngModelChange)="calculateTarifaTurista('cityTax', $event)">
+                            <label for="cityTaxTurista">City tax</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">attach_money</i>
+                            <input disabled id="turista" type="number" class="validate" name="turista" #turista="ngModel" [(ngModel)]="hotelTarifa.turista">
+                            <label for="turista">Tarifa total por noche</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="tarifaTuristaSup" type="number" class="validate" name="tarifaTuristaSup" [(ngModel)]="subtotalTuristaSup['tarifaTuristaSup']" (ngModelChange)="calculateTarifaTuristaSup('tarifa', $event)">
+                            <label for="tarifaTuristaSup">Tarifa por noche</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="desayunoTuristaSup" type="number" class="validate" name="desayunoTuristaSup" [(ngModel)]="subtotalTuristaSup['desayunoTuristaSup']" (ngModelChange)="calculateTarifaTuristaSup('desayuno', $event)">
+                            <label for="desayunoTuristaSup">Desayuno</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="cityTaxTuristaSup" type="number" class="validate" name="cityTaxTuristaSup" [(ngModel)]="subtotalTuristaSup['cityTaxTuristaSup']" (ngModelChange)="calculateTarifaTuristaSup('cityTax', $event)">
+                            <label for="cityTaxTuristaSup">City tax</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">attach_money</i>
+                            <input disabled id="turistaSup" type="number" class="validate" name="turistaSup" #turistaSup="ngModel" [(ngModel)]="hotelTarifa.turistaSup">
+                            <label for="turistaSup">Tarifa total por noche</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="tarifaPremium" type="number" class="validate" name="tarifaPremium" [(ngModel)]="subtotalPremium['tarifaPremium']" (ngModelChange)="calculateTarifaPremium('tarifa', $event)">
+                            <label for="tarifaPremium">Tarifa por noche</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="desayunoPremium" type="number" class="validate" name="desayunoPremium" [(ngModel)]="subtotalPremium['desayunoPremium']" (ngModelChange)="calculateTarifaPremium('desayuno', $event)">
+                            <label for="desayunoPremium">Desayuno</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="cityTaxPremium" type="number" class="validate" name="cityTaxPremium" [(ngModel)]="subtotalPremium['cityTaxPremium']" (ngModelChange)="calculateTarifaPremium('cityTax', $event)">
+                            <label for="cityTaxPremium">City tax</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">attach_money</i>
+                            <input disabled id="premium" type="number" class="validate" name="premium" #premium="ngModel" [(ngModel)]="hotelTarifa.premium">
+                            <label for="premium">Tarifa total por noche</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col s3">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="tarifaLujo" type="number" class="validate" name="tarifaLujo" [(ngModel)]="subtotalLujo['tarifaLujo']" (ngModelChange)="calculateTarifaLujo('tarifa', $event)">
+                            <label for="tarifaLujo">Tarifa por noche</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="desayunoLujo" type="number" class="validate" name="desayunoLujo" [(ngModel)]="subtotalLujo['desayunoLujo']" (ngModelChange)="calculateTarifaLujo('desayuno', $event)">
+                            <label for="desayunoLujo">Desayuno</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="cityTaxLujo" type="number" class="validate" name="cityTaxLujo" [(ngModel)]="subtotalLujo['cityTaxLujo']" (ngModelChange)="calculateTarifaLujo('cityTax', $event)">
+                            <label for="cityTaxLujo">City tax</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">attach_money</i>
+                            <input disabled id="lujo" type="number" class="validate" name="lujo" #lujo="ngModel" [(ngModel)]="hotelTarifa.lujo">
+                            <label for="lujo">Tarifa total por noche</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <label for="turistaSupT">Descripción para hotel turistaSup</label>
+                    <textarea id="turistaSupT" class="validate" rows="40" cols="50" style="height: 100px;" name="turistaT" #turistaT="ngModel" [(ngModel)]="hotelTarifa.turistaT">
+                </textarea>
+                </div>
+                <div class="col s6">
+                    <label for="premiumT">Descripción para hotel premium</label>
+                    <textarea id="premiumT" class="validate" rows="40" cols="50" style="height: 100px;" name="turistaSupT" #turistaSupT="ngModel" [(ngModel)]="hotelTarifa.turistaSupT">
+                </textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s6">
+                    <label for="lujoT">Descripción para hotel de lujo</label>
+                    <textarea id="lujoT" class="validate" rows="40" cols="50" style="height: 100px;" name="premiumT" #premiumT="ngModel" [(ngModel)]="hotelTarifa.premiumT">
+                </textarea>
+                </div>
+                <div class="col s6">
+                    <label for="turistaT">Descripción para hotel turista</label>
+                    <textarea id="turistaT" class="validate" rows="40" cols="50" style="height: 100px;" name="lujoT" #lujoT="ngModel" [(ngModel)]="hotelTarifa.lujoT">
+                </textarea>
+                </div>
+            </div>
+            <button style="width: 300px;" type="submit" class="waves-effect waves-light btn">Guardar</button>
+        </form>
+    </div>
+
+    <!-- TABLE -->
+    <div class="z-depth-2 container-table">
+        <div class="row center">
+            <h2 style="padding: 20px;" class="col s12 teal lighten-2">LISTADO DE TARIFAS DE HOTEL</h2>
+        </div>
+        <div class="row options">
+            <div class="col s4 offset-s8">
+                <div class="row options">
+                    <div class="col s12">
+                        <div class="row options">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">search</i>
+                                <input type="text" id="autocomplete-input" class="autocomplete">
+                                <label for="autocomplete-input">Realice su búsqueda</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper-up">
+            <div class="scroll-up">
+
+            </div>
+        </div>
+        <div class="wrapper-down">
+            <div class="row scroll-down">
+                <table class="centered">
+                    <thead>
+                        <tr>
+                            <th>Ciudad</th>
+                            <th>Precio de hotel turista</th>
+                            <th>Precio de hotel turistaSup</th>
+                            <th>Precio de hotel premium</th>
+                            <th>Precio de hotel de lujo</th>
+                            <th>Descripción de hotel turista</th>
+                            <th>Descripción de hotel turistaSup</th>
+                            <th>Descripción de hotel premium</th>
+                            <th>Descripción de hotel de lujo</th>
+                            <th>Ultima actualización</th>
+                            <th>Guardar</th>
+                            <th>Eliminar</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let hotelTarifa of hotelesTarifas; let i = index" height="200">
+                            <td class="small-cell">
+                                <input disabled [value]="hotelTarifa.nombre" type="text" class="validate">
+                            </td>
+                            <td width="120" class="small-cell">
+                                <input [value]="hotelTarifa.turista" type="text" class="validate" name="turista" [(ngModel)]="hotelTarifa.turista">
+                            </td>
+                            <td class="small-cell">
+                                <input [value]="hotelTarifa.turistaSup" type="number" class="validate" name="turistaSup" [(ngModel)]="hotelTarifa.turistaSup">
+                            </td>
+                            <td class="small-cell">
+                                <input [value]="hotelTarifa.premium" type="number" class="validate" name="premium" [(ngModel)]="hotelTarifa.premium">
+                            </td>
+                            <td class="small-cell">
+                                <input [value]="hotelTarifa.lujo" type="number" class="validate" name="lujo" [(ngModel)]="hotelTarifa.lujo">
+                            </td>
+                            <td>
+                                <textarea [value]="hotelTarifa.turistaT" class="validate" rows="40" cols="50" name="turistaT" [(ngModel)]="hotelTarifa.turistaT"></textarea>
+                            </td>
+                            <td>
+                                <textarea [value]="hotelTarifa.turistaSupT" class="validate" rows="40" cols="50" name="turistaSupT" [(ngModel)]="hotelTarifa.turistaSupT"></textarea>
+                            </td>
+                            <td>
+                                <textarea [value]="hotelTarifa.premiumT" class="validate" rows="40" cols="50" name="premiumT" [(ngModel)]="hotelTarifa.premiumT"></textarea>
+                            </td>
+                            <td>
+                                <textarea [value]="hotelTarifa.lujoT" class="validate" rows="40" cols="50" name="lujoT" [(ngModel)]="hotelTarifa.lujoT"></textarea>
+                            </td>
+                            <td>
+                                <input disabled value="{{ hotelTarifa.updatedAt | date: 'd MMMM y'}}" type="text" class="validate">
+                            </td>
+                            <td>
+                                <i class="material-icons" (click)="update(hotelTarifa)">save</i>
+                            </td>
+                            <td>
+                                <i class="material-icons" (click)="delete(hotelTarifa.idHotelTarifa, i)">delete</i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <ul class="pagination center-align" style="margin-bottom: 50px !important;">
+            <li class="disabled" (click)="pagination('before')">
+                <a>
+                    <i class="material-icons">chevron_left</i>
+                </a>
+            </li>
+            <li class="active" (click)="pagination('active')" style="cursor: pointer;">
+                <a>1</a>
+            </li>
+            <li (click)="pagination('next')">
+                <a>
+                    <i class="material-icons">chevron_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+</div>

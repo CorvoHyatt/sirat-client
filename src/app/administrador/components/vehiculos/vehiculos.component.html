@@ -1,0 +1,166 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abrirNuevoVehiculo()">Nuevo vehiculo</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE VEHICULOS</h2>
+    </div>
+
+    <div class="row">
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>
+                    NOMBRE
+                </th>
+                <th>
+                    PASAJEROS MÁXIMOS
+                </th>
+                <th>
+                    MALETAS MÁXIMAS(maletas de 23 Kg documentadas)
+                </th>
+                <th>
+                    MALETAS DE MANO MÁXIMA
+                </th>
+                <th>
+                    TIPO
+                </th>
+                <th></th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let vehiculo of vehiculos">
+                    <td>
+                        {{vehiculo.idVehiculo}}
+                    </td>
+                    <td>
+                        {{vehiculo.nombre}}
+                    </td>
+                    <td>
+                        {{vehiculo.pasajerosMax}}
+                    </td>
+
+                    <td>
+                        {{vehiculo.maletasMax}}
+                    </td>
+
+                    <td>
+                        {{vehiculo.maletasManoMax}}
+                    </td>
+                    <td>
+                        <span *ngIf="vehiculo.lujo==0">
+                            Normal
+                        </span>
+                        <span *ngIf="vehiculo.lujo==1">
+                            Lujo
+                        </span>
+                    </td>
+
+                    <td style="width: 200px;">
+                        <i class="small material-icons" (click)="abrirEditar(vehiculo)" title="Editar" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                        <i class="small material-icons" (click)="eliminar(vehiculo.idVehiculo)" title="Eliminar" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- Modal para agregar un nuevo vehiculo -->
+<div id="nuevoVehiculo" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Vehiculo</h2>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="vehiculo.nombre">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="pasajerosMax">Pasajeros máximos</label></span>
+                <input type="number" id="pasajerosMax" [(ngModel)]="vehiculo.pasajerosMax">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="maletasMax">Maletas máximas (de 23 kg documentadas)</label></span>
+                <input type="number" id="maletasMax" [(ngModel)]="vehiculo.maletasMax">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="maletasManoMax">Maletas de mano máximas</label></span>
+                <input type="number" id="maletasManoMax" [(ngModel)]="vehiculo.maletasManoMax">
+            </div>
+
+            <!-- Switch -->
+            <div class="  col s12 switch">
+                <label>
+                        Normal
+                <input type="checkbox" [(ngModel)]="vehiculo.lujo">
+                <span class="lever"></span>
+                Lujo
+                </label>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="guardarVehiculo()">Aceptar</a>
+    </div>
+</div>
+
+<!-- Modal para editar un vehiculo -->
+<div id="editarVehiculo" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Vehiculo</h2>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12 ">
+                <span><label for="nombre">Nombre</label></span>
+                <input type="text" id="nombre" [(ngModel)]="vehiculo.nombre">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="pasajerosMax">Pasajeros máximos</label></span>
+                <input type="number" id="pasajerosMax" [(ngModel)]="vehiculo.pasajerosMax">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="maletasMax">Maletas máximas (de 23 kg documentadas)</label></span>
+                <input type="number" id="maletasMax" [(ngModel)]="vehiculo.maletasMax">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="maletasManoMax">Maletas de mano máximas</label></span>
+                <input type="number" id="maletasManoMax" [(ngModel)]="vehiculo.maletasManoMax">
+            </div>
+
+            <!-- Switch -->
+            <div class="  col s12 switch">
+                <label>
+                        Normal
+                <input type="checkbox" [(ngModel)]="vehiculo.lujo">
+                <span class="lever"></span>
+                Lujo
+                </label>
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="actualizarVehiculo()">Aceptar</a>
+    </div>
+</div>

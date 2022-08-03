@@ -1,0 +1,47 @@
+.main-container {
+    height: 100%;
+}
+
+.top {
+    margin-top: 50px;
+}
+
+.products-container {
+    height: 650px !important;
+    overflow-y: scroll !important;
+}
+
+.row-style {
+    padding: 15px !important;
+    margin: 10px !important;
+}
+
+.remove {
+    cursor: pointer;
+}
+
+.actions a {
+    font-size: 1.1vh !important;
+}
+
+.alineacion-texto {
+    height: 100%;
+    width: 6.5vh !important;
+    font-size: 7.5vh;
+    word-wrap: break-word;
+    text-align: center;
+    align-items: center;
+    line-height: 100px;
+}
+
+.modalEditProducts {
+    width: 80% !important;
+}
+
+.datepicker {
+    z-index: 999999 !important;
+}
+
+.timepicker {
+    z-index: 999999 !important;
+}

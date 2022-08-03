@@ -1,0 +1,178 @@
+<div class="container-pendientes">
+    <div class="row center actividades">
+        <div class="col s12">
+            <h1>Actividades pendientes</h1>
+        </div>
+    </div>
+    <div class="row center">
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content altas">
+                    <h2>Prioridad Alta</h2>
+                    <div [ngClass]="{'card-list': true, 'valign': actividadesPA.length === 0}">
+                        <ol class="left-align">
+                            <p *ngIf="actividadesPA.length === 0"><strong>Sin actividades en esta sección.</strong></p>
+                            <span *ngIf="actividadesPA.length > 0">
+                                <li *ngFor="let actividad of actividadesPA">{{actividad.text}} <a style="text-decoration: underline #54C6F3; " [routerLink]="['/finanzas/detalle-venta', actividad.idCotizacion]">Ver venta {{actividad.idCotizacion}}</a></li>
+                            </span>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content medias">
+                    <h2>Prioridad Media</h2>
+                    <div [ngClass]="{'card-list': true, 'valign': actividadesPM.length === 0}">
+                        <ol class="left-align">
+                            <p *ngIf="actividadesPM.length === 0"><strong>Sin actividades en esta sección.</strong></p>
+                            <span *ngIf="actividadesPM.length > 0">
+                                <li *ngFor="let actividad of actividadesPM">{{actividad.text}} <a style="text-decoration: underline #54C6F3; " [routerLink]="['/finanzas/detalle-venta', actividad.idCotizacion]">Ver venta {{actividad.idCotizacion}}</a></li>
+                            </span>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card">
+                <div class="card-content">
+                    <h2>Notificaciones Interárea</h2>
+                    <div class="card-list">
+                        <div class="deep-orange darken-1 white-text">Prioridad Alta ({{ countAltas }})</div>
+                        <div class="container-altas">
+                            <div class="z-depth-1 notificaciones-container" (click)="verNotificacion(notificacion)" *ngFor="let notificacion of notificacionesAltas;">
+                                <div class="row">
+                                    <div class="col s6 left-align">
+                                        <strong>{{ notificacion.nombre }}</strong>
+                                    </div>
+                                    <div class="col s6 right-align">
+                                        {{ notificacion.tipo === 1 ? 'Tarea' : notificacion.tipo === 2 ? 'Llamada' : 'Nota' }}
+                                    </div>
+                                </div>
+                                <div class="row left-align">
+                                    <div class="col s12 truncate">
+                                        {{ jsonDecode(notificacion.data, notificacion.tipo) }}
+                                    </div>
+                                </div>
+                                <div class="row right-align date">
+                                    <div class="col s12">
+                                        {{ notificacion.createAt | amLocale:'es' | amDateFormat:'DD MMMM YYYY, h:mm a' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="valign no-notificaciones-container" *ngIf="notificacionesAltas.length === 0">
+                                <p><strong>Sin notificaciones en esta sección.</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="orange darken-1 white-text" style="margin-top: 5px">Prioridad Media ({{ countMedias }})</div>
+                        <div class="container-medias">
+                            <div class="z-depth-1 notificaciones-container" (click)="verNotificacion(notificacion)" *ngFor="let notificacion of notificacionesMedias;">
+                                <div class="row">
+                                    <div class="col s6 left-align">
+                                        <strong>{{ notificacion.nombre }}</strong>
+                                    </div>
+                                    <div class="col s6 right-align">
+                                        {{ notificacion.tipo === 1 ? 'Tarea' : notificacion.tipo === 2 ? 'Llamada' : 'Nota' }}
+                                    </div>
+                                </div>
+                                <div class="row left-align">
+                                    <div class="col s12 truncate">
+                                        {{ jsonDecode(notificacion.data, notificacion.tipo) }}
+                                    </div>
+                                </div>
+                                <div class="row right-align date">
+                                    <div class="col s12">
+                                        {{ notificacion.createAt | amLocale:'es' | amDateFormat:'DD MMMM YYYY, h:mm a' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="valign no-notificaciones-container" *ngIf="notificacionesMedias.length === 0">
+                                <p><strong>Sin notificaciones en esta sección.</strong></p>
+                            </div>
+                        </div>
+
+                        <div class="green white-text" style="margin-top: 5px">Prioridad Baja  ({{ countBajas }})</div>
+                        <div class="container-bajas">
+                            <div class="z-depth-1 notificaciones-container" (click)="verNotificacion(notificacion)" *ngFor="let notificacion of notificacionesBajas;">
+                                <div class="row">
+                                    <div class="col s6 left-align">
+                                        <strong>{{ notificacion.nombre }}</strong>
+                                    </div>
+                                    <div class="col s6 right-align">
+                                        {{ notificacion.tipo === 1 ? 'Tarea' : notificacion.tipo === 2 ? 'Llamada' : 'Nota' }}
+                                    </div>
+                                </div>
+                                <div class="row left-align">
+                                    <div class="col s12 truncate">
+                                        {{ jsonDecode(notificacion.data, notificacion.tipo) }}
+                                    </div>
+                                </div>
+                                <div class="row right-align date">
+                                    <div class="col s12">
+                                        {{ notificacion.createAt | amLocale:'es' | amDateFormat:'DD MMMM YYYY, h:mm a' }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="valign no-notificaciones-container" *ngIf="notificacionesBajas.length === 0">
+                                <p><strong>Sin notificaciones en esta sección.</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div id="VerNotificacion" class="modal">
+    <div class="row" style="margin: 0px !important;">
+        <i class="material-icons modal-close right" style="margin: 8px;">close</i>
+    </div>
+    <div *ngIf="notificacion" class="modal-content" style="padding-top: 0px">
+        <h1 class="center">Detalle de notificación</h1>
+        <div class="card-content row center">
+            <div class="col s6">
+                <b>Fecha de llegada:</b> <br> {{ notificacion.createAt | date: 'dd/mm/yyyy hh:mm a' }}
+            </div>
+            <div class="col s6">
+                <b>Fecha límite:</b> <br> {{ notificacion.caducidad | date: 'dd/mm/yyyy hh:mm a' }}
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col s6">
+                <b>Asunto:</b> <br> {{ notificacion.asunto }}
+            </div>
+            <div class="col s6">
+                <b>Detalle:</b> <br> {{ jsonDecode(notificacion.data, notificacion.tipo) }}
+            </div>
+        </div>
+        <div class="row center">
+            <div class="col s4">
+                <b>De:</b> {{ notificacion.nombre }}
+            </div>
+            <div class="col s4">
+                <div [ngSwitch]="notificacion.prioridad">
+                    <span class="green-text" *ngSwitchCase="1"> <b class="black-text">Prioridad:</b> Baja</span>
+                    <span class="orange-text" *ngSwitchCase="2"> <b class="black-text">Prioridad:</b> Media</span>
+                    <span class="red-text" *ngSwitchCase="3"> <b class="black-text">Prioridad:</b> Alta</span>
+                </div>
+            </div>
+            <div class="col s4">
+                <div class="switch">
+                    <label>
+                      Pendiente
+                      <input [disabled]="notificacion.estatus === 0 ? false : true" [checked]="notificacion.estatus === 0 ? false : true" type="checkbox" (click)="verificarFinalizado(notificacion)">
+                      <span class="lever"></span>
+                      Finalizada
+                    </label>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>

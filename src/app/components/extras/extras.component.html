@@ -1,0 +1,107 @@
+<div class="row">
+    <form class="col s12 z-depth-2" #extrasForm="ngForm" (ngSubmit)="onSubmit(extrasForm)">
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input 
+                [ngClass]="{'invalid': validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)}" 
+                required 
+                id="comision" 
+                type="number" 
+                name="comision" 
+                #comision="ngModel" 
+                [(ngModel)]="extra.comision" 
+                (ngModelChange)="calcularComision()">
+                <label for="comision">Comisión 5rives (%)</label>
+                <span *ngIf="validando && comision.invalid || comision.invalid && (comision.dirty || comision.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s6">
+                <input 
+                [ngClass]="{'invalid': validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)}" 
+                required 
+                id="comisionAgente" 
+                type="number" 
+                name="comisionAgente" 
+                #comisionAgente="ngModel" 
+                [(ngModel)]="extra.comisionAgente" 
+                (ngModelChange)="calcularComision()">
+                <label for="comisionAgente">Comisión Agente (%)</label>
+                <span *ngIf="validando && comisionAgente.invalid || comisionAgente.invalid && (comisionAgente.dirty || comisionAgente.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input 
+                [ngClass]="{'invalid': validando && extras.invalid || extras.invalid && (extras.dirty || extras.touched)}" 
+                required 
+                id="extras" 
+                type="text" 
+                name="extras" 
+                #extras="ngModel" 
+                [(ngModel)]="extra.extras">
+                <label for="extras">Extras</label>
+                <span *ngIf="validando && extras.invalid || extras.invalid && (extras.dirty || extras.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+            <div class="input-field col s6">
+                <input required id="fechaExtra" type="text" #newDate class="datepicker" name="fecha" #fecha="ngModel" [(ngModel)]="extra.fecha" (change)="changeDate(newDate.value)">
+                <label for="fechaExtra">Fecha</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6">
+                <input disabled [value]="destino.ciudad" type="text">
+                <label for="autocomplete-input">Ciudad</label>
+            </div>
+            <div class="input-field col s6">
+                <input 
+                [ngClass]="{'invalid': validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)}" 
+                required 
+                id="tarifa" 
+                type="number" 
+                name="tarifa" 
+                #tarifa="ngModel" 
+                [(ngModel)]="extra.tarifa" 
+                (ngModelChange)="extraTotal($event)">
+                <label for="tarifa">Tarifa</label>
+                <span *ngIf="validando && tarifa.invalid || tarifa.invalid && (tarifa.dirty || tarifa.touched)" class="helper-text red-text text-darken-2">El campo es obligatorio</span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <label for="notas">Notas del operador</label>
+                <textarea id="notas" rows="40" cols="50" style="height: 100px;" name="notas" #notas="ngModel" [(ngModel)]="extra.notas">
+                </textarea>
+            </div>
+        </div>
+
+        <div class="col s12" style="margin-bottom: 25px;">
+            <button *ngIf="editing && !editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="abrirModalDetalle()">{{ total | currency: cotizacion.divisa }} Actualizar</button>
+            <button *ngIf="!editing && !editingCarrito" type="submit" style="width: 100%;" class="btn amber darken-2">{{ total | currency: cotizacion.divisa }} Agregar</button>
+            <button *ngIf="editingCarrito" type="button" style="width: 100%;" class="btn amber darken-2" (click)="updateCarrito(extrasForm)">{{ total | currency: cotizacion.divisa }} Agregar</button>
+
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal detalle -->
+<div id="modalDetalleExtra" class="modal">
+    <div class="modal-content">
+        <div class="row center">
+            <h1>¿Por qué realizaste ésta actualización?</h1>
+        </div>
+        <div class="row">
+            <div class="col s10 offset-s1">
+                <textarea id="detalle" #detalle rows="40" cols="50" style="height: 100px;"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <a class="btn right" (click)="onUpdate()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>

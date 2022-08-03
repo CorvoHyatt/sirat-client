@@ -1,0 +1,231 @@
+<div class="panel center" style="margin: 20px !important;">
+    <div class="row" style="text-align: center;">
+        <a class="btn modal-trigger" (click)="abrirNuevoAgente()">Nuevo agente</a>
+    </div>
+
+    <div class="row center">
+        <h2 class="col s12 teal lighten-2">LISTADO DE AGENTES</h2>
+    </div>
+
+    <div class="row">
+
+        <div class="col s6">
+            <span><label >Agencia</label></span>
+            <select id="agencias" class="browser-default" name="agencias" [(ngModel)]="agenciaSeleccionada" (change)="getAgentes()" required>
+                <option value="-1">Todos</option>
+                <option *ngFor="let agencia of agencias; let ii = index" [value]="agencia.idAgencia">{{agencia.nombre}}</option>  
+            </select>
+        </div>
+
+
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>
+                    AGENCIA
+                </th>
+                <th>
+                    NOMBRE
+                </th>
+                <th>
+                    APELLIDOS
+                </th>
+
+                <th>
+                    CORREO ELECTRÓNICO
+                </th>
+
+                <th></th>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let agente of agentes">
+                    <td>
+                        {{agente?.idAgente}}
+                    </td>
+                    <td>
+                        {{agente?.agencia}}
+                    </td>
+                    <td>
+                        {{agente?.nombre}}
+                    </td>
+                    <td>
+                        {{agente?.apellidos}}
+                    </td>
+
+                    <td>
+                        {{agente?.correo}}
+                    </td>
+
+                    <td style="width: 200px;">
+                        <i class="small material-icons" (click)="abrirVerAgente(agente)" title="Ver detalle">remove_red_eye</i>
+                        <i class="small material-icons" (click)="abrirEditarAgente(agente)" title="Editar" style="margin-left: 5px;margin-right: 5px; ">edit</i>
+                        <i class="small material-icons" (click)="eliminar(agente.idAgente)" title="Eliminar" style="margin-left: 5px;margin-right: 5px; ">clear</i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para agregar un nuevo agente -->
+<div id="nuevoAgente" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Agente</h2>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <span><label >Agencia</label></span>
+                <select id="agenciasNuevo" class="browser-default" name="agenciasNuevo" [(ngModel)]="agente.idAgencia" required>
+                    <option *ngFor="let agencia of agencias" [value]="agencia.idAgencia">{{agencia.nombre}}</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="nombreNuevo">Nombre</label></span>
+                <input type="text" id="nombreNuevo" [(ngModel)]="agente.nombre">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="apellidosNuevo">Apellidos</label></span>
+                <input type="text" id="apellidosNuevo" [(ngModel)]="agente.apellidos">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="correoNuevo">Correo electrónico</label></span>
+                <input type="email" id="correoNuevo" [(ngModel)]="agente.correo">
+            </div>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center;">
+                Comisiones(%)
+            </div>
+
+            <table>
+                <tbody>
+                    <tr *ngFor="let comision of comisiones">
+                        <td>
+                            {{comision.nombre}}
+                        </td>
+                        <td>
+                            <input type="number" id="comisionNuevo" [(ngModel)]="comision.comision">
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="guardarAgenteNuevo()">Aceptar</a>
+    </div>
+</div>
+
+
+<!-- Modal para ver un  agente -->
+<div id="verAgente" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Agente</h2>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                Agencia: {{agente.agencia}}
+            </div>
+
+            <div class="input-field col s12 ">
+                Nombre: {{agente.nombre}}
+            </div>
+
+            <div class="input-field col s12 ">
+                Apellidos: {{agente.apellidos}}
+            </div>
+            <div class="input-field col s12 ">
+                Correo electrónico: {{agente.correo}}
+            </div>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center;">
+                Comisiones(%)
+            </div>
+
+            <table>
+                <tbody>
+                    <tr *ngFor="let comision of comisiones">
+                        <td>
+                            {{comision.nombre}}
+                        </td>
+                        <td>
+                            {{comision.comision}} %
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="guardarAgenteNuevo()">Aceptar</a>
+    </div>
+</div>
+
+
+<!-- Modal para editar un agente -->
+<div id="editarAgente" class="modal">
+    <div class="modal-content">
+        <div style="text-align: center;">
+            <h2>Agente</h2>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <span><label >Agencia</label></span>
+                <select id="agenciasNuevo" class="browser-default" name="agenciasNuevo" [(ngModel)]="agente.idAgencia" required>
+                    <option *ngFor="let agencia of agencias" [value]="agencia.idAgencia">{{agencia.nombre}}</option>  
+                </select>
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="nombreNuevo">Nombre</label></span>
+                <input type="text" id="nombreNuevo" [(ngModel)]="agente.nombre">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="apellidosNuevo">Apellidos</label></span>
+                <input type="text" id="apellidosNuevo" [(ngModel)]="agente.apellidos">
+            </div>
+
+            <div class="input-field col s12 ">
+                <span><label for="correoEditar">Correo electrónico</label></span>
+                <input type="email" id="correoEditar" [(ngModel)]="agente.correo">
+            </div>
+
+            <div class="col s12" style="background-color: blue; color: white; text-align: center;">
+                Comisiones(%)
+            </div>
+
+            <table>
+                <tbody>
+                    <tr *ngFor="let comision of comisiones">
+                        <td>
+                            {{comision.nombre}}
+                        </td>
+                        <td>
+                            <input type="number" id="comisionNuevo" [(ngModel)]="comision.comision">
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a id="cerrarGuardar" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+        <a class=" waves-effect waves-green btn-flat" (click)="actualizar()">Aceptar</a>
+    </div>
+</div>

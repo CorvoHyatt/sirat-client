@@ -1,0 +1,28 @@
+<div *ngIf="!isAuth">
+    <div class="row center-align">
+        <h1>Inicio de sesión</h1>
+    </div>
+    <div class="row center container">
+        <form class="col s6 offset-s3">
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="email" type="email" class="validate">
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <a class="waves-effect waves-light btn" (click)="changeStatusAuth()">
+                <i class="material-icons right">login</i>Ingresar
+            </a>
+        </form>
+    </div>
+</div>
+
+<div *ngIf="isAuth">
+    <p>Algún diseño chido</p>
+</div>

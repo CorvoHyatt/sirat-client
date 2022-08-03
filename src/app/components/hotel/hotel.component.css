@@ -1,0 +1,13 @@
+
+.hidden{
+    display: none;
+}
+
+.modal-pais{
+    width: 19% !important;
+    min-height: 37% !important;
+}
+
+.pointer{
+    cursor: pointer;
+}

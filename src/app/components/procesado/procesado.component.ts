@@ -69,7 +69,7 @@ export class ProcesadoComponent implements OnInit {
  // idImagenDayByDay: any;
  // idImagenItinerarioFinal: any;
   
-  mapProductosPorHoja: Map<string,ProductoResumen[]>=new Map<string,ProductoResumen[]>();
+  mapProductosPorHoja: Map<string,ProductoResumen[]> =new Map<string,ProductoResumen[]>();
   mapTexto: Map<string,string>=new Map<string,string>();
   mapProductosPorHojaTourExtra: Map<string,ProductoResumen[]>=new Map<string,ProductoResumen[]>();
   mapProductosPorHojaArreglo:any;
@@ -90,6 +90,10 @@ export class ProcesadoComponent implements OnInit {
   guiaFin:any;
   //guiaHotel1: any;
   //guiaHotel2: any;
+
+
+  
+
   validate(event: ResizeEvent): boolean 
   {
     const MIN_DIMENSIONS_PX: number = 50;
@@ -146,6 +150,78 @@ export class ProcesadoComponent implements OnInit {
     this.estadoGuiaEvento=2;
     this.guiaDaybyday=null;
     this.guiaFin=null;
+  }
+
+  guardarCotizacionAuxiliar()
+  {
+    let datos = {
+      'idCotizacion':this.vista.idCotizacion,
+      'titulo': this.vista.titulo,
+      'nombreCliente': this.vista.nombreCliente,
+      'agencia': this.vista.agencia,
+      'idAgencia': this.vista.idAgencia,
+      'fecha': this.vista.fecha,
+      'agente': this.vista.agente,
+      'correoAgente': this.vista.correoAgente,
+      'periodo': this.vista.periodo,
+      'noches': this.vista.noches,
+      'evento': this.vista.evento,
+      'listaDestinos': this.vista.lista_destinos,
+      'imagenAuxiliar': this.vista.imagenPrincipalAuxiliar,
+      'imagenSeleccionada': this.vista.imagenPrincipalSeleccionada,
+      'imagenEventoAuxiliar': this.vista.imagenEventoAuxiliar,
+      'imagenEventoSeleccionada': this.vista.imagenEventoSeleccionada,
+      'imagenDaybydayAuxiliar': this.vista.imagenDaybydayAuxiliar,
+      'imagenDaybydaySeleccionada': this.vista.imagenDaybydaySeleccionada,
+      'imagenItinerarioFinalAuxiliar': this.vista.imagenItinerarioFinalAuxiliar,
+      'imagenItinerarioFinalSeleccionada': this.vista.imagenItinerarioFinalSeleccionada,
+      'imagenFinAuxiliar': this.vista.imagenFinAuxiliar,
+      'imagenFinSeleccionada': this.vista.imagenFinSeleccionada
+    };  
+    console.log("this.nuevo",this.nuevo);    
+    if(this.nuevo==1)
+    {
+      console.log("guardando cotizacionAuxiliar nueva");
+      console.log(datos);
+      this.cotizacionesService.guardarCotizacionAuxiliar(datos).subscribe((res: any) => 
+      {
+        this.guardarNuevoItinerario();
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `Cambios almacenados correctamente`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+  
+        this.nuevo = 0;
+      },
+        err => console.error(err)
+      );
+
+    }
+   
+    else
+    {
+      console.log("actualizando cotizacionAuxiliar ");
+      console.log(datos);
+
+      this.cotizacionesService.actualizar(datos).subscribe((res: any) => 
+      {
+        this.actualizarItinerario();
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `Cambios Actualizados correctamente`,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+  
+      },
+        err => console.error(err)
+      );
+
+    }
   }
   darMes(mes)
   {
@@ -990,76 +1066,7 @@ Su guía conoce la ruta como la palma de sus manos, así que se encargará de ll
     })
   }
 
-  guardarNuevaInfo()
-  {
-    let datos = {
-      'idCotizacion':this.vista.idCotizacion,
-      'titulo': this.vista.titulo,
-      'nombreCliente': this.vista.nombreCliente,
-      'agencia': this.vista.agencia,
-      'idAgencia': this.vista.idAgencia,
-      'fecha': this.vista.fecha,
-      'agente': this.vista.agente,
-      'correoAgente': this.vista.correoAgente,
-      'periodo': this.vista.periodo,
-      'noches': this.vista.noches,
-      'evento': this.vista.evento,
-      'listaDestinos': this.vista.lista_destinos,
-      'imagenAuxiliar': this.vista.imagenPrincipalAuxiliar,
-      'imagenSeleccionada': this.vista.imagenPrincipalSeleccionada,
-      'imagenEventoAuxiliar': this.vista.imagenEventoAuxiliar,
-      'imagenEventoSeleccionada': this.vista.imagenEventoSeleccionada,
-      'imagenDaybydayAuxiliar': this.vista.imagenDaybydayAuxiliar,
-      'imagenDaybydaySeleccionada': this.vista.imagenDaybydaySeleccionada,
-      'imagenItinerarioFinalAuxiliar': this.vista.imagenItinerarioFinalAuxiliar,
-      'imagenItinerarioFinalSeleccionada': this.vista.imagenItinerarioFinalSeleccionada,
-      'imagenFinAuxiliar': this.vista.imagenFinAuxiliar,
-      'imagenFinSeleccionada': this.vista.imagenFinSeleccionada
-    };  
-    console.log("this.nuevo",this.nuevo);    
-    if(this.nuevo==1)
-    {
-      console.log("guardando cotizacionAuxiliar nueva");
-      console.log(datos);
-      this.cotizacionesService.guardar(datos).subscribe((res: any) => 
-      {
-        this.guardarNuevoItinerario();
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: `Cambios almacenados correctamente`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
   
-
-      },
-        err => console.error(err)
-      );
-
-    }
-    else
-    {
-      console.log("actualizando cotizacionAuxiliar ");
-      console.log(datos);
-
-      this.cotizacionesService.actualizar(datos).subscribe((res: any) => 
-      {
-        this.actualizarItinerario();
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: `Cambios almacenados correctamente`,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-  
-      },
-        err => console.error(err)
-      );
-
-    }
-  }
   signo(tmp)
   {
     if(tmp>0)
@@ -1115,7 +1122,7 @@ Su guía conoce la ruta como la palma de sus manos, así que se encargará de ll
     this.canastaService.listOneCotizacionByUserByVersionResumen(4,this.idCotizacion,this.versionCotizacion,this.versionCotizacion).subscribe((res5: any) => 
     {
       var datos = new Array();
-      console.log(res5);
+      console.log("Canasta:",res5);
       for(let data of res5.canasta)
       {
 
@@ -1151,7 +1158,7 @@ Su guía conoce la ruta como la palma de sus manos, así que se encargará de ll
         return 1;
       }
       datos.sort(naturalCompare);
-      let mapProductos : Map<string,ProductoResumen[]>=new Map<string,ProductoResumen[]>();
+      let mapProductos : Map<string,ProductoResumen[]> = new Map<string,ProductoResumen[]>();
       for(let data of datos)
       {
         if(mapProductos.has(data.fecha)==false)
@@ -1557,8 +1564,8 @@ this.vista.mapHotelesActualizacion=resHotelesExtras;
                 this.cotizacionesService.listImagenesCiudadesDaybyday(this.idCotizacion).subscribe((res7: any) => 
                 {
                   this.vista.listaImagenesCiudadesDaybyday=res7;
-                  this.vista.imagenDaybydaySeleccionada=res7[0].idCiudad+"_"+res7[0].num;
-                  this.vista.imagenFinSeleccionada =res7[0].idCiudad+"_"+res7[0].num;
+                //   this.vista.imagenDaybydaySeleccionada=res7[0].idCiudad+"_"+res7[0].num;
+                //   this.vista.imagenFinSeleccionada =res7[0].idCiudad+"_"+res7[0].num;
                   this.obtenerCanasta();
                 },
                 err => 
@@ -1638,6 +1645,7 @@ this.vista.mapHotelesActualizacion=resHotelesExtras;
       this.versionCotizacion = Number(params.get('versionCotizacion'));
       this.cotizacionesService.existeAuxiliar(this.idCotizacion).subscribe((res: any) => 
       {
+        console.log("Inicio procesado: ",res);
         if(res==null)
           this.nuevo=1;
         else
@@ -1649,7 +1657,7 @@ this.vista.mapHotelesActualizacion=resHotelesExtras;
           this.vista.agencia=res.agencia;
           this.vista.idAgencia=res.idAgencia;
           this.vista.agente=res.agente;
-          this.vista.correoAgente=res.correoAgente;
+          this.vista.correoAgente=res.correoAgente; 
           this.vista.evento=res.evento;
           this.vista.fecha=res.fecha;
           this.vista.lista_destinos=res.listaDestinos;
@@ -1666,7 +1674,9 @@ this.vista.mapHotelesActualizacion=resHotelesExtras;
           this.vista.imagenEventoSeleccionada=res.imagenEventoSeleccionada;
           this.vista.imagenDaybydayAuxiliar=res.imagenDaybydayAuxiliar;
           this.vista.imagenFinAuxiliar=res.imagenFinAuxiliar;
+          console.log("guiaDaybyday: ",this.guiaDaybyday);
           this.vista.imagenDaybydaySeleccionada=res.imagenDaybydaySeleccionada;
+          console.log("Imagen dbd: ", res.imagenDaybydaySeleccionada);
           this.vista.imagenFinSeleccionada=res.imagenFinSeleccionada;
           this.vista.imagenItinerarioFinalAuxiliar=res.imagenItinerarioFinalAuxiliar;
           this.vista.imagenItinerarioFinalSeleccionada=res.imagenItinerarioFinalSeleccionada;
@@ -1675,6 +1685,7 @@ this.vista.mapHotelesActualizacion=resHotelesExtras;
         }
         if(this.nuevo==1)
         {
+            console.log("Entre otra opción de cargado");
           this.cotizacionesService.list_oneResumen(this.idCotizacion).subscribe((res1: any) => 
           {
             this.cotizacion = res1;

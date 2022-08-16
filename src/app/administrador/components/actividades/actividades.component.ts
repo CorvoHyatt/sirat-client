@@ -127,7 +127,6 @@ export class ActividadesComponent implements OnInit {
     this.subcategoriasService.list().subscribe(
       (resp: Subcategoria[]) => {
         this.subcategorias = resp;
-        //console.log(this.subcategorias);
       }
     );
   }
@@ -186,7 +185,6 @@ export class ActividadesComponent implements OnInit {
           let tmp: any = document.getElementById("autocomplete_pais");
           tmp = tmp.value;
 
-          //   console.log(tmp.value);
           for (const id of this.paises) {
             if (id.nombre === tmp) {
               destino = id.id;
@@ -207,7 +205,6 @@ export class ActividadesComponent implements OnInit {
           let tmp: any = document.getElementById("autocomplete_paisEditar");
           tmp = tmp.value;
 
-          //   console.log(tmp.value);
           for (const id of this.paises) {
             if (id.nombre === tmp) {
               destino = id.id;

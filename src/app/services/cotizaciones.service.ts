@@ -36,7 +36,7 @@ export class CotizacionesService {
     // console.log("guardar itinerario cotizaciones.service");
       return this.http.post(`${environment.API_URI}/cotizaciones/itinerario/create`,datos);
   }
-  guardar(datos): Observable<any> 
+  guardarCotizacionAuxiliar(datos): Observable<any> 
   {  
     // console.log("guardar cotizaciones.service");
       return this.http.post(`${environment.API_URI}/cotizaciones/createAuxiliar`,datos);
